@@ -4,6 +4,7 @@ import { productCard } from './components.js'
 import { setCatalogCategory } from './catalog.js'
 import { icon } from './icons.js'
 import { showToast, formatPrice, escapeHtml } from './ui.js'
+import { showItemDetails } from './item-details.js'
 
 const CATEGORY_LABELS = {
   CPU: 'Processors', GPU: 'Graphics Cards', RAM: 'Memory',
@@ -45,6 +46,19 @@ export function initHome(catalog) {
   subscribe(renderPicks)
 
   picksGrid.addEventListener('click', (event) => {
+    const details = event.target.closest('[data-details]')
+    if (details) {
+      const item = byId(details.dataset.details)
+      if (item) showItemDetails(item, null, { onAdd: () => {
+        if (!addToCart(item)) {
+          showToast('Sign in to add items to your cart.')
+          location.hash = '#account'
+          return
+        }
+        showToast(`${item.name} added to your cart.`)
+      } })
+      return
+    }
     const btn = event.target.closest('[data-add]')
     if (!btn) return
     const item = byId(btn.dataset.add)

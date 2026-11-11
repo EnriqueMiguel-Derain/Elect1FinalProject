@@ -93,12 +93,12 @@ function checkoutSelected(catalogIds) {
     const owned = parts.find((part) => part.catalogId === item.id && part.ownership !== 'on-hold')
     if (owned) {
       parts = parts.map((part) => part.id === owned.id
-        ? { ...part, quantity: part.quantity + quantity, ownership: 'owned', purchasedAt }
+        ? { ...part, quantity: part.quantity + quantity, purchasePrice: Math.round((((part.purchasePrice ?? Number(item.price)) * part.quantity) + Number(item.price) * quantity) / (part.quantity + quantity) * 100) / 100, ownership: 'owned', purchasedAt }
         : part)
     } else {
       parts.push({
         id: makeId(), catalogId: item.id, name: item.name, category: item.category,
-        quantity, ownership: 'owned', minStock: tracksLowStock(item.category) ? getSettings().minStock : 0,
+        quantity, purchasePrice: Number(item.price), ownership: 'owned', minStock: tracksLowStock(item.category) ? getSettings().minStock : 0,
         location: '', purchasedAt,
       })
     }

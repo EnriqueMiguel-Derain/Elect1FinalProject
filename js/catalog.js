@@ -2,6 +2,7 @@ import { getParts, subscribe } from './store.js'
 import { addToCart } from './cart.js'
 import { productCard } from './components.js'
 import { escapeHtml, showToast } from './ui.js'
+import { showItemDetails } from './item-details.js'
 
 let catalog = []
 const grid = document.getElementById('catalog-grid')
@@ -21,6 +22,7 @@ export function initCatalog(data) {
   categorySelect.addEventListener('change', render)
   sortSelect.addEventListener('change', render)
   grid.addEventListener('click', handleAdd)
+  grid.addEventListener('click', handleDetails)
   subscribe(render)
   render()
 }
@@ -42,6 +44,23 @@ export function handleAdd(event) {
     return
   }
   showToast(`${item.name} added to your cart.`)
+}
+
+function handleDetails(event) {
+  const button = event.target.closest('[data-details]')
+  if (!button) return
+  const item = catalog.find((entry) => entry.id === button.dataset.details)
+  if (!item) return
+  showItemDetails(item, null, {
+    onAdd: () => {
+      if (!addToCart(item)) {
+        showToast('Sign in to add items to your cart.')
+        location.hash = '#account'
+        return
+      }
+      showToast(`${item.name} added to your cart.`)
+    },
+  })
 }
 
 function render() {

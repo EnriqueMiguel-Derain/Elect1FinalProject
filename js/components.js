@@ -34,7 +34,8 @@ export function productCard(item, parts) {
       <p class="product-cat">${escapeHtml(item.category)}${item.brand ? ' · ' + escapeHtml(item.brand) : ''}</p>
       ${item.summary ? `<p class="product-spec">${escapeHtml(item.summary)}</p>` : ''}
       <p class="price${item.price == null ? ' price-none' : ''}">${formatPrice(item.price)}</p>
-      <button class="btn btn-block" data-add="${item.id}">+ Add to cart</button>
+      <button class="btn btn-block btn-secondary" data-details="${escapeHtml(item.id)}">View details</button>
+      <button class="btn btn-block" data-add="${escapeHtml(item.id)}">+ Add to cart</button>
     </article>`
 }
 
@@ -53,10 +54,10 @@ export function inventoryCard(part, item) {
       <h3>${escapeHtml(part.name)}</h3>
       <p class="product-cat">${escapeHtml(part.category)}${item?.brand ? ' · ' + escapeHtml(item.brand) : ''}</p>
       ${item?.summary ? `<p class="product-spec">${escapeHtml(item.summary)}</p>` : ''}
-      <p class="price${item?.price == null ? ' price-none' : ''}">${item?.price == null ? 'Price not set' : formatPrice(item.price)}</p>
+      <p class="price${part.purchasePrice == null && item?.price == null ? ' price-none' : ''}">${part.purchasePrice == null && item?.price == null ? 'Price not set' : formatPrice(part.purchasePrice ?? item?.price)}</p>
       <div class="inventory-tags"><span class="tag ${held ? 'tag-hold' : 'tag-ok'}">${held ? 'On hold' : 'Owned'} · Qty ${part.quantity}</span>${stockStatus ? `<span class="tag tag-${stockStatus}">${stockStatus === 'out' ? 'Out of stock' : stockStatus === 'low' ? 'Low stock' : 'In stock'}</span>` : ''}</div>
       ${part.location ? `<p class="product-cat inventory-location">Location · ${escapeHtml(part.location)}</p>` : ''}
       ${purchaseLabel ? `<p class="product-cat inventory-purchase">Purchased ${purchaseLabel}</p>` : ''}
-      <div class="inventory-actions"><button class="btn btn-small" data-action="edit" data-id="${escapeHtml(part.id)}">Edit</button><button class="btn btn-small btn-danger" data-action="delete" data-id="${escapeHtml(part.id)}">Remove</button></div>
+      <div class="inventory-actions"><button class="btn btn-small btn-secondary" data-action="details" data-id="${escapeHtml(part.id)}">Details</button><button class="btn btn-small" data-action="return" data-id="${escapeHtml(part.id)}" ${held || (part.purchasePrice == null && item?.price == null) ? 'disabled title="Only purchased, priced items can be returned."' : ''}>Return item</button></div>
     </li>`
 }
