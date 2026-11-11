@@ -108,7 +108,7 @@ async function start() {
   } catch (error) {
     console.error(error.message)
   }
-  initInventory()
+  initInventory(catalog)
   initCatalog(catalog)
   initCartPage(catalog)
   initHome(catalog)

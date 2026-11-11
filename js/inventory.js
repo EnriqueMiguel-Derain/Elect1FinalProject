@@ -1,10 +1,10 @@
 import { getParts, setParts, subscribe } from './store.js'
 import { getStockStatus, tracksLowStock } from './availability.js'
 import { showToast, escapeHtml, confirmInApp } from './ui.js'
-
-const STATUS_LABELS = { ok: 'In stock', low: 'Low stock', out: 'Out of stock' }
+import { inventoryCard } from './components.js'
 
 let parts = getParts()
+let catalog = []
 
 const form = document.getElementById('part-form')
 const editDialog = document.getElementById('part-edit-dialog')
@@ -17,7 +17,8 @@ const minStockField = document.getElementById('min-stock-field')
 const summary = document.getElementById('summary')
 const cancelBtn = document.getElementById('cancel-edit')
 
-export function initInventory() {
+export function initInventory(catalogItems = []) {
+  catalog = catalogItems
   form.addEventListener('submit', handleSubmit)
   cancelBtn.addEventListener('click', resetForm)
   editDialog.addEventListener('click', (event) => {
@@ -176,28 +177,7 @@ function render() {
   const visible = getVisibleParts()
 
   list.innerHTML = visible
-    .map((p) => {
-      const ownership = p.ownership === 'on-hold' ? 'on-hold' : 'owned'
-      const stockStatus = tracksLowStock(p.category) ? getStockStatus(p.quantity, p.minStock) : ''
-      const purchaseDate = p.purchasedAt ? new Date(p.purchasedAt) : null
-      const purchaseLabel = purchaseDate && !Number.isNaN(purchaseDate.valueOf())
-        ? purchaseDate.toLocaleDateString('en-PH', { year: 'numeric', month: 'short', day: 'numeric' })
-        : ''
-      return `
-        <li class="card part-card">
-          <div>
-            <h3>${escapeHtml(p.name)}</h3>
-            <p class="part-meta">${escapeHtml(p.category)} · Qty ${p.quantity}${p.location ? ' · ' + escapeHtml(p.location) : ''}</p>
-            ${purchaseLabel ? `<small class="part-purchase">Last purchased ${purchaseLabel}</small>` : ''}
-            <span class="badge ${ownership === 'on-hold' ? 'badge-local' : 'badge-ok'}">${ownership === 'on-hold' ? 'On hold' : 'Owned'}</span>
-            ${stockStatus ? `<span class="badge badge-${stockStatus}">${STATUS_LABELS[stockStatus]}</span>` : ''}
-          </div>
-          <div class="part-actions">
-            <button class="btn btn-small" data-action="edit" data-id="${p.id}">Edit</button>
-            <button class="btn btn-small btn-danger" data-action="delete" data-id="${p.id}">Delete</button>
-          </div>
-        </li>`
-    })
+    .map((p) => inventoryCard(p, catalog.find((item) => item.id === p.catalogId)))
     .join('')
 
   const ownedCount = parts.filter((p) => p.ownership !== 'on-hold').length

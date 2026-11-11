@@ -1,5 +1,5 @@
-import { getParts, subscribe, reloadAccountParts } from './store.js'
-import { getCurrentAccount, signIn, signOut, clearAccountInventory, adjustCurrentBalance } from './accounts.js'
+import { getParts, setParts, subscribe, reloadAccountParts } from './store.js'
+import { getCurrentAccount, signIn, signOut, adjustCurrentBalance } from './accounts.js'
 import { getStockStatus, tracksLowStock } from './availability.js'
 import { loadProfile, saveProfile } from './profile.js'
 import { showToast, escapeHtml, formatPrice, confirmInApp } from './ui.js'
@@ -186,15 +186,25 @@ function bindEvents() {
     reader.readAsDataURL(file)
   })
   $('profile-clear').addEventListener('click', async () => {
+    const priceOf = (part) => catalog.find((item) => item.id === part.catalogId)?.price
+    const soldParts = getParts().filter((part) => part.ownership !== 'on-hold' && Number.isFinite(Number(priceOf(part))) && priceOf(part) != null && part.quantity > 0)
+    if (!soldParts.length) {
+      showToast('There are no priced, owned parts to sell.', true)
+      return
+    }
+    const proceeds = Math.round(soldParts.reduce((sum, part) => sum + Number(priceOf(part)) * part.quantity, 0) * 100) / 100
     if (!await confirmInApp({
-      title: 'Clear inventory?',
-      message: 'This clears every part from this account’s inventory.',
-      confirmLabel: 'Clear inventory',
-      danger: true,
+      title: 'Sell inventory?',
+      message: `Sell ${soldParts.length} priced, owned part type(s) for ${formatPrice(proceeds)}? The money will be added to your balance. Unpriced and on-hold parts will stay in your inventory.`,
+      confirmLabel: 'Sell inventory',
     })) return
-    clearAccountInventory()
+    if (proceeds > 0) adjustCurrentBalance(proceeds)
+    const soldIds = new Set(soldParts.map((part) => part.id))
+    setParts(getParts().filter((part) => !soldIds.has(part.id)))
     reloadAccountParts()
-    showToast('Inventory cleared.')
+    renderBalance()
+    window.dispatchEvent(new Event('pyesa-balance-updated'))
+    showToast(`Inventory sold for ${formatPrice(proceeds)}.`)
   })
 }
 
