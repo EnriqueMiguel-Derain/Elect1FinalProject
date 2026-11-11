@@ -4,6 +4,7 @@ import { showToast } from './ui.js'
 
 export function initSettings() {
   const swatches = document.getElementById('swatches')
+  const themes = document.getElementById('themes')
   const motion = document.getElementById('set-motion')
   const minStock = document.getElementById('set-minstock')
   const summary = document.getElementById('data-summary')
@@ -19,6 +20,21 @@ export function initSettings() {
       )
       .join('')
   }
+  const THEMES = {
+    dark: ['Dark', '#0e1019'],
+    light: ['Light', '#f4f6fb'],
+    system: ['Match device', 'linear-gradient(90deg, #0e1019 50%, #f4f6fb 50%)'],
+  }
+  const renderThemes = () => {
+    themes.innerHTML = Object.entries(THEMES)
+      .map(
+        ([key, [label, bg]]) => `
+      <button type="button" class="swatch" role="radio" aria-checked="${getSettings().theme === key}" data-theme-opt="${key}" style="--c:${bg}">
+        <span class="dot" aria-hidden="true"></span>${label}
+      </button>`
+      )
+      .join('')
+  }
   const renderSummary = () => {
     const parts = getParts()
     summary.textContent = `${parts.length} part type(s) saved in this browser.`
@@ -27,8 +43,18 @@ export function initSettings() {
   motion.checked = getSettings().motion
   minStock.value = getSettings().minStock
   renderSwatches()
+  renderThemes()
   renderSummary()
   subscribe(renderSummary)
+
+  themes.addEventListener('click', (event) => {
+    const btn = event.target.closest('[data-theme-opt]')
+    if (!btn) return
+    updateSettings({ theme: btn.dataset.themeOpt })
+    renderThemes()
+    renderSwatches()
+    showToast(`${THEMES[btn.dataset.themeOpt][0]} theme applied.`)
+  })
 
   swatches.addEventListener('click', (event) => {
     const btn = event.target.closest('[data-accent]')

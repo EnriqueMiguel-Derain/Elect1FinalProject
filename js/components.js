@@ -19,8 +19,9 @@ export function productCard(item, parts) {
       ${tag}
       <div class="product-visual ${tone(item.category)}">${icon(item.category, 56)}</div>
       <h3>${escapeHtml(item.name)}</h3>
-      <p class="product-cat">${escapeHtml(item.category)}</p>
-      <p class="price">${formatPrice(item.price)}</p>
+      <p class="product-cat">${escapeHtml(item.category)}${item.brand ? ' · ' + escapeHtml(item.brand) : ''}</p>
+      ${item.summary ? `<p class="product-spec">${escapeHtml(item.summary)}</p>` : ''}
+      <p class="price${item.price == null ? ' price-none' : ''}">${formatPrice(item.price)}</p>
       <button class="btn btn-block" data-add="${item.id}">+ Add to Inventory</button>
     </article>`
 }

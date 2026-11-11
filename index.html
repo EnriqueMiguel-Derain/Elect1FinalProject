@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pyesa</title>
+  <script>try{var t=(JSON.parse(localStorage.getItem('pyesa-settings'))||{}).theme||'dark';if(t==='system')t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.dataset.theme=t}catch(e){document.documentElement.dataset.theme='dark'}</script>
   <link rel="icon" type="image/png" href="img/logo-white.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -59,28 +60,48 @@
 
       <div class="container">
         <ul class="features reveal">
-          <li><span data-icon="inventory" data-size="30"></span><div><strong>Track Your Parts</strong><small>Quantities and locations</small></div></li>
-          <li><span data-icon="alert" data-size="30"></span><div><strong>Low-Stock Flags</strong><small>Know before you run out</small></div></li>
-          <li><span data-icon="shield" data-size="30"></span><div><strong>Saved in Your Browser</strong><small>No account needed</small></div></li>
-          <li><span data-icon="check" data-size="30"></span><div><strong>Free to Use</strong><small>For hobbyists and students</small></div></li>
+          <li><a href="#pc-builder"><span data-icon="tower" data-size="30"></span><div><strong>Plan Your Build</strong><small>Pick parts that fit together</small></div></a></li>
+          <li><a href="#inventory"><span data-icon="inventory" data-size="30"></span><div><strong>Stock Your Bench</strong><small>Never buy the same part twice</small></div></a></li>
+          <li><a href="#circuit-builder"><span data-icon="board" data-size="30"></span><div><strong>Prototype Circuits</strong><small>Go from idea to working board</small></div></a></li>
+          <li><a href="#catalog" data-category=""><span data-icon="bolt" data-size="30"></span><div><strong>Learn by Making</strong><small>Made for students and makers</small></div></a></li>
         </ul>
       </div>
 
       <div class="section container">
-        <div class="section-title reveal">
+        <div class="section-title wide reveal">
           <p class="eyebrow">Hand-picked components</p>
           <h2>Featured Parts</h2>
-          <p>Popular picks for your next circuit or PC build. Add them straight to your inventory.</p>
+          <p class="one-line">Popular picks for your next circuit or PC build. Add them straight to your inventory.</p>
         </div>
         <div id="top-picks" class="product-grid reveal"></div>
         <p class="picks-more"><a class="link" href="#catalog" data-category="">View all parts <span data-icon="arrow" data-size="14"></span></a></p>
+      </div>
+
+      <div class="section container split">
+        <div class="reveal">
+          <p class="eyebrow">Inventory</p>
+          <h2 class="split-title">Know What's <strong>On Your Bench</strong></h2>
+          <p class="lead">Log every part you own with its quantity and location, and get a heads-up before you run out.</p>
+          <ul class="ticks">
+            <li>Quantities and storage locations</li>
+            <li>Low-stock flags on every part</li>
+            <li>Export and import your list</li>
+          </ul>
+          <a class="btn btn-lg" href="#inventory">Open Inventory <span data-icon="arrow" data-size="18"></span></a>
+        </div>
+        <div class="card stock-panel reveal" role="img" aria-label="Example inventory list showing in stock, low stock and out of stock parts">
+          <div class="stock-head"><span>Example</span><span>Qty</span></div>
+          <div class="stock-row"><div><strong>Arduino Uno R3</strong><small>Drawer A</small></div><span class="badge badge-ok">In stock · 4</span></div>
+          <div class="stock-row"><div><strong>10k Ohm Resistors</strong><small>Parts box</small></div><span class="badge badge-low">Low stock · 2</span></div>
+          <div class="stock-row"><div><strong>DHT22 Sensor</strong><small>Shelf 2</small></div><span class="badge badge-out">Out of stock · 0</span></div>
+        </div>
       </div>
 
       <div class="build section">
         <div class="container build-grid">
           <div class="build-art reveal" data-icon="tower" data-size="220" aria-hidden="true"></div>
           <div class="reveal">
-            <p class="eyebrow">Build your own PC</p>
+            <p class="eyebrow">Build your own PC<span class="soon-tag">Coming soon</span></p>
             <h2>Build Your <strong>New PC</strong></h2>
             <p class="lead">Pick compatible processors, boards, memory and graphics cards, then add everything to your inventory in one go.</p>
             <div class="spec-row">
@@ -104,13 +125,33 @@
         <div id="presets" class="presets"></div>
       </div>
 
+      <div class="section container split">
+        <div class="reveal">
+          <p class="eyebrow">Circuit Builder<span class="soon-tag">Coming soon</span></p>
+          <h2 class="split-title">Wire It Up. <strong>Check the Parts.</strong></h2>
+          <p class="lead">Sketch circuits with microcontrollers, sensors and resistors, then see exactly which parts you still need.</p>
+          <ul class="ticks">
+            <li>Place boards, sensors and passives</li>
+            <li>Pull parts straight from the catalog</li>
+            <li>Compare the circuit against your inventory</li>
+          </ul>
+          <a class="btn btn-lg" href="#circuit-builder">Open Circuit Builder <span data-icon="arrow" data-size="18"></span></a>
+        </div>
+        <svg class="circuit-art reveal" viewBox="0 0 320 200" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M40 150V115M26 115H54M33 100H47M40 100V50H90l10-16 14 32 14-32 14 32 10-16h46h20"/>
+          <path d="M230 32V68L258 50Z M262 32V68M262 50H280V150H40"/>
+          <path d="M268 28l14-12M278 40l14-12"/>
+        </svg>
+      </div>
+
       <div class="container cta-wrap">
         <div class="cta reveal">
           <div>
-            <h2>Stop losing track of your parts.</h2>
-            <p>Add what you own, set a low-stock level, and see what to buy next.</p>
+            <p class="eyebrow">Account<span class="soon-tag">Coming soon</span></p>
+            <h2>Take your bench with you.</h2>
+            <p>Save builds and projects, and keep your inventory in sync across devices.</p>
           </div>
-          <a class="btn btn-lg" href="#inventory">Open Inventory <span data-icon="arrow" data-size="18"></span></a>
+          <a class="btn btn-lg" href="#account">Open Account <span data-icon="arrow" data-size="18"></span></a>
         </div>
       </div>
     </section>
@@ -130,6 +171,7 @@
       <p id="catalog-count" class="summary"></p>
       <div id="catalog-grid" class="product-grid"></div>
       <p id="catalog-empty" class="empty" hidden>No parts match your search or filter.</p>
+      <p class="picks-more"><button id="catalog-more" type="button" class="btn btn-secondary" hidden>Show more parts</button></p>
     </section>
 
     <!-- INVENTORY -->
@@ -206,6 +248,11 @@
       <p class="summary">Saved in this browser. No account needed.</p>
       <div class="settings-grid">
         <div class="card setting">
+          <h2>Theme</h2>
+          <p>Choose how Pyesa looks.</p>
+          <div id="themes" class="swatches" role="radiogroup" aria-label="Theme"></div>
+        </div>
+        <div class="card setting">
           <h2>Accent color</h2>
           <p>Changes buttons, highlights and glows across the site.</p>
           <div id="swatches" class="swatches" role="radiogroup" aria-label="Accent color"></div>
@@ -260,6 +307,7 @@
       <div>
         <h4>About</h4>
         <p>Capstone project for ELECT1: Frontend Development.</p>
+        <p class="credit">Part specs from <a href="https://github.com/buildcores/buildcores-open-db">BuildCores OpenDB</a>, licensed <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>. Source filtered and reformatted for this project.</p>
       </div>
     </div>
     <p class="copyright">© <span id="year"></span> Pyesa. Student project.</p>

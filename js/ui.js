@@ -17,4 +17,4 @@ export function escapeHtml(text) {
   return div.innerHTML
 }
 
-export const formatPrice = (n) => '₱' + n.toLocaleString('en-PH')
+export const formatPrice = (n) => (n == null ? 'Price not set' : '₱' + n.toLocaleString('en-PH'))
