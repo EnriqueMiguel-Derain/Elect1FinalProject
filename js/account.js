@@ -3,6 +3,7 @@ import { getCurrentAccount, signIn, signOut, clearAccountInventory, adjustCurren
 import { getStockStatus, tracksLowStock } from './availability.js'
 import { loadProfile, saveProfile } from './profile.js'
 import { showToast, escapeHtml, formatPrice, confirmInApp } from './ui.js'
+import { refreshCart } from './cart.js'
 
 const $ = (id) => document.getElementById(id)
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
@@ -103,12 +104,14 @@ function bindEvents() {
     $('login-error').hidden = true
     loginForm.reset()
     reloadAccountParts()
+    refreshCart()
     renderSession()
     showToast('Signed in.')
   })
   $('account-logout').addEventListener('click', () => {
     signOut()
     reloadAccountParts()
+    refreshCart()
     renderSession()
     showToast('Signed out.')
   })
@@ -131,6 +134,7 @@ function bindEvents() {
     }
     $('balance-dialog').close()
     renderBalance()
+    window.dispatchEvent(new Event('pyesa-balance-updated'))
     showToast(balanceDirection === 'in' ? 'Balance updated.' : 'Cash out recorded.')
   })
 
@@ -233,5 +237,6 @@ export function initAccount(catalogData) {
   catalog = catalogData
   bindEvents()
   renderSession()
+  window.addEventListener('pyesa-balance-updated', renderBalance)
   subscribe(renderStats)
 }

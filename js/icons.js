@@ -13,6 +13,7 @@ const PATHS = {
   sensor: '<path d="M10 14V5a2 2 0 014 0v9a4 4 0 11-4 0z"/>',
   resistor: '<path d="M2 12h4l2-4 3 8 3-8 2 4h6"/>',
   inventory: '<path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/>',
+  cart: '<path d="M3 4h2l2.4 12.2a2 2 0 002 1.6h8.8a2 2 0 002-1.6L22 8H6"/><circle cx="10" cy="21" r="1"/><circle cx="18" cy="21" r="1"/>',
   search: '<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>',
   arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>',
   alert: '<path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18h.01"/>',

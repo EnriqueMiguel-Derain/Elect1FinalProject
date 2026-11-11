@@ -1,4 +1,5 @@
-import { getParts, subscribe, addFromCatalog } from './store.js'
+import { getParts, subscribe } from './store.js'
+import { addToCart } from './cart.js'
 import { productCard } from './components.js'
 import { escapeHtml, showToast } from './ui.js'
 
@@ -34,8 +35,13 @@ export function handleAdd(event) {
   const btn = event.target.closest('[data-add]')
   if (!btn) return
   const item = catalog.find((c) => c.id === btn.dataset.add)
-  addFromCatalog(item)
-  showToast(`${item.name} added to inventory.`)
+  if (!item) return
+  if (!addToCart(item)) {
+    showToast('Sign in to add items to your cart.')
+    location.hash = '#account'
+    return
+  }
+  showToast(`${item.name} added to your cart.`)
 }
 
 function render() {

@@ -1,4 +1,5 @@
-import { getParts, subscribe, addFromCatalog } from './store.js'
+import { getParts, subscribe } from './store.js'
+import { addToCart, addItemsToCart } from './cart.js'
 import { productCard } from './components.js'
 import { setCatalogCategory } from './catalog.js'
 import { icon } from './icons.js'
@@ -47,8 +48,12 @@ export function initHome(catalog) {
     const btn = event.target.closest('[data-add]')
     if (!btn) return
     const item = byId(btn.dataset.add)
-    addFromCatalog(item)
-    showToast(`${item.name} added to inventory.`)
+    if (!addToCart(item)) {
+      showToast('Sign in to add items to your cart.')
+      location.hash = '#account'
+      return
+    }
+    showToast(`${item.name} added to your cart.`)
   })
 
   // Ready builds
@@ -63,7 +68,7 @@ export function initHome(catalog) {
         <div class="preset-price">${formatPrice(total)}<small>${escapeHtml(p.note)}</small></div>
       </div>
       <ul>${items.map((c) => `<li>${escapeHtml(c.name)}</li>`).join('')}</ul>
-      <div class="preset-foot"><button class="btn btn-block" data-preset="${i}">Add build to inventory</button></div>
+      <div class="preset-foot"><button class="btn btn-block" data-preset="${i}">Add build to cart</button></div>
     </article>`
   }).join('')
 
@@ -71,8 +76,12 @@ export function initHome(catalog) {
     const btn = event.target.closest('[data-preset]')
     if (!btn) return
     const items = PRESETS[btn.dataset.preset].ids.map(byId).filter(Boolean)
-    items.forEach(addFromCatalog)
-    showToast(`${items.length} parts added to inventory.`)
+    if (!addItemsToCart(items)) {
+      showToast('Sign in to add a build to your cart.')
+      location.hash = '#account'
+      return
+    }
+    showToast(`${items.length} build part(s) added to your cart.`)
   })
 
   // Any link with data-category (tiles, banner, footer) pre-filters the Catalog page.

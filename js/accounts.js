@@ -6,8 +6,8 @@ const LEGACY_PROFILE_KEY = 'pyesa-profile'
 const STARTING_BALANCE = 5000
 
 const DEMO_ACCOUNTS = [
-  { id: 'student-enrique', username: 'enrique', password: 'pyesa123', role: 'student', balance: STARTING_BALANCE, profile: { name: 'Enrique Miguel N. Derain', bench: '', email: '', photo: '' }, parts: [] },
-  { id: 'admin', username: 'admin', password: 'admin123', role: 'admin', balance: STARTING_BALANCE, profile: { name: 'Pyesa Admin', bench: '', email: '', photo: '' }, parts: [] },
+  { id: 'student-enrique', username: 'enrique', password: 'pyesa123', role: 'student', balance: STARTING_BALANCE, profile: { name: 'Enrique Miguel N. Derain', bench: '', email: '', photo: '' }, parts: [], cart: [] },
+  { id: 'admin', username: 'admin', password: 'admin123', role: 'admin', balance: STARTING_BALANCE, profile: { name: 'Pyesa Admin', bench: '', email: '', photo: '' }, parts: [], cart: [] },
 ]
 
 function readDatabase() {
@@ -19,13 +19,14 @@ function readDatabase() {
         accounts: saved.accounts.map((account) => ({
           ...account,
           balance: Number.isFinite(account.balance) ? Math.max(0, account.balance) : STARTING_BALANCE,
+          cart: Array.isArray(account.cart) ? account.cart : [],
         })),
       }
       try { localStorage.setItem(DATABASE_KEY, JSON.stringify(normalized)) } catch { /* normalized data remains available for this visit */ }
       return normalized
     }
   } catch { /* start with demo accounts if storage is unavailable or invalid */ }
-  const database = { accounts: DEMO_ACCOUNTS.map((account) => ({ ...account, profile: { ...account.profile }, parts: [] })) }
+  const database = { accounts: DEMO_ACCOUNTS.map((account) => ({ ...account, profile: { ...account.profile }, parts: [], cart: [] })) }
   try {
     const legacyParts = JSON.parse(localStorage.getItem(LEGACY_PARTS_KEY) || '[]')
     const legacyProfile = JSON.parse(localStorage.getItem(LEGACY_PROFILE_KEY) || 'null')
@@ -74,6 +75,18 @@ export function saveAccountParts(parts, accountId = sessionId) {
   const account = database.accounts.find((item) => item.id === accountId)
   if (!account) return
   account.parts = parts
+  writeDatabase()
+}
+
+export function loadAccountCart(accountId = sessionId) {
+  return database.accounts.find((account) => account.id === accountId)?.cart || []
+}
+
+export function saveAccountCart(cart, accountId = sessionId) {
+  if (!accountId) return
+  const account = database.accounts.find((item) => item.id === accountId)
+  if (!account) return
+  account.cart = cart
   writeDatabase()
 }
 

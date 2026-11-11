@@ -179,11 +179,16 @@ function render() {
     .map((p) => {
       const ownership = p.ownership === 'on-hold' ? 'on-hold' : 'owned'
       const stockStatus = tracksLowStock(p.category) ? getStockStatus(p.quantity, p.minStock) : ''
+      const purchaseDate = p.purchasedAt ? new Date(p.purchasedAt) : null
+      const purchaseLabel = purchaseDate && !Number.isNaN(purchaseDate.valueOf())
+        ? purchaseDate.toLocaleDateString('en-PH', { year: 'numeric', month: 'short', day: 'numeric' })
+        : ''
       return `
         <li class="card part-card">
           <div>
             <h3>${escapeHtml(p.name)}</h3>
             <p class="part-meta">${escapeHtml(p.category)} · Qty ${p.quantity}${p.location ? ' · ' + escapeHtml(p.location) : ''}</p>
+            ${purchaseLabel ? `<small class="part-purchase">Last purchased ${purchaseLabel}</small>` : ''}
             <span class="badge ${ownership === 'on-hold' ? 'badge-local' : 'badge-ok'}">${ownership === 'on-hold' ? 'On hold' : 'Owned'}</span>
             ${stockStatus ? `<span class="badge badge-${stockStatus}">${STATUS_LABELS[stockStatus]}</span>` : ''}
           </div>

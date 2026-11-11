@@ -7,12 +7,15 @@ import { motionEnabled } from './settings.js'
 import { initSettings } from './settings-page.js'
 import { initAccount } from './account.js'
 import { initContact } from './contact.js'
+import { initCartPage, getCartCount, subscribeCart } from './cart.js'
 
 const pages = document.querySelectorAll('.page')
 const navLinks = document.querySelectorAll('#nav-links a')
 const menuToggle = document.getElementById('menu-toggle')
 const navList = document.getElementById('nav-links')
 const invCount = document.getElementById('inv-count')
+const cartCount = document.getElementById('cart-count')
+const cartLink = document.getElementById('cart-link')
 
 // Simple navigation: show the page named in the URL hash (#home, #catalog, #inventory ...).
 let firstLoad = true
@@ -24,6 +27,8 @@ function showPage() {
   const swap = () => {
     pages.forEach((p) => (p.hidden = p.id !== `page-${target}`))
     navLinks.forEach((a) => a.classList.toggle('active', a.dataset.page === target))
+    cartLink.classList.toggle('active', target === 'cart')
+    cartLink.setAttribute('aria-current', target === 'cart' ? 'page' : 'false')
     navList.classList.remove('open')
     menuToggle.setAttribute('aria-expanded', 'false')
     window.scrollTo(0, 0)
@@ -48,6 +53,12 @@ function updateCount() {
   const total = getParts().reduce((sum, p) => sum + p.quantity, 0)
   invCount.textContent = total
   invCount.hidden = total === 0
+}
+
+function updateCartCount() {
+  const total = getCartCount()
+  cartCount.textContent = total
+  cartCount.hidden = total === 0
 }
 
 menuToggle.addEventListener('click', () => {
@@ -99,12 +110,15 @@ async function start() {
   }
   initInventory()
   initCatalog(catalog)
+  initCartPage(catalog)
   initHome(catalog)
   initSettings()
   initAccount(catalog)
   initContact()
   subscribe(updateCount)
+  subscribeCart(updateCartCount)
   updateCount()
+  updateCartCount()
   showPage()
 }
 

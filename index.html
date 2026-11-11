@@ -24,6 +24,7 @@
         <li><a href="#circuit-builder" data-page="circuit-builder">Circuit Builder</a></li>
       </ul>
       <div class="nav-actions">
+        <a id="cart-link" class="icon-link" href="#cart" aria-label="Shopping cart"><span data-icon="cart"></span><span id="cart-count" class="count" hidden>0</span></a>
         <a class="icon-link" href="#account" aria-label="Account" data-icon="user"></a>
         <a class="icon-link" href="#settings" aria-label="Settings" data-icon="settings"></a>
         <button id="menu-toggle" class="menu-toggle" aria-label="Toggle menu" aria-expanded="false">Menu</button>
@@ -67,7 +68,7 @@
         <div class="section-title wide reveal">
           <p class="eyebrow">Hand-picked components</p>
           <h2>Featured Parts</h2>
-          <p class="one-line">Popular picks for your next circuit or PC build. Add them straight to your inventory.</p>
+          <p class="one-line">Popular picks for your next circuit or PC build. Add them to your cart when you are ready to buy.</p>
         </div>
         <div id="top-picks" class="product-grid reveal"></div>
         <p class="picks-more"><a class="link" href="#catalog" data-category="">View all parts <span data-icon="arrow" data-size="14"></span></a></p>
@@ -99,7 +100,7 @@
           <div class="reveal">
             <p class="eyebrow">Build your own PC<span class="soon-tag">Coming soon</span></p>
             <h2>Build Your <strong>New PC</strong></h2>
-            <p class="lead">Pick compatible processors, boards, memory and graphics cards, then add everything to your inventory in one go.</p>
+            <p class="lead">Pick compatible processors, boards, memory and graphics cards, then add everything to your cart in one go.</p>
             <div class="spec-row">
               <div class="spec"><span data-icon="gpu" data-size="34"></span><div><strong>GPU ready</strong><small>Power and fit checks</small></div></div>
               <div class="spec"><span data-icon="ram" data-size="34"></span><div><strong>Socket + RAM match</strong><small>AM5 / DDR5 aware</small></div></div>
@@ -116,7 +117,7 @@
         <div class="section-title reveal">
           <p class="eyebrow">Play like the pros</p>
           <h2>Ready Builds</h2>
-          <p>Starter bundles priced from the live catalog. Add a whole bundle to your inventory with one click.</p>
+          <p>Starter bundles priced from the live catalog. Add a whole bundle to your cart with one click.</p>
         </div>
         <div id="presets" class="presets"></div>
       </div>
@@ -168,6 +169,29 @@
       <div id="catalog-grid" class="product-grid"></div>
       <p id="catalog-empty" class="empty" hidden>No parts match your search or filter.</p>
       <p class="picks-more"><button id="catalog-more" type="button" class="btn btn-secondary" hidden>Show more parts</button></p>
+    </section>
+
+    <!-- SHOPPING CART -->
+    <section id="page-cart" class="page container" hidden>
+      <h1>Shopping cart</h1>
+      <p class="summary">Review your items, choose what to check out, and pay with your account balance.</p>
+      <p id="cart-login-prompt" class="card cart-login-prompt" hidden>Sign in to view and use your personal cart. <a class="link" href="#account">Go to Account</a></p>
+      <div id="cart-content" hidden>
+        <div class="cart-layout">
+          <div>
+            <ul id="cart-items" class="cart-list" aria-label="Items in your cart"></ul>
+            <p id="cart-empty" class="card cart-empty" hidden>Your cart is empty. Browse the <a class="link" href="#catalog">Catalog</a> to add parts.</p>
+          </div>
+          <aside class="card cart-summary">
+            <h2>Checkout</h2>
+            <p id="cart-balance" class="cart-balance"></p>
+            <div class="cart-total"><span>Selected total</span><strong id="cart-total">₱0</strong></div>
+            <p id="cart-error" class="error cart-error" role="alert" hidden></p>
+            <button id="cart-checkout" type="button" class="btn btn-block" disabled>Check out selected items</button>
+            <small class="hint">Checkout deducts from your demo balance and moves the items into Inventory.</small>
+          </aside>
+        </div>
+      </div>
     </section>
 
     <!-- INVENTORY -->
