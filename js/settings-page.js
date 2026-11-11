@@ -1,5 +1,6 @@
 import { getParts, setParts, subscribe, makeId } from './store.js'
 import { ACCENTS, getSettings, updateSettings } from './settings.js'
+import { tracksLowStock } from './availability.js'
 import { showToast } from './ui.js'
 
 export function initSettings() {
@@ -107,7 +108,8 @@ export function initSettings() {
           name: p.name,
           category: p.category,
           quantity: p.quantity,
-          minStock: Number.isInteger(p.minStock) ? p.minStock : 0,
+          ownership: p.ownership === 'on-hold' ? 'on-hold' : 'owned',
+          minStock: tracksLowStock(p.category) && Number.isInteger(p.minStock) ? p.minStock : 0,
           location: typeof p.location === 'string' ? p.location : '',
           ...(p.catalogId ? { catalogId: p.catalogId } : {}),
         }))

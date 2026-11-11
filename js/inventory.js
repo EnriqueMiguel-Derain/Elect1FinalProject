@@ -1,11 +1,10 @@
 import { getParts, setParts, subscribe, makeId } from './store.js'
-import { getStockStatus } from './availability.js'
+import { getStockStatus, tracksLowStock } from './availability.js'
 import { showToast, escapeHtml } from './ui.js'
 
 const STATUS_LABELS = { ok: 'In stock', low: 'Low stock', out: 'Out of stock' }
 
 let parts = getParts()
-let catalog = []
 
 const form = document.getElementById('part-form')
 const list = document.getElementById('parts-list')
@@ -13,17 +12,15 @@ const emptyState = document.getElementById('empty-state')
 const searchInput = document.getElementById('search')
 const categoryFilter = document.getElementById('filter-category')
 const sortSelect = document.getElementById('sort')
-const catalogSelect = document.getElementById('catalog-select')
+const minStockField = document.getElementById('min-stock-field')
 const summary = document.getElementById('summary')
 const submitBtn = document.getElementById('submit-btn')
 const cancelBtn = document.getElementById('cancel-edit')
 
-export function initInventory(catalogData) {
-  catalog = catalogData
-  fillCatalogSelect()
+export function initInventory() {
   form.addEventListener('submit', handleSubmit)
   cancelBtn.addEventListener('click', resetForm)
-  catalogSelect.addEventListener('change', handleCatalogPick)
+  form.elements.category.addEventListener('input', updateLowStockField)
   searchInput.addEventListener('input', render)
   categoryFilter.addEventListener('change', render)
   sortSelect.addEventListener('change', render)
@@ -37,19 +34,8 @@ export function initInventory(catalogData) {
 
 /* ---------- Form ---------- */
 
-function fillCatalogSelect() {
-  const options = catalog
-    .map((item) => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.name)}</option>`)
-    .join('')
-  catalogSelect.innerHTML = `<option value="">Choose a catalog part...</option>${options}`
-}
-
-function handleCatalogPick() {
-  const item = catalog.find((c) => c.id === catalogSelect.value)
-  if (!item) return
-  form.elements.name.value = item.name
-  form.elements.category.value = item.category
-  form.elements.catalogId.value = item.id
+function updateLowStockField() {
+  minStockField.hidden = !tracksLowStock(form.elements.category.value)
 }
 
 function getFormData() {
@@ -61,6 +47,7 @@ function getFormData() {
     category: f.category.value.trim(),
     quantity: f.quantity.value,
     minStock: f.minStock.value,
+    ownership: f.ownership.value,
     location: f.location.value.trim(),
   }
 }
@@ -74,7 +61,7 @@ function validate(data) {
     errors.quantity = 'Quantity must be a whole number, 0 or more.'
   }
   const min = Number(data.minStock || 0)
-  if (!Number.isInteger(min) || min < 0) {
+  if (tracksLowStock(data.category) && (!Number.isInteger(min) || min < 0)) {
     errors.minStock = 'Low-stock level must be a whole number, 0 or more.'
   }
   return errors
@@ -100,7 +87,8 @@ function handleSubmit(event) {
     name: data.name,
     category: data.category,
     quantity: Number(data.quantity),
-    minStock: Number(data.minStock || 0),
+    ownership: data.ownership === 'on-hold' ? 'on-hold' : 'owned',
+    minStock: tracksLowStock(data.category) ? Number(data.minStock || 0) : 0,
     location: data.location,
     ...(data.catalogId ? { catalogId: data.catalogId } : {}),
   }
@@ -122,6 +110,7 @@ function resetForm() {
   form.reset()
   form.elements.id.value = ''
   form.elements.catalogId.value = ''
+  updateLowStockField()
   showErrors({})
   submitBtn.textContent = 'Add part'
   cancelBtn.hidden = true
@@ -137,7 +126,9 @@ function startEdit(id) {
   f.category.value = part.category
   f.quantity.value = part.quantity
   f.minStock.value = part.minStock
+  f.ownership.value = part.ownership === 'on-hold' ? 'on-hold' : 'owned'
   f.location.value = part.location
+  updateLowStockField()
   submitBtn.textContent = 'Save changes'
   cancelBtn.hidden = false
   form.scrollIntoView({ behavior: 'smooth' })
@@ -187,13 +178,15 @@ function render() {
 
   list.innerHTML = visible
     .map((p) => {
-      const status = getStockStatus(p.quantity, p.minStock)
+      const ownership = p.ownership === 'on-hold' ? 'on-hold' : 'owned'
+      const stockStatus = tracksLowStock(p.category) ? getStockStatus(p.quantity, p.minStock) : ''
       return `
         <li class="card part-card">
           <div>
             <h3>${escapeHtml(p.name)}</h3>
             <p class="part-meta">${escapeHtml(p.category)} · Qty ${p.quantity}${p.location ? ' · ' + escapeHtml(p.location) : ''}</p>
-            <span class="badge badge-${status}">${STATUS_LABELS[status]}</span>
+            <span class="badge ${ownership === 'on-hold' ? 'badge-local' : 'badge-ok'}">${ownership === 'on-hold' ? 'On hold' : 'Owned'}</span>
+            ${stockStatus ? `<span class="badge badge-${stockStatus}">${STATUS_LABELS[stockStatus]}</span>` : ''}
           </div>
           <div class="part-actions">
             <button class="btn btn-small" data-action="edit" data-id="${p.id}">Edit</button>
@@ -203,10 +196,12 @@ function render() {
     })
     .join('')
 
-  const lowCount = parts.filter((p) => getStockStatus(p.quantity, p.minStock) !== 'ok').length
-  summary.textContent = `${parts.length} part(s) total · ${lowCount} low or out of stock`
+  const ownedCount = parts.filter((p) => p.ownership !== 'on-hold').length
+  const onHoldCount = parts.length - ownedCount
+  const lowCount = parts.filter((p) => tracksLowStock(p.category) && getStockStatus(p.quantity, p.minStock) !== 'ok').length
+  summary.textContent = `${parts.length} part type(s) · ${ownedCount} owned · ${onHoldCount} on hold · ${lowCount} electronic part(s) low or out of stock`
 
   emptyState.hidden = visible.length > 0
   emptyState.textContent =
-    parts.length === 0 ? 'No parts yet. Add your first part above.' : 'No parts match your search or filter.'
+    parts.length === 0 ? 'No parts recorded yet. Add a catalog part from the Catalog page, or enter a custom part above.' : 'No parts match your search or filter.'
 }

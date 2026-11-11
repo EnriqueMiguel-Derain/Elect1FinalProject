@@ -1,6 +1,6 @@
 import { icon } from './icons.js'
 import { escapeHtml, formatPrice } from './ui.js'
-import { getStockStatus } from './availability.js'
+import { getStockStatus, tracksLowStock } from './availability.js'
 
 const tone = (category) => 'tone-' + 'abcd'[[...category].reduce((sum, ch) => sum + ch.charCodeAt(0), 0) % 4]
 
@@ -9,8 +9,13 @@ export function productCard(item, parts) {
   const owned = parts.find((p) => p.catalogId === item.id)
   let tag = ''
   if (owned) {
-    const status = getStockStatus(owned.quantity, owned.minStock)
-    tag = `<span class="tag tag-${status}">Owned: ${owned.quantity}</span>`
+    const onHold = owned.ownership === 'on-hold'
+    const ownership = `${onHold ? 'On hold' : 'Owned'}: ${owned.quantity}`
+    if (tracksLowStock(item.category)) {
+      const status = getStockStatus(owned.quantity, owned.minStock)
+      const stockLabel = status === 'out' ? 'Out of stock' : status === 'low' ? 'Low stock' : 'In stock'
+      tag = `<span class="tag tag-${onHold ? 'hold' : status}">${ownership} · ${stockLabel}</span>`
+    } else tag = `<span class="tag tag-${onHold ? 'hold' : 'ok'}">${ownership}</span>`
   } else if (item.badge) {
     tag = `<span class="tag tag-${item.badge.toLowerCase()}">${escapeHtml(item.badge)}</span>`
   }

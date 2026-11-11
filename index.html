@@ -39,7 +39,7 @@
           <div>
             <p class="eyebrow">Organize your workbench</p>
             <h1>Smart Parts.<strong>Better Builds.</strong></h1>
-            <p class="hero-text">Track your electronics and PC parts, see what is running low, and browse a catalog of components for your next project.</p>
+            <p class="hero-text">Track the PC parts you own and see when electronic components for your circuits are running low.</p>
             <div class="hero-cta">
               <a class="btn btn-lg" href="#catalog" data-category="">Explore Catalog <span data-icon="arrow" data-size="18"></span></a>
               <div class="hero-stat"><span id="hero-count">14</span> parts<small>ready to add to your bench</small></div>
@@ -80,7 +80,7 @@
           <p class="lead">Log every part you own with its quantity and location, and get a heads-up before you run out.</p>
           <ul class="ticks">
             <li>Quantities and storage locations</li>
-            <li>Low-stock flags on every part</li>
+            <li>Low-stock alerts for electronic components</li>
             <li>Export and import your list</li>
           </ul>
           <a class="btn btn-lg" href="#inventory">Open Inventory <span data-icon="arrow" data-size="18"></span></a>
@@ -173,14 +173,11 @@
     <!-- INVENTORY -->
     <section id="page-inventory" class="page container" hidden>
       <h1>Inventory</h1>
+      <p class="summary">Your inventory is the list of parts you own or have on hold in this account. Browse the Catalog to add catalog parts, then track their quantity and location here.</p>
 
       <form id="part-form" class="card form-grid" novalidate>
         <input type="hidden" name="id">
         <input type="hidden" name="catalogId">
-
-        <label class="full">Add from catalog (optional)
-          <select id="catalog-select"></select>
-        </label>
 
         <label>Part name
           <input type="text" name="name">
@@ -194,7 +191,13 @@
           <input type="number" name="quantity" min="0">
           <small class="error" data-error="quantity"></small>
         </label>
-        <label>Low-stock at
+        <label>Inventory status
+          <select name="ownership">
+            <option value="owned">Owned</option>
+            <option value="on-hold">On hold</option>
+          </select>
+        </label>
+        <label id="min-stock-field">Electronic low-stock at
           <input type="number" name="minStock" min="0">
           <small class="error" data-error="minStock"></small>
         </label>
@@ -299,7 +302,7 @@
 
         <div class="account-side">
           <div class="card setting">
-            <h2>Needs restocking</h2>
+            <h2>Electronic parts to restock</h2>
             <ul id="account-restock" class="restock-list"></ul>
             <p id="account-restock-empty" class="restock-empty" hidden></p>
             <a class="link" href="#inventory">Open inventory <span data-icon="arrow" data-size="14"></span></a>
@@ -336,8 +339,8 @@
           <label class="switch"><input type="checkbox" id="set-motion"><span class="track" aria-hidden="true"></span>Enable animations</label>
         </div>
         <div class="card setting">
-          <h2>Default low-stock level</h2>
-          <p>Used when you add a part from the catalog.</p>
+          <h2>Default electronic low-stock level</h2>
+          <p>Used for electronic parts such as resistors, capacitors and sensors. PC parts do not use low-stock alerts.</p>
           <label class="field">Low-stock at<input type="number" id="set-minstock" min="0"></label>
         </div>
         <div class="card setting">

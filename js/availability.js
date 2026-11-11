@@ -1,4 +1,14 @@
 // Stock status for one inventory item (Inventory page).
+const PC_PART_CATEGORIES = new Set([
+  'motherboard', 'ram', 'gpu', 'storage', 'psu', 'case', 'cpu', 'keyboard', 'mouse', 'monitor',
+])
+
+// Low-stock alerts apply to circuit/electronic components, not PC parts or peripherals.
+export function tracksLowStock(category = '') {
+  const normalized = category.trim().toLowerCase()
+  return !PC_PART_CATEGORIES.has(normalized) && !normalized.includes('peripheral')
+}
+
 export function getStockStatus(quantity, minStock) {
   if (quantity <= 0) return 'out'
   if (quantity <= minStock) return 'low'

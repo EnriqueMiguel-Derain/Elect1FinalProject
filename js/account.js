@@ -1,6 +1,6 @@
 import { getParts, subscribe, reloadAccountParts } from './store.js'
 import { getCurrentAccount, signIn, signOut, clearAccountInventory } from './accounts.js'
-import { getStockStatus } from './availability.js'
+import { getStockStatus, tracksLowStock } from './availability.js'
 import { loadProfile, saveProfile } from './profile.js'
 import { showToast, escapeHtml, formatPrice } from './ui.js'
 
@@ -155,7 +155,7 @@ function bindEvents() {
 function renderStats() {
   const parts = getParts()
   const units = parts.reduce((sum, part) => sum + part.quantity, 0)
-  const attention = parts.filter((part) => getStockStatus(part.quantity, part.minStock) !== 'ok')
+  const attention = parts.filter((part) => tracksLowStock(part.category) && getStockStatus(part.quantity, part.minStock) !== 'ok')
   const priceOf = (part) => catalog.find((item) => item.id === part.catalogId)?.price
   const priced = parts.filter((part) => priceOf(part) != null)
   const value = priced.reduce((sum, part) => sum + priceOf(part) * part.quantity, 0)
@@ -163,7 +163,7 @@ function renderStats() {
   const stats = [
     ['Part types', parts.length, 'in your inventory', ''],
     ['Total units', units, 'across all parts', ''],
-    ['Needs attention', attention.length, 'low or out of stock', attention.length ? 'warn' : ''],
+    ['Electronic parts to restock', attention.length, 'low or out of stock', attention.length ? 'warn' : ''],
     ['Estimated value', formatPrice(value), unpriced ? `${unpriced} part(s) without a price` : 'from catalog prices', ''],
   ]
   $('account-stats').innerHTML = stats
@@ -178,7 +178,7 @@ function renderStats() {
   }).join('')
   list.hidden = worst.length === 0
   empty.hidden = worst.length > 0
-  empty.textContent = parts.length === 0 ? 'No parts yet. Add some from the catalog to start tracking stock.' : 'Everything is stocked. Nothing needs restocking.'
+  empty.textContent = parts.length === 0 ? 'No parts yet. Add some from the catalog to start tracking stock.' : 'All electronic parts are stocked. No restocking needed.'
 }
 
 export function initAccount(catalogData) {
