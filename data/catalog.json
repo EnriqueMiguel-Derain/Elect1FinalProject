@@ -1,0 +1,16 @@
+[
+  { "id": "mcu-uno", "name": "Arduino Uno R3", "category": "Microcontroller", "price": 650, "featured": true, "badge": "POPULAR", "specs": {} },
+  { "id": "mcu-esp32", "name": "ESP32 DevKit V1", "category": "Microcontroller", "price": 420, "badge": "NEW", "specs": {} },
+  { "id": "sen-dht22", "name": "DHT22 Temperature Sensor", "category": "Sensor", "price": 180, "specs": {} },
+  { "id": "res-10k", "name": "10k Ohm Resistor (pack of 100)", "category": "Resistor", "price": 60, "specs": {} },
+  { "id": "cpu-r5-7600", "name": "AMD Ryzen 5 7600", "category": "CPU", "price": 12500, "featured": true, "badge": "POPULAR", "specs": { "socket": "AM5", "tdp": 65 } },
+  { "id": "mb-b650m", "name": "B650M Micro-ATX Motherboard", "category": "Motherboard", "price": 8500, "specs": { "socket": "AM5", "ramType": "DDR5", "formFactor": "mATX" } },
+  { "id": "ram-ddr5-16", "name": "16GB DDR5-5600 Kit", "category": "RAM", "price": 3200, "featured": true, "specs": { "ramType": "DDR5" } },
+  { "id": "gpu-rtx4060", "name": "RTX 4060 8GB", "category": "GPU", "price": 18500, "featured": true, "badge": "NEW", "specs": { "tdp": 115 } },
+  { "id": "ssd-1tb", "name": "1TB NVMe SSD", "category": "Storage", "price": 3800, "specs": {} },
+  { "id": "psu-550", "name": "550W 80+ Bronze PSU", "category": "PSU", "price": 2800, "specs": { "wattage": 550 } },
+  { "id": "case-matx", "name": "Micro-ATX Mid Tower Case", "category": "Case", "price": 2500, "specs": { "formFactor": "mATX" } },
+  { "id": "kb-mech", "name": "Mechanical Keyboard (Tenkeyless)", "category": "Keyboard", "price": 2200, "specs": {} },
+  { "id": "ms-gaming", "name": "Gaming Mouse 12000 DPI", "category": "Mouse", "price": 1100, "specs": {} },
+  { "id": "mon-24", "name": "24-inch 144Hz Monitor", "category": "Monitor", "price": 7500, "specs": {} }
+]
