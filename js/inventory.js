@@ -1,12 +1,13 @@
-import { getParts, setParts, subscribe, makeId } from './store.js'
+import { getParts, setParts, subscribe } from './store.js'
 import { getStockStatus, tracksLowStock } from './availability.js'
-import { showToast, escapeHtml } from './ui.js'
+import { showToast, escapeHtml, confirmInApp } from './ui.js'
 
 const STATUS_LABELS = { ok: 'In stock', low: 'Low stock', out: 'Out of stock' }
 
 let parts = getParts()
 
 const form = document.getElementById('part-form')
+const editDialog = document.getElementById('part-edit-dialog')
 const list = document.getElementById('parts-list')
 const emptyState = document.getElementById('empty-state')
 const searchInput = document.getElementById('search')
@@ -14,12 +15,14 @@ const categoryFilter = document.getElementById('filter-category')
 const sortSelect = document.getElementById('sort')
 const minStockField = document.getElementById('min-stock-field')
 const summary = document.getElementById('summary')
-const submitBtn = document.getElementById('submit-btn')
 const cancelBtn = document.getElementById('cancel-edit')
 
 export function initInventory() {
   form.addEventListener('submit', handleSubmit)
   cancelBtn.addEventListener('click', resetForm)
+  editDialog.addEventListener('click', (event) => {
+    if (event.target === editDialog) editDialog.close()
+  })
   form.elements.category.addEventListener('input', updateLowStockField)
   searchInput.addEventListener('input', render)
   categoryFilter.addEventListener('change', render)
@@ -93,17 +96,11 @@ function handleSubmit(event) {
     ...(data.catalogId ? { catalogId: data.catalogId } : {}),
   }
 
-  if (data.id) {
-    parts = parts.map((p) => (p.id === data.id ? { ...p, ...part } : p))
-    showToast('Part updated.')
-  } else {
-    parts = [...parts, { id: makeId(), ...part }]
-    showToast('Part added.')
-  }
-
+  if (!data.id || !parts.some((p) => p.id === data.id)) return showToast('Choose an inventory item to edit.', true)
+  parts = parts.map((p) => (p.id === data.id ? { ...p, ...part } : p))
   setParts(parts)
   resetForm()
-  render()
+  showToast('Inventory item updated.')
 }
 
 function resetForm() {
@@ -112,8 +109,7 @@ function resetForm() {
   form.elements.catalogId.value = ''
   updateLowStockField()
   showErrors({})
-  submitBtn.textContent = 'Add part'
-  cancelBtn.hidden = true
+  if (editDialog.open) editDialog.close()
 }
 
 function startEdit(id) {
@@ -129,19 +125,22 @@ function startEdit(id) {
   f.ownership.value = part.ownership === 'on-hold' ? 'on-hold' : 'owned'
   f.location.value = part.location
   updateLowStockField()
-  submitBtn.textContent = 'Save changes'
-  cancelBtn.hidden = false
-  form.scrollIntoView({ behavior: 'smooth' })
+  editDialog.showModal()
 }
 
 /* ---------- List ---------- */
 
-function handleListClick(event) {
+async function handleListClick(event) {
   const btn = event.target.closest('button[data-action]')
   if (!btn) return
   const { action, id } = btn.dataset
   if (action === 'edit') startEdit(id)
-  if (action === 'delete' && confirm('Delete this part?')) {
+  if (action === 'delete' && await confirmInApp({
+    title: 'Remove inventory item?',
+    message: 'This removes the part from your inventory.',
+    confirmLabel: 'Remove item',
+    danger: true,
+  })) {
     parts = parts.filter((p) => p.id !== id)
     setParts(parts)
     render()
@@ -203,5 +202,5 @@ function render() {
 
   emptyState.hidden = visible.length > 0
   emptyState.textContent =
-    parts.length === 0 ? 'No parts recorded yet. Add a catalog part from the Catalog page, or enter a custom part above.' : 'No parts match your search or filter.'
+    parts.length === 0 ? 'Your inventory is empty. Visit the Catalog to add parts to this account.' : 'No parts match your search or filter.'
 }

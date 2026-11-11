@@ -1,8 +1,8 @@
 import { getParts, subscribe, reloadAccountParts } from './store.js'
-import { getCurrentAccount, signIn, signOut, clearAccountInventory } from './accounts.js'
+import { getCurrentAccount, signIn, signOut, clearAccountInventory, adjustCurrentBalance } from './accounts.js'
 import { getStockStatus, tracksLowStock } from './availability.js'
 import { loadProfile, saveProfile } from './profile.js'
-import { showToast, escapeHtml, formatPrice } from './ui.js'
+import { showToast, escapeHtml, formatPrice, confirmInApp } from './ui.js'
 
 const $ = (id) => document.getElementById(id)
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
@@ -11,6 +11,8 @@ const PHOTO_LIMIT = 2 * 1024 * 1024
 let catalog = []
 let profile = loadProfile()
 let form, summaryBox, fields
+let balanceDirection = 'in'
+const balanceFormat = new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' })
 
 const initials = (name) =>
   name.trim().split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0].toUpperCase()).join('') || '?'
@@ -66,9 +68,25 @@ function renderSession() {
   if (!account) return
   profile = loadProfile()
   $('account-role').textContent = account.role === 'admin' ? 'Administrator account' : 'Student account'
+  renderBalance()
   fillForm()
   renderProfile()
   renderStats()
+}
+
+function renderBalance() {
+  const account = getCurrentAccount()
+  $('account-balance').textContent = balanceFormat.format(account?.balance ?? 0)
+}
+
+function openBalanceDialog(direction) {
+  balanceDirection = direction
+  $('balance-dialog-title').textContent = direction === 'in' ? 'Cash in' : 'Cash out'
+  $('balance-submit').textContent = direction === 'in' ? 'Cash in' : 'Cash out'
+  $('balance-amount').value = ''
+  $('balance-error').hidden = true
+  $('balance-dialog').showModal()
+  $('balance-amount').focus()
 }
 
 function bindEvents() {
@@ -93,6 +111,27 @@ function bindEvents() {
     reloadAccountParts()
     renderSession()
     showToast('Signed out.')
+  })
+
+  $('cash-in').addEventListener('click', () => openBalanceDialog('in'))
+  $('cash-out').addEventListener('click', () => openBalanceDialog('out'))
+  $('balance-cancel').addEventListener('click', () => $('balance-dialog').close())
+  $('balance-dialog').addEventListener('click', (event) => {
+    if (event.target === $('balance-dialog')) $('balance-dialog').close()
+  })
+  $('balance-form').addEventListener('submit', (event) => {
+    event.preventDefault()
+    const amount = Number($('balance-amount').value)
+    if (!$('balance-form').reportValidity()) return
+    const next = adjustCurrentBalance(balanceDirection === 'in' ? amount : -amount)
+    if (next === null) {
+      $('balance-error').textContent = 'Cash out cannot be greater than your current balance.'
+      $('balance-error').hidden = false
+      return
+    }
+    $('balance-dialog').close()
+    renderBalance()
+    showToast(balanceDirection === 'in' ? 'Balance updated.' : 'Cash out recorded.')
   })
 
   ;['name', 'email'].forEach((key) => fields[key].addEventListener('blur', () => setFieldError(key, validate(read())[key])))
@@ -142,8 +181,13 @@ function bindEvents() {
     })
     reader.readAsDataURL(file)
   })
-  $('profile-clear').addEventListener('click', () => {
-    if (!confirm('Clear all parts from this account’s inventory?')) return
+  $('profile-clear').addEventListener('click', async () => {
+    if (!await confirmInApp({
+      title: 'Clear inventory?',
+      message: 'This clears every part from this account’s inventory.',
+      confirmLabel: 'Clear inventory',
+      danger: true,
+    })) return
     clearAccountInventory()
     reloadAccountParts()
     showToast('Inventory cleared.')

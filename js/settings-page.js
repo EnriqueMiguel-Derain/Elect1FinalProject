@@ -1,7 +1,7 @@
 import { getParts, setParts, subscribe, makeId } from './store.js'
 import { ACCENTS, getSettings, updateSettings } from './settings.js'
 import { tracksLowStock } from './availability.js'
-import { showToast } from './ui.js'
+import { showToast, confirmInApp } from './ui.js'
 
 export function initSettings() {
   const swatches = document.getElementById('swatches')
@@ -101,7 +101,12 @@ export function initSettings() {
         Array.isArray(data) &&
         data.every((p) => p && typeof p.name === 'string' && typeof p.category === 'string' && Number.isInteger(p.quantity) && p.quantity >= 0)
       if (!valid) throw new Error('bad format')
-      if (!confirm(`Replace your current inventory with ${data.length} imported part(s)?`)) return
+      if (!await confirmInApp({
+        title: 'Replace inventory?',
+        message: `Replace your current inventory with ${data.length} imported part(s)?`,
+        confirmLabel: 'Replace inventory',
+        danger: true,
+      })) return
       setParts(
         data.map((p) => ({
           id: p.id || makeId(),
@@ -120,9 +125,14 @@ export function initSettings() {
     }
   })
 
-  document.getElementById('clear-btn').addEventListener('click', () => {
+  document.getElementById('clear-btn').addEventListener('click', async () => {
     if (getParts().length === 0) return showToast('Inventory is already empty.')
-    if (confirm('Delete every part from your inventory? This cannot be undone.')) {
+    if (await confirmInApp({
+      title: 'Clear inventory?',
+      message: 'Delete every part from your inventory? This cannot be undone.',
+      confirmLabel: 'Clear inventory',
+      danger: true,
+    })) {
       setParts([])
       showToast('Inventory cleared.')
     }

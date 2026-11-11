@@ -3,16 +3,27 @@ const DATABASE_KEY = 'pyesa-accounts'
 const SESSION_KEY = 'pyesa-session'
 const LEGACY_PARTS_KEY = 'pyesa-inventory'
 const LEGACY_PROFILE_KEY = 'pyesa-profile'
+const STARTING_BALANCE = 5000
 
 const DEMO_ACCOUNTS = [
-  { id: 'student-enrique', username: 'enrique', password: 'pyesa123', role: 'student', profile: { name: 'Enrique Miguel N. Derain', bench: '', email: '', photo: '' }, parts: [] },
-  { id: 'admin', username: 'admin', password: 'admin123', role: 'admin', profile: { name: 'Pyesa Admin', bench: '', email: '', photo: '' }, parts: [] },
+  { id: 'student-enrique', username: 'enrique', password: 'pyesa123', role: 'student', balance: STARTING_BALANCE, profile: { name: 'Enrique Miguel N. Derain', bench: '', email: '', photo: '' }, parts: [] },
+  { id: 'admin', username: 'admin', password: 'admin123', role: 'admin', balance: STARTING_BALANCE, profile: { name: 'Pyesa Admin', bench: '', email: '', photo: '' }, parts: [] },
 ]
 
 function readDatabase() {
   try {
     const saved = JSON.parse(localStorage.getItem(DATABASE_KEY))
-    if (saved?.accounts?.length) return saved
+    if (saved?.accounts?.length) {
+      const normalized = {
+        ...saved,
+        accounts: saved.accounts.map((account) => ({
+          ...account,
+          balance: Number.isFinite(account.balance) ? Math.max(0, account.balance) : STARTING_BALANCE,
+        })),
+      }
+      try { localStorage.setItem(DATABASE_KEY, JSON.stringify(normalized)) } catch { /* normalized data remains available for this visit */ }
+      return normalized
+    }
   } catch { /* start with demo accounts if storage is unavailable or invalid */ }
   const database = { accounts: DEMO_ACCOUNTS.map((account) => ({ ...account, profile: { ...account.profile }, parts: [] })) }
   try {
@@ -80,4 +91,14 @@ export function saveAccountProfile(profile, accountId = sessionId) {
 
 export function clearAccountInventory(accountId = sessionId) {
   saveAccountParts([], accountId)
+}
+
+export function adjustCurrentBalance(amount) {
+  const account = getCurrentAccount()
+  if (!account || !Number.isFinite(amount) || amount === 0) return null
+  const nextBalance = Math.round((account.balance + amount) * 100) / 100
+  if (nextBalance < 0) return null
+  account.balance = nextBalance
+  writeDatabase()
+  return nextBalance
 }

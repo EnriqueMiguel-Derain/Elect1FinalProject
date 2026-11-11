@@ -175,42 +175,6 @@
       <h1>Inventory</h1>
       <p class="summary">Your inventory is the list of parts you own or have on hold in this account. Browse the Catalog to add catalog parts, then track their quantity and location here.</p>
 
-      <form id="part-form" class="card form-grid" novalidate>
-        <input type="hidden" name="id">
-        <input type="hidden" name="catalogId">
-
-        <label>Part name
-          <input type="text" name="name">
-          <small class="error" data-error="name"></small>
-        </label>
-        <label>Category
-          <input type="text" name="category">
-          <small class="error" data-error="category"></small>
-        </label>
-        <label>Quantity
-          <input type="number" name="quantity" min="0">
-          <small class="error" data-error="quantity"></small>
-        </label>
-        <label>Inventory status
-          <select name="ownership">
-            <option value="owned">Owned</option>
-            <option value="on-hold">On hold</option>
-          </select>
-        </label>
-        <label id="min-stock-field">Electronic low-stock at
-          <input type="number" name="minStock" min="0">
-          <small class="error" data-error="minStock"></small>
-        </label>
-        <label>Location
-          <input type="text" name="location">
-        </label>
-
-        <div class="full actions">
-          <button type="submit" id="submit-btn" class="btn">Add part</button>
-          <button type="button" id="cancel-edit" class="btn btn-secondary" hidden>Cancel edit</button>
-        </div>
-      </form>
-
       <div class="toolbar">
         <input type="search" id="search" placeholder="Search parts...">
         <select id="filter-category"></select>
@@ -267,6 +231,11 @@
           <p id="account-email" class="profile-sub"></p>
         </div>
         <span class="badge badge-local">Saved in this browser</span>
+      </div>
+
+      <div class="card balance-card">
+        <div><p class="eyebrow">Demo balance</p><h2 id="account-balance">₱5,000.00</h2><p>Cash in or cash out only changes this on-site balance. No real money moves.</p></div>
+        <div class="actions balance-actions"><button type="button" id="cash-in" class="btn">Cash in</button><button type="button" id="cash-out" class="btn btn-secondary">Cash out</button></div>
       </div>
 
       <ul id="account-stats" class="stat-grid" aria-label="Inventory at a glance"></ul>
@@ -356,6 +325,40 @@
       </div>
     </section>
   </main>
+
+  <dialog id="part-edit-dialog" class="site-dialog" aria-labelledby="part-dialog-title">
+    <form id="part-form" class="form-grid edit-part-form" novalidate>
+      <input type="hidden" name="id">
+      <input type="hidden" name="catalogId">
+      <h2 id="part-dialog-title">Edit inventory item</h2>
+      <label>Part name<input type="text" name="name"><small class="error" data-error="name"></small></label>
+      <label>Category<input type="text" name="category"><small class="error" data-error="category"></small></label>
+      <label>Quantity<input type="number" name="quantity" min="0"><small class="error" data-error="quantity"></small></label>
+      <label>Inventory status<select name="ownership"><option value="owned">Owned</option><option value="on-hold">On hold</option></select></label>
+      <label id="min-stock-field">Electronic low-stock at<input type="number" name="minStock" min="0"><small class="error" data-error="minStock"></small></label>
+      <label>Location<input type="text" name="location"></label>
+      <p id="part-edit-error" class="error" role="alert" hidden></p>
+      <div class="actions"><button type="submit" id="submit-btn" class="btn">Save changes</button><button type="button" id="cancel-edit" class="btn btn-secondary">Cancel</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="confirm-dialog" class="site-dialog confirm-dialog" aria-labelledby="confirm-title" aria-describedby="confirm-message">
+    <form method="dialog" class="form-grid">
+      <h2 id="confirm-title">Confirm action</h2>
+      <p id="confirm-message"></p>
+      <div class="actions"><button type="submit" value="cancel" class="btn btn-secondary">Cancel</button><button type="submit" id="confirm-action" value="confirm" class="btn btn-danger">Confirm</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="balance-dialog" class="site-dialog" aria-labelledby="balance-dialog-title" aria-describedby="balance-dialog-help">
+    <form id="balance-form" class="form-grid" novalidate>
+      <div class="dialog-heading"><div><p class="eyebrow">Demo balance</p><h2 id="balance-dialog-title">Cash in</h2></div><button type="button" id="balance-cancel" class="btn btn-secondary btn-small">Close</button></div>
+      <p id="balance-dialog-help" class="hint">This only updates your Pyesa balance. No real money moves.</p>
+      <label for="balance-amount">Amount (PHP)<input id="balance-amount" type="number" name="amount" min="0.01" step="0.01" required></label>
+      <p id="balance-error" class="error" role="alert" hidden></p>
+      <div class="actions"><button type="submit" id="balance-submit" class="btn">Cash in</button></div>
+    </form>
+  </dialog>
 
   <footer class="site-footer">
     <div class="container footer-grid">
