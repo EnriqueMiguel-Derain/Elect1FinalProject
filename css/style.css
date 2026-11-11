@@ -154,7 +154,7 @@ svg { display: block; }
 .product-visual { display: grid; place-items: center; height: 130px; border-radius: 8px; margin-bottom: 12px; color: var(--accent-soft); background: radial-gradient(circle at 50% 60%, rgba(var(--accent-rgb), 0.28), var(--surface-2) 70%); }
 .product h3 { font-size: 0.92rem; font-weight: 500; margin-bottom: 2px; }
 .product-cat { color: var(--muted); font-size: 0.78rem; margin-bottom: 6px; }
-.product h3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.product h3 { display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 .product-spec { color: var(--text-soft); font-size: 0.78rem; margin-bottom: 8px; }
 .price-none { font-weight: 400; font-size: 0.85rem; color: var(--muted); }
 .credit { font-size: 0.78rem !important; }
