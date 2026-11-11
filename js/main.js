@@ -6,6 +6,7 @@ import { icon } from './icons.js'
 import { motionEnabled } from './settings.js'
 import { initSettings } from './settings-page.js'
 import { initAccount } from './account.js'
+import { initContact } from './contact.js'
 
 const pages = document.querySelectorAll('.page')
 const navLinks = document.querySelectorAll('#nav-links a')
@@ -105,6 +106,7 @@ async function start() {
   initHome(catalog)
   initSettings()
   initAccount(catalog)
+  initContact()
   subscribe(updateCount)
   updateCount()
   showPage()

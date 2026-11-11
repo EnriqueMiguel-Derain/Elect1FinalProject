@@ -1,8 +1,8 @@
 // One shared copy of the inventory. Pages subscribe so they update when it changes.
-import { loadParts, saveParts } from './storage.js'
+import { getCurrentAccount, loadAccountParts, saveAccountParts } from './accounts.js'
 import { getSettings } from './settings.js'
 
-let parts = loadParts()
+let parts = loadAccountParts()
 const listeners = []
 
 export const getParts = () => parts
@@ -10,8 +10,14 @@ export const subscribe = (fn) => listeners.push(fn)
 export const makeId = () => Date.now().toString(36) + Math.random().toString(36).slice(2)
 
 export function setParts(next) {
+  if (!getCurrentAccount()) return
   parts = next
-  saveParts(parts)
+  saveAccountParts(parts)
+  listeners.forEach((fn) => fn(parts))
+}
+
+export function reloadAccountParts() {
+  parts = loadAccountParts()
   listeners.forEach((fn) => fn(parts))
 }
 

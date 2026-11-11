@@ -240,7 +240,25 @@
     <!-- ACCOUNT -->
     <section id="page-account" class="page container" hidden>
       <h1>Account</h1>
-      <p class="summary">Your bench profile. Saved in this browser, no password needed.</p>
+      <p class="summary">Sign in to view your profile and personal inventory.</p>
+
+      <form id="login-form" class="card form-grid login-card" novalidate>
+        <h2>Sign in to Pyesa</h2>
+        <p>Use one of the demo accounts to get started.</p>
+        <label for="login-username">Username
+          <input id="login-username" name="username" autocomplete="username" required>
+        </label>
+        <label for="login-password">Password
+          <input id="login-password" name="password" type="password" autocomplete="current-password" required>
+        </label>
+        <p id="login-error" class="error" role="alert" hidden></p>
+        <button type="submit" class="btn">Sign in</button>
+        <small class="hint">Student: enrique / pyesa123 · Admin: admin / admin123</small>
+        <small class="hint">Demo only: accounts and passwords are stored in this browser.</small>
+      </form>
+
+      <div id="account-content" hidden>
+      <div class="account-session"><span id="account-role" class="badge badge-local"></span><button id="account-logout" type="button" class="btn btn-secondary btn-small">Log out</button></div>
 
       <div class="card profile-card">
         <div id="account-avatar" class="avatar" aria-hidden="true">?</div>
@@ -249,7 +267,7 @@
           <p id="account-bench" class="profile-sub"></p>
           <p id="account-email" class="profile-sub"></p>
         </div>
-        <span class="badge badge-local">Local profile</span>
+        <span class="badge badge-local">Saved in this browser</span>
       </div>
 
       <ul id="account-stats" class="stat-grid" aria-label="Inventory at a glance"></ul>
@@ -273,6 +291,10 @@
             <input type="email" id="pf-email" name="email" maxlength="80" autocomplete="email" inputmode="email" aria-describedby="pf-email-error">
             <small class="error" id="pf-email-error"></small>
           </label>
+          <label for="pf-photo">Profile picture (optional)
+            <input type="file" id="pf-photo" name="photo" accept="image/*">
+            <small class="hint">Choose an image up to 2 MB.</small>
+          </label>
           <div class="actions">
             <button type="submit" class="btn">Save profile</button>
             <button type="button" id="profile-reset" class="btn btn-secondary">Discard changes</button>
@@ -287,18 +309,13 @@
             <a class="link" href="#inventory">Open inventory <span data-icon="arrow" data-size="14"></span></a>
           </div>
 
-          <div class="card setting sync-card">
-            <h2>Sync across devices<span class="soon-tag">Coming soon</span></h2>
-            <p>Sign in to keep your inventory, builds and projects on every device. For now your data stays in this browser. Use Export in Settings to back it up.</p>
-            <a class="link" href="#settings">Go to Settings <span data-icon="arrow" data-size="14"></span></a>
-          </div>
-
           <div class="card setting">
-            <h2>Remove profile</h2>
-            <p>Clears your name, bench and email from this browser. Your inventory is not touched.</p>
-            <button type="button" id="profile-clear" class="btn btn-danger btn-small">Remove profile</button>
+            <h2>Clear / sell inventory</h2>
+            <p>Clear all parts from this account's inventory.</p>
+            <button type="button" id="profile-clear" class="btn btn-danger btn-small">Clear inventory</button>
           </div>
         </div>
+      </div>
       </div>
     </section>
 
@@ -367,6 +384,7 @@
       <div>
         <h4>About</h4>
         <p>Capstone project for ELECT1: Frontend Development.</p>
+        <button type="button" class="link-button" id="contact-open">Contact the developers</button>
         <p class="credit">Part specs from <a href="https://github.com/buildcores/buildcores-open-db">BuildCores OpenDB</a>, licensed <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>. Source filtered and reformatted for this project.</p>
       </div>
     </div>
@@ -376,6 +394,17 @@
   <button id="to-top" class="to-top" type="button" aria-label="Back to top" data-icon="up" data-size="22"></button>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <dialog id="contact-dialog" class="contact-dialog" aria-labelledby="contact-title">
+    <form id="contact-form" class="form-grid" novalidate>
+      <div class="dialog-heading"><div><p class="eyebrow">Pyesa support</p><h2 id="contact-title">Contact the developers</h2></div><button type="button" id="contact-close" class="btn btn-secondary btn-small" aria-label="Close contact form">Close</button></div>
+      <label for="contact-name">Your name<input id="contact-name" name="name" maxlength="80" required></label>
+      <label for="contact-email">Email<input id="contact-email" name="email" type="email" maxlength="120" required></label>
+      <label for="contact-message">Message<textarea id="contact-message" name="message" rows="5" maxlength="2000" required></textarea></label>
+      <p class="hint">This demo saves your message on this device. Message delivery is not connected yet.</p>
+      <div class="actions"><button type="submit" class="btn">Save message</button></div>
+    </form>
+  </dialog>
 
   <script type="module" src="js/main.js"></script>
 </body>

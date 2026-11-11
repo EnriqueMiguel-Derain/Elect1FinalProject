@@ -1,27 +1,13 @@
-// Local profile saved in localStorage. No password: nothing sensitive is stored.
-const KEY = 'pyesa-profile'
-const EMPTY = { name: '', bench: '', email: '' }
+import { getCurrentAccount, loadAccountProfile, saveAccountProfile } from './accounts.js'
+
+const EMPTY = { name: '', bench: '', email: '', photo: '' }
 
 export function loadProfile() {
-  try {
-    return { ...EMPTY, ...JSON.parse(localStorage.getItem(KEY)) }
-  } catch {
-    return { ...EMPTY }
-  }
+  const account = getCurrentAccount()
+  return account ? { ...EMPTY, ...loadAccountProfile(account.id) } : { ...EMPTY }
 }
 
 export function saveProfile(profile) {
-  try {
-    localStorage.setItem(KEY, JSON.stringify(profile))
-  } catch {
-    /* storage unavailable: profile lasts for this visit only */
-  }
-}
-
-export function clearProfile() {
-  try {
-    localStorage.removeItem(KEY)
-  } catch {
-    /* nothing to clear */
-  }
+  const account = getCurrentAccount()
+  if (account) saveAccountProfile(profile, account.id)
 }
