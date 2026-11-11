@@ -493,3 +493,10 @@ label.btn { cursor: pointer; }
 #profile-form .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
 .profile-id h2 { margin: 0; }
 .profile-card { align-items: center; }
+
+@media (min-width: 992px) {
+  #profile-form { grid-template-columns: repeat(2, minmax(0, 1fr)); align-content: start; }
+  #profile-form > h2,
+  #profile-form > .error-summary,
+  #profile-form > .actions { grid-column: 1 / -1; }
+}
