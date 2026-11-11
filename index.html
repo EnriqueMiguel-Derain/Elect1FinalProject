@@ -3,73 +3,119 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PartsHub</title>
+  <title>Pyesa</title>
+  <link rel="icon" type="image/png" href="img/logo-white.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&family=Rubik:wght@300;400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+  <a class="skip-link" href="#main" id="skip-link">Skip to content</a>
   <header class="site-header">
     <nav class="nav container">
-      <a class="brand" href="#home"><span class="brand-mark" data-icon="chip" data-size="20"></span>PartsHub</a>
+      <a class="brand" href="#home"><img class="brand-logo" src="img/logo-white.png" alt="" width="32" height="32">Pyesa</a>
       <ul id="nav-links" class="nav-links">
         <li><a href="#home" data-page="home">Home</a></li>
         <li><a href="#catalog" data-page="catalog">Catalog</a></li>
-        <li><a href="#inventory" data-page="inventory">Inventory</a></li>
-        <!-- TODO: Projects, PC Builder, Shopping List -->
+        <li><a href="#inventory" data-page="inventory">Inventory<span id="inv-count" class="count" hidden>0</span></a></li>
+        <li><a href="#pc-builder" data-page="pc-builder">PC Builder</a></li>
+        <li><a href="#circuit-builder" data-page="circuit-builder">Circuit Builder</a></li>
       </ul>
       <div class="nav-actions">
         <a id="search-link" class="icon-link" href="#catalog" aria-label="Search the catalog" data-icon="search"></a>
-        <a class="icon-link" href="#inventory" aria-label="Inventory">
-          <span data-icon="inventory"></span><span id="inv-count" class="count" hidden>0</span>
-        </a>
+        <a class="icon-link" href="#account" aria-label="Account" data-icon="user"></a>
+        <a class="icon-link" href="#settings" aria-label="Settings" data-icon="settings"></a>
         <button id="menu-toggle" class="menu-toggle" aria-label="Toggle menu" aria-expanded="false">Menu</button>
       </div>
     </nav>
   </header>
 
-  <main>
+  <main id="main" tabindex="-1">
     <!-- HOME -->
     <section id="page-home" class="page">
       <div class="hero">
         <div class="container hero-grid">
           <div>
-            <p class="eyebrow">ORGANIZE YOUR WORKBENCH</p>
-            <h1>Smart Parts.<br>Better Builds.</h1>
+            <p class="eyebrow">Organize your workbench</p>
+            <h1>Smart Parts.<strong>Better Builds.</strong></h1>
             <p class="hero-text">Track your electronics and PC parts, see what is running low, and browse a catalog of components for your next project.</p>
-            <a class="btn btn-lg" href="#catalog" data-category="">Explore Catalog <span data-icon="arrow" data-size="18"></span></a>
+            <div class="hero-cta">
+              <a class="btn btn-lg" href="#catalog" data-category="">Explore Catalog <span data-icon="arrow" data-size="18"></span></a>
+              <div class="hero-stat"><span id="hero-count">14</span> parts<small>ready to add to your bench</small></div>
+            </div>
           </div>
-          <div class="hero-art" data-icon="chip" data-size="220" aria-hidden="true"></div>
+          <div class="hero-art" aria-hidden="true">
+            <span class="ring"></span><span class="ring r2"></span>
+            <span class="chip chip-1"><span data-icon="alert" data-size="16"></span>Low-stock alerts</span>
+            <span class="chip chip-2"><span data-icon="chip" data-size="16"></span>Socket checks</span>
+            <span class="chip chip-3"><span data-icon="shield" data-size="16"></span>Saved locally</span>
+            <img src="img/logo-white.png" alt="" width="260" height="260">
+          </div>
         </div>
       </div>
 
+      <div id="category-grid" class="tiles" aria-label="Browse by category"></div>
+
       <div class="container">
-        <ul class="features">
+        <ul class="features reveal">
           <li><span data-icon="inventory" data-size="30"></span><div><strong>Track Your Parts</strong><small>Quantities and locations</small></div></li>
           <li><span data-icon="alert" data-size="30"></span><div><strong>Low-Stock Flags</strong><small>Know before you run out</small></div></li>
           <li><span data-icon="shield" data-size="30"></span><div><strong>Saved in Your Browser</strong><small>No account needed</small></div></li>
           <li><span data-icon="check" data-size="30"></span><div><strong>Free to Use</strong><small>For hobbyists and students</small></div></li>
         </ul>
+      </div>
 
-        <div id="category-grid" class="category-grid"></div>
-
-        <div class="section-head">
-          <h2>Top Picks</h2>
-          <a class="link" href="#catalog" data-category="">View All <span data-icon="arrow" data-size="14"></span></a>
+      <div class="section container">
+        <div class="section-title reveal">
+          <p class="eyebrow">Hand-picked components</p>
+          <h2>Featured Parts</h2>
+          <p>Popular picks for your next circuit or PC build. Add them straight to your inventory.</p>
         </div>
-        <div id="top-picks" class="product-grid"></div>
+        <div id="top-picks" class="product-grid reveal"></div>
+        <p class="picks-more"><a class="link" href="#catalog" data-category="">View all parts <span data-icon="arrow" data-size="14"></span></a></p>
+      </div>
 
-        <div class="banner">
-          <div>
-            <p class="eyebrow">BUILD YOUR OWN PC</p>
-            <h2>Pick the Parts. Plan the Build.</h2>
-            <p>Browse processors, graphics cards, memory and more, then add them to your inventory.</p>
-            <a class="btn btn-outline" href="#catalog" data-category="">Explore PC Parts <span data-icon="arrow" data-size="16"></span></a>
+      <div class="build section">
+        <div class="container build-grid">
+          <div class="build-art reveal" data-icon="tower" data-size="220" aria-hidden="true"></div>
+          <div class="reveal">
+            <p class="eyebrow">Build your own PC</p>
+            <h2>Build Your <strong>New PC</strong></h2>
+            <p class="lead">Pick compatible processors, boards, memory and graphics cards, then add everything to your inventory in one go.</p>
+            <div class="spec-row">
+              <div class="spec"><span data-icon="gpu" data-size="34"></span><div><strong>GPU ready</strong><small>Power and fit checks</small></div></div>
+              <div class="spec"><span data-icon="ram" data-size="34"></span><div><strong>Socket + RAM match</strong><small>AM5 / DDR5 aware</small></div></div>
+            </div>
+            <div class="build-actions">
+              <a class="btn btn-lg" href="#pc-builder">Open PC Builder</a>
+              <a class="btn btn-lg btn-outline" href="#catalog" data-category="CPU">Browse Processors</a>
+            </div>
           </div>
-          <div class="banner-art" data-icon="gpu" data-size="140" aria-hidden="true"></div>
+        </div>
+      </div>
+
+      <div class="section container">
+        <div class="section-title reveal">
+          <p class="eyebrow">Play like the pros</p>
+          <h2>Ready Builds</h2>
+          <p>Starter bundles priced from the live catalog. Add a whole bundle to your inventory with one click.</p>
+        </div>
+        <div id="presets" class="presets"></div>
+      </div>
+
+      <div class="container cta-wrap">
+        <div class="cta reveal">
+          <div>
+            <h2>Stop losing track of your parts.</h2>
+            <p>Add what you own, set a low-stock level, and see what to buy next.</p>
+          </div>
+          <a class="btn btn-lg" href="#inventory">Open Inventory <span data-icon="arrow" data-size="18"></span></a>
         </div>
       </div>
     </section>
 
-    <!-- CATALOG -->
+<!-- CATALOG -->
     <section id="page-catalog" class="page container" hidden>
       <h1>Catalog</h1>
       <div class="toolbar">
@@ -138,12 +184,60 @@
       <ul id="parts-list" class="parts-list"></ul>
       <p id="empty-state" class="empty" hidden></p>
     </section>
+
+    <section id="page-pc-builder" class="page container" hidden>
+      <h1>PC Builder</h1>
+      <p class="soon">PC Builder is coming soon.</p>
+    </section>
+
+    <section id="page-circuit-builder" class="page container" hidden>
+      <h1>Circuit Builder</h1>
+      <p class="soon">Circuit Builder is coming soon.</p>
+    </section>
+
+    <section id="page-account" class="page container" hidden>
+      <h1>Account</h1>
+      <p class="soon">Account is coming soon.</p>
+    </section>
+
+    <!-- SETTINGS -->
+    <section id="page-settings" class="page container" hidden>
+      <h1>Settings</h1>
+      <p class="summary">Saved in this browser. No account needed.</p>
+      <div class="settings-grid">
+        <div class="card setting">
+          <h2>Accent color</h2>
+          <p>Changes buttons, highlights and glows across the site.</p>
+          <div id="swatches" class="swatches" role="radiogroup" aria-label="Accent color"></div>
+        </div>
+        <div class="card setting">
+          <h2>Animations</h2>
+          <p>Page transitions, hover motion and scroll reveals.</p>
+          <label class="switch"><input type="checkbox" id="set-motion"><span class="track" aria-hidden="true"></span>Enable animations</label>
+        </div>
+        <div class="card setting">
+          <h2>Default low-stock level</h2>
+          <p>Used when you add a part from the catalog.</p>
+          <label class="field">Low-stock at<input type="number" id="set-minstock" min="0"></label>
+        </div>
+        <div class="card setting">
+          <h2>Your data</h2>
+          <p id="data-summary"></p>
+          <div class="actions wrap">
+            <button type="button" id="export-btn" class="btn btn-secondary btn-small">Export JSON</button>
+            <label class="btn btn-secondary btn-small" for="import-file">Import JSON</label>
+            <input type="file" id="import-file" accept="application/json,.json" hidden>
+            <button type="button" id="clear-btn" class="btn btn-danger btn-small">Clear inventory</button>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
 
   <footer class="site-footer">
     <div class="container footer-grid">
       <div>
-        <a class="brand" href="#home"><span class="brand-mark" data-icon="chip" data-size="20"></span>PartsHub</a>
+        <a class="brand" href="#home"><img class="brand-logo" src="img/logo-white.png" alt="" width="32" height="32">Pyesa</a>
         <p>Your parts tracker for electronics projects and PC builds.</p>
       </div>
       <div>
@@ -151,6 +245,10 @@
         <a href="#home">Home</a>
         <a href="#catalog" data-category="">Catalog</a>
         <a href="#inventory">Inventory</a>
+        <a href="#pc-builder">PC Builder</a>
+        <a href="#circuit-builder">Circuit Builder</a>
+        <a href="#account">Account</a>
+        <a href="#settings">Settings</a>
       </div>
       <div>
         <h4>Categories</h4>
@@ -164,8 +262,10 @@
         <p>Capstone project for ELECT1: Frontend Development.</p>
       </div>
     </div>
-    <p class="copyright">© <span id="year"></span> PartsHub. Student project.</p>
+    <p class="copyright">© <span id="year"></span> Pyesa. Student project.</p>
   </footer>
+
+  <button id="to-top" class="to-top" type="button" aria-label="Back to top" data-icon="up" data-size="22"></button>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 

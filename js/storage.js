@@ -1,5 +1,5 @@
 // Saves and loads the inventory using localStorage.
-const KEY = 'partshub-inventory'
+const KEY = 'pyesa-inventory'
 
 export function loadParts() {
   try {

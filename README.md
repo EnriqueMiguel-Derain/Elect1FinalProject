@@ -1,4 +1,4 @@
-# PartsHub (plain HTML, CSS, JavaScript version)
+# Pyesa (plain HTML, CSS, JavaScript version)
 
 Stage 1 of the capstone: the same app as the React plan, built with the tools from Modules 2 to 6.
 Stage 2 will port it to React + Vite + Tailwind.

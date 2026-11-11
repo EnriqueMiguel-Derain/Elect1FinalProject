@@ -1,5 +1,6 @@
 // One shared copy of the inventory. Pages subscribe so they update when it changes.
 import { loadParts, saveParts } from './storage.js'
+import { getSettings } from './settings.js'
 
 let parts = loadParts()
 const listeners = []
@@ -20,6 +21,6 @@ export function addFromCatalog(item) {
   if (owned) {
     setParts(parts.map((p) => (p.id === owned.id ? { ...p, quantity: p.quantity + 1 } : p)))
   } else {
-    setParts([...parts, { id: makeId(), catalogId: item.id, name: item.name, category: item.category, quantity: 1, minStock: 1, location: '' }])
+    setParts([...parts, { id: makeId(), catalogId: item.id, name: item.name, category: item.category, quantity: 1, minStock: getSettings().minStock, location: '' }])
   }
 }
