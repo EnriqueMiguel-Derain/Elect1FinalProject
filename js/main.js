@@ -13,7 +13,6 @@ const navLinks = document.querySelectorAll('#nav-links a')
 const menuToggle = document.getElementById('menu-toggle')
 const navList = document.getElementById('nav-links')
 const invCount = document.getElementById('inv-count')
-let focusSearch = false
 
 // Simple navigation: show the page named in the URL hash (#home, #catalog, #inventory ...).
 let firstLoad = true
@@ -28,8 +27,6 @@ function showPage() {
     navList.classList.remove('open')
     menuToggle.setAttribute('aria-expanded', 'false')
     window.scrollTo(0, 0)
-    if (focusSearch && target === 'catalog') document.getElementById('catalog-search').focus()
-    focusSearch = false
   }
 
   // Page transition: View Transitions API where supported, a simple fade-up everywhere else.
@@ -57,7 +54,6 @@ menuToggle.addEventListener('click', () => {
   const open = navList.classList.toggle('open')
   menuToggle.setAttribute('aria-expanded', String(open))
 })
-document.getElementById('search-link').addEventListener('click', () => (focusSearch = true))
 window.addEventListener('hashchange', showPage)
 
 // Logo: on the home page just scroll to the top; from other pages the link goes home.

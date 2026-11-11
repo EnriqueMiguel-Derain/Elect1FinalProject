@@ -4,14 +4,10 @@ import { setCatalogCategory } from './catalog.js'
 import { icon } from './icons.js'
 import { showToast, formatPrice, escapeHtml } from './ui.js'
 
-const TILES = [
-  { category: 'Microcontroller', label: 'Microcontrollers' },
-  { category: 'Sensor', label: 'Sensors' },
-  { category: 'CPU', label: 'Processors' },
-  { category: 'GPU', label: 'Graphics Cards' },
-  { category: 'RAM', label: 'Memory' },
-  { category: 'Storage', label: 'Storage' },
-]
+const CATEGORY_LABELS = {
+  CPU: 'Processors', GPU: 'Graphics Cards', RAM: 'Memory',
+  Microcontroller: 'Microcontrollers', Sensor: 'Sensors',
+}
 
 // Ready builds are priced from the catalog so they never drift out of date.
 const PRESETS = [
@@ -24,16 +20,22 @@ export function initHome(catalog) {
   const byId = (id) => catalog.find((c) => c.id === id)
   const picks = catalog.filter((c) => c.featured).slice(0, 8)
   const picksGrid = document.getElementById('top-picks')
-  const countOf = (cat) => catalog.filter((c) => c.category === cat).length
+  const categoryCounts = catalog.reduce((counts, item) => {
+    counts[item.category] = (counts[item.category] || 0) + 1
+    return counts
+  }, {})
 
   document.getElementById('hero-count').textContent = catalog.length
 
-  document.getElementById('category-grid').innerHTML = TILES.map(
-    (t) => `
-    <a class="tile" href="#catalog" data-category="${t.category}">
-      <span class="tile-icon">${icon(t.category, 96)}</span>
-      <h3>${t.label}</h3>
-      <small>${countOf(t.category)} part(s)</small>
+  const mostAbundant = Object.entries(categoryCounts)
+    .sort(([categoryA, countA], [categoryB, countB]) => countB - countA || categoryA.localeCompare(categoryB))
+    .slice(0, 6)
+  document.getElementById('category-grid').innerHTML = mostAbundant.map(
+    ([category, count]) => `
+    <a class="tile" href="#catalog" data-category="${escapeHtml(category)}">
+      <span class="tile-icon">${icon(category, 96)}</span>
+      <h3>${escapeHtml(CATEGORY_LABELS[category] || category)}</h3>
+      <small>${count} part(s)</small>
     </a>`
   ).join('')
 
@@ -84,7 +86,7 @@ export function initHome(catalog) {
   if ('IntersectionObserver' in window) {
     const io = new IntersectionObserver((entries) => entries.forEach((e) => {
       if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target) }
-    }), { threshold: 0.15 })
+    }), { threshold: 0.12, rootMargin: '0px 0px -32px 0px' })
     reveals.forEach((el) => io.observe(el))
   } else reveals.forEach((el) => el.classList.add('in'))
 }
