@@ -1,113 +1,153 @@
-import { initInventory } from './inventory.js'
-import { initCatalog } from './catalog.js'
-import { initHome } from './home.js'
 import { getParts, subscribe } from './store.js'
-import { icon } from './icons.js'
-import { motionEnabled } from './settings.js'
-import { initSettings } from './settings-page.js'
-import { initAccount } from './account.js'
+import { getStockStatus } from './availability.js'
+import { loadProfile, saveProfile, clearProfile } from './profile.js'
+import { showToast, escapeHtml, formatPrice } from './ui.js'
 
-const pages = document.querySelectorAll('.page')
-const navLinks = document.querySelectorAll('#nav-links a')
-const menuToggle = document.getElementById('menu-toggle')
-const navList = document.getElementById('nav-links')
-const invCount = document.getElementById('inv-count')
-let focusSearch = false
+const $ = (id) => document.getElementById(id)
+const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
 
-// Simple navigation: show the page named in the URL hash (#home, #catalog, #inventory ...).
-let firstLoad = true
+let catalog = []
+let profile = loadProfile()
 
-function showPage() {
-  const name = location.hash.replace('#', '') || 'home'
-  const target = document.getElementById(`page-${name}`) ? name : 'home'
+let form, summaryBox, fields
 
-  const swap = () => {
-    pages.forEach((p) => (p.hidden = p.id !== `page-${target}`))
-    navLinks.forEach((a) => a.classList.toggle('active', a.dataset.page === target))
-    navList.classList.remove('open')
-    menuToggle.setAttribute('aria-expanded', 'false')
-    window.scrollTo(0, 0)
-    if (focusSearch && target === 'catalog') document.getElementById('catalog-search').focus()
-    focusSearch = false
-  }
+const initials = (name) =>
+  name.trim().split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0].toUpperCase()).join('') || '?'
 
-  // Page transition: View Transitions API where supported, a simple fade-up everywhere else.
-  if (!firstLoad && motionEnabled() && document.startViewTransition) {
-    document.startViewTransition(swap)
-  } else {
-    swap()
-    if (!firstLoad && motionEnabled()) {
-      const el = document.getElementById(`page-${target}`)
-      el.classList.remove('page-enter')
-      void el.offsetWidth // restart the animation
-      el.classList.add('page-enter')
-    }
-  }
-  firstLoad = false
+/* ---------- Profile header + form ---------- */
+
+function renderProfile() {
+  $('account-avatar').textContent = initials(profile.name)
+  $('account-name').textContent = profile.name || 'Maker'
+  $('account-bench').textContent = profile.bench || 'Add a bench name below'
+  $('account-email').textContent = profile.email
+  $('account-email').hidden = !profile.email
 }
 
-function updateCount() {
-  const total = getParts().reduce((sum, p) => sum + p.quantity, 0)
-  invCount.textContent = total
-  invCount.hidden = total === 0
+function fillForm() {
+  fields.name.value = profile.name
+  fields.bench.value = profile.bench
+  fields.email.value = profile.email
+  clearErrors()
 }
 
-menuToggle.addEventListener('click', () => {
-  const open = navList.classList.toggle('open')
-  menuToggle.setAttribute('aria-expanded', String(open))
-})
-document.getElementById('search-link').addEventListener('click', () => (focusSearch = true))
-window.addEventListener('hashchange', showPage)
+function validate(data) {
+  const errors = {}
+  if (!data.name) errors.name = 'Enter a display name.'
+  if (data.email && !EMAIL.test(data.email)) errors.email = 'Enter an email like name@example.com.'
+  return errors
+}
 
-// Logo: on the home page just scroll to the top; from other pages the link goes home.
-document.querySelectorAll('.brand').forEach((brand) =>
-  brand.addEventListener('click', (event) => {
-    const onHome = (location.hash.replace('#', '') || 'home') === 'home'
-    if (onHome) {
-      event.preventDefault()
-      window.scrollTo({ top: 0, behavior: motionEnabled() ? 'smooth' : 'auto' })
+const read = () => ({ name: fields.name.value.trim(), bench: fields.bench.value.trim(), email: fields.email.value.trim() })
+
+function setFieldError(key, message) {
+  const el = $(`pf-${key}-error`)
+  if (!el) return
+  el.textContent = message || ''
+  fields[key].toggleAttribute('aria-invalid', Boolean(message))
+}
+
+function clearErrors() {
+  ;['name', 'email'].forEach((k) => setFieldError(k, ''))
+  summaryBox.hidden = true
+}
+
+function bindEvents() {
+  // Inline validation on blur (one field at a time), full check with an error summary on submit.
+  ;['name', 'email'].forEach((key) =>
+    fields[key].addEventListener('blur', () => setFieldError(key, validate(read())[key]))
+  )
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault()
+    const data = read()
+    const errors = validate(data)
+    ;['name', 'email'].forEach((k) => setFieldError(k, errors[k]))
+    const keys = Object.keys(errors)
+    if (keys.length) {
+      summaryBox.querySelector('ul').innerHTML = keys
+        .map((k) => `<li><a href="#pf-${k}" data-focus="${k}">${escapeHtml(errors[k])}</a></li>`)
+        .join('')
+      summaryBox.hidden = false
+      summaryBox.focus()
+      return
     }
+    summaryBox.hidden = true
+    profile = data
+    saveProfile(profile)
+    renderProfile()
+    showToast('Profile saved.')
   })
-)
 
-// Back-to-top button (bottom right) and header shadow once the page is scrolled.
-const toTop = document.getElementById('to-top')
-const header = document.querySelector('.site-header')
-function onScroll() {
-  toTop.classList.toggle('show', window.scrollY > 400)
-  header.classList.toggle('scrolled', window.scrollY > 8)
-}
-window.addEventListener('scroll', onScroll, { passive: true })
-toTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: motionEnabled() ? 'smooth' : 'auto' }))
-onScroll()
+  // Summary links focus the field without touching the URL hash (the hash drives navigation).
+  summaryBox.addEventListener('click', (event) => {
+    const link = event.target.closest('[data-focus]')
+    if (!link) return
+    event.preventDefault()
+    fields[link.dataset.focus].focus()
+  })
 
-// Skip link: move focus to the page content without changing the URL hash (the hash drives navigation).
-document.getElementById('skip-link').addEventListener('click', (event) => {
-  event.preventDefault()
-  document.getElementById('main').focus()
-})
+  $('profile-reset').addEventListener('click', () => {
+    fillForm()
+    showToast('Changes discarded.')
+  })
 
-document.querySelectorAll('[data-icon]').forEach((el) => (el.innerHTML = icon(el.dataset.icon, Number(el.dataset.size) || 22)))
-document.getElementById('year').textContent = new Date().getFullYear()
+  $('profile-clear').addEventListener('click', () => {
+    if (!confirm('Remove your profile from this browser? Your inventory will not be deleted.')) return
+    clearProfile()
+    profile = loadProfile()
+    fillForm()
+    renderProfile()
+    showToast('Profile removed.')
+  })
 
-// Load the catalog with the Fetch API (Module 6), then start every page.
-async function start() {
-  let catalog = []
-  try {
-    const response = await fetch('data/catalog.json')
-    if (!response.ok) throw new Error('Unable to load catalog.')
-    catalog = await response.json()
-  } catch (error) {
-    console.error(error.message)
-  }
-  initInventory(catalog)
-  initCatalog(catalog)
-  initHome(catalog)
-  initSettings()
-  initAccount(catalog)
-  subscribe(updateCount)
-  updateCount()
-  showPage()
 }
 
-start()
+/* ---------- Stats + restock list ---------- */
+
+function renderStats() {
+  const parts = getParts()
+  const units = parts.reduce((sum, p) => sum + p.quantity, 0)
+  const attention = parts.filter((p) => getStockStatus(p.quantity, p.minStock) !== 'ok')
+  const priceOf = (p) => catalog.find((c) => c.id === p.catalogId)?.price
+  const priced = parts.filter((p) => priceOf(p) != null)
+  const value = priced.reduce((sum, p) => sum + priceOf(p) * p.quantity, 0)
+  const unpriced = parts.length - priced.length
+
+  const stats = [
+    ['Part types', parts.length, 'in your inventory', ''],
+    ['Total units', units, 'across all parts', ''],
+    ['Needs attention', attention.length, 'low or out of stock', attention.length ? 'warn' : ''],
+    ['Estimated value', formatPrice(value), unpriced ? `${unpriced} part(s) without a price` : 'from catalog prices', ''],
+  ]
+  $('account-stats').innerHTML = stats
+    .map(([label, value, note, tone]) => `<li class="card stat${tone ? ' stat-' + tone : ''}"><span class="stat-label">${label}</span><strong class="stat-value">${value}</strong><small>${note}</small></li>`)
+    .join('')
+
+  const list = $('account-restock')
+  const empty = $('account-restock-empty')
+  const worst = [...attention].sort((a, b) => a.quantity - b.quantity).slice(0, 5)
+  list.innerHTML = worst
+    .map((p) => {
+      const status = getStockStatus(p.quantity, p.minStock)
+      return `<li><span>${escapeHtml(p.name)}</span><span class="badge badge-${status}">${status === 'out' ? 'Out of stock' : 'Low · ' + p.quantity}</span></li>`
+    })
+    .join('')
+  list.hidden = worst.length === 0
+  empty.hidden = worst.length > 0
+  empty.textContent = parts.length === 0 ? 'No parts yet. Add some from the catalog to start tracking stock.' : 'Everything is stocked. Nothing needs restocking.'
+}
+
+export function initAccount(catalogData) {
+  // Safe if the Account section is missing from index.html: skip instead of breaking the whole site.
+  form = $('profile-form')
+  if (!form) return console.warn('Account page markup not found in index.html; skipping.')
+  summaryBox = $('profile-errors')
+  fields = { name: form.elements.name, bench: form.elements.bench, email: form.elements.email }
+  catalog = catalogData
+  bindEvents()
+  fillForm()
+  renderProfile()
+  renderStats()
+  subscribe(renderStats)
+}
