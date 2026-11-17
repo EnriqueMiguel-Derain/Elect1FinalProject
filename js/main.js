@@ -8,6 +8,7 @@ import { initSettings } from './settings-page.js'
 import { initAccount } from './account.js'
 import { initContact } from './contact.js'
 import { initCartPage, getCartCount, subscribeCart } from './cart.js'
+import { initPCBuilder } from './pc-builder.js'
 
 const pages = document.querySelectorAll('.page')
 const navLinks = document.querySelectorAll('#nav-links a')
@@ -111,6 +112,7 @@ async function start() {
   initInventory(catalog)
   initCatalog(catalog)
   initCartPage(catalog)
+  initPCBuilder(catalog)
   initHome(catalog)
   initSettings()
   initAccount(catalog)

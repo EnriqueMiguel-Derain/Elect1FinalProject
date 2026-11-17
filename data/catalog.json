@@ -328,14 +328,15 @@
   },
   {
     "id": "res-220",
-    "name": "220 Ω 5% 1/4W Resistor (pack)",
+    "name": "220 Ω 5% 1/4W Resistor (10-pack)",
     "category": "Resistor",
     "price": 19,
-    "summary": "Through-hole carbon-film resistor pack for current limiting and general circuits.",
+    "summary": "10 through-hole carbon-film resistors for current limiting and general circuits.",
     "specs": {
       "resistance": "220 Ω",
       "tolerance": "±5%",
       "powerW": 0.25,
+      "quantityInPack": 10,
       "type": "Carbon film"
     },
     "sourceUrl": "https://circuit.rocks/products/resistors-through-hole-220-ohm-5-1-4w-pack-of-25",
@@ -361,14 +362,15 @@
   },
   {
     "id": "res-470",
-    "name": "470 Ω 5% 1/4W Resistor (pack)",
+    "name": "470 Ω 5% 1/4W Resistor (10-pack)",
     "category": "Resistor",
     "price": 19,
-    "summary": "Through-hole carbon-film resistor pack for general prototyping.",
+    "summary": "10 through-hole carbon-film resistors for general prototyping.",
     "specs": {
       "resistance": "470 Ω",
       "tolerance": "±5%",
       "powerW": 0.25,
+      "quantityInPack": 10,
       "type": "Carbon film"
     },
     "sourceUrl": "https://circuit.rocks/products/resistors-through-hole-470-ohm-5-1-4w-pack-of-25",
@@ -490,12 +492,13 @@
   },
   {
     "id": "dio-1n4148",
-    "name": "1N4148 Fast Switching Signal Diode (pack)",
+    "name": "1N4148 Fast Switching Signal Diode (5-pack)",
     "category": "Diode",
     "price": 25,
-    "summary": "Small-signal silicon switching diode for low-current signal circuits.",
+    "summary": "Pack of 5 small-signal silicon switching diodes for low-current circuits.",
     "specs": {
       "partNumber": "1N4148",
+      "quantityInPack": 5,
       "type": "Fast switching signal diode"
     },
     "sourceUrl": "https://circuit.rocks/products/diode-1n4148-signal-10-pack",
@@ -511,7 +514,8 @@
     "specs": {
       "partNumber": "1N4733",
       "zenerVoltage": "5.1V",
-      "powerW": 1
+      "powerW": 1,
+      "quantityInPack": 10
     },
     "sourceUrl": "https://circuit.rocks/collections/discrete-devices?limit=30",
     "sourceName": "Circuitrocks",
@@ -566,14 +570,15 @@
   },
   {
     "id": "led-ir-940",
-    "name": "5mm 940nm Infrared LED",
+    "name": "5mm 940nm Infrared LED (5-pack)",
     "category": "LED",
     "price": 35,
-    "summary": "Infrared emitting diode intended for IR transmitter or optical sensing circuits.",
+    "summary": "Pack of 5 infrared emitters for IR transmission or optical sensing circuits.",
     "specs": {
       "diameter": "5 mm",
       "wavelength": "940 nm",
-      "type": "Infrared emitter"
+      "type": "Infrared emitter",
+      "quantityInPack": 5
     },
     "sourceUrl": "https://circuit.rocks/products/ir-receiver-diode",
     "sourceName": "Circuitrocks",
@@ -597,13 +602,14 @@
   },
   {
     "id": "led-3mm",
-    "name": "3mm Indicator LED (pack)",
+    "name": "3mm Indicator LED (5-pack)",
     "category": "LED",
     "price": 19,
-    "summary": "Small through-hole indicator LED; check available color variant at listing.",
+    "summary": "Pack of 5 small through-hole indicator LEDs; check available color variant at listing.",
     "specs": {
       "diameter": "3 mm",
-      "mounting": "Through-hole"
+      "mounting": "Through-hole",
+      "quantityInPack": 5
     },
     "sourceUrl": "https://circuit.rocks/collections/integrated-circuits",
     "sourceName": "Circuitrocks",

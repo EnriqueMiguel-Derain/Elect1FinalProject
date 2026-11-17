@@ -1,22 +1,16 @@
 import { getParts, subscribe } from './store.js'
-import { addToCart, addItemsToCart } from './cart.js'
+import { addToCart } from './cart.js'
 import { productCard } from './components.js'
 import { setCatalogCategory } from './catalog.js'
 import { icon } from './icons.js'
 import { showToast, formatPrice, escapeHtml } from './ui.js'
 import { showItemDetails } from './item-details.js'
+import { PC_PACKAGES } from './pc-packages.js'
 
 const CATEGORY_LABELS = {
   CPU: 'Processors', GPU: 'Graphics Cards', RAM: 'Memory',
   Microcontroller: 'Microcontrollers', Sensor: 'Sensors',
 }
-
-// Ready builds are priced from the catalog so they never drift out of date.
-const PRESETS = [
-  { name: 'Essentials', note: 'Office and light work', ids: ['cpu-r5-7600', 'mb-b650m', 'ram-ddr5-16', 'ssd-1tb', 'psu-550', 'case-matx'] },
-  { name: 'Gamer', note: 'Essentials + graphics', ids: ['cpu-r5-7600', 'mb-b650m', 'ram-ddr5-16', 'gpu-rtx4060', 'ssd-1tb', 'psu-550', 'case-matx'], featured: true },
-  { name: 'Full Setup', note: 'Gamer + peripherals', ids: ['cpu-r5-7600', 'mb-b650m', 'ram-ddr5-16', 'gpu-rtx4060', 'ssd-1tb', 'psu-550', 'case-matx', 'mon-24', 'kb-mech', 'ms-gaming'] },
-]
 
 export function initHome(catalog) {
   const byId = (id) => catalog.find((c) => c.id === id)
@@ -72,31 +66,19 @@ export function initHome(catalog) {
 
   // Ready builds
   const presetsEl = document.getElementById('presets')
-  presetsEl.innerHTML = PRESETS.map((p, i) => {
-    const items = p.ids.map(byId).filter(Boolean)
-    const total = items.reduce((sum, c) => sum + c.price, 0)
+  presetsEl.innerHTML = PC_PACKAGES.map((p, i) => {
+    const items = p.partIds.map(byId).filter(Boolean)
+    const total = Math.round(items.reduce((sum, c) => sum + (Number(c.price) || 0), 0) * 0.9 * 100) / 100
     return `
     <article class="preset reveal${p.featured ? ' featured' : ''}" style="transition-delay:${i * 90}ms">
       <div class="preset-head">
         <h3>${escapeHtml(p.name)}</h3>
-        <div class="preset-price">${formatPrice(total)}<small>${escapeHtml(p.note)}</small></div>
+        <div class="preset-price">${formatPrice(total)}<small>with 10% full-package offer · ${escapeHtml(p.note)}</small></div>
       </div>
       <ul>${items.map((c) => `<li>${escapeHtml(c.name)}</li>`).join('')}</ul>
-      <div class="preset-foot"><button class="btn btn-block" data-preset="${i}">Add build to cart</button></div>
+      <div class="preset-foot"><a class="btn btn-block" href="#pc-builder">See package options</a></div>
     </article>`
   }).join('')
-
-  presetsEl.addEventListener('click', (event) => {
-    const btn = event.target.closest('[data-preset]')
-    if (!btn) return
-    const items = PRESETS[btn.dataset.preset].ids.map(byId).filter(Boolean)
-    if (!addItemsToCart(items)) {
-      showToast('Sign in to add a build to your cart.')
-      location.hash = '#account'
-      return
-    }
-    showToast(`${items.length} build part(s) added to your cart.`)
-  })
 
   // Any link with data-category (tiles, banner, footer) pre-filters the Catalog page.
   document.addEventListener('click', (event) => {

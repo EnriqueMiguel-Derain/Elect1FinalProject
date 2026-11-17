@@ -185,6 +185,7 @@
           <aside class="card cart-summary">
             <h2>Checkout</h2>
             <p id="cart-balance" class="cart-balance"></p>
+            <div class="cart-total"><span>Complete-package savings</span><strong id="cart-discount">−₱0.00</strong></div>
             <div class="cart-total"><span>Selected total</span><strong id="cart-total">₱0</strong></div>
             <p id="cart-error" class="error cart-error" role="alert" hidden></p>
             <button id="cart-checkout" type="button" class="btn btn-block" disabled>Check out selected items</button>
@@ -216,7 +217,11 @@
 
     <section id="page-pc-builder" class="page container" hidden>
       <h1>PC Builder</h1>
-      <p class="soon">PC Builder is coming soon.</p>
+      <p class="summary">Choose a prebuilt PC package. Buy the complete package for 10% off, or buy only the parts missing from your inventory at regular catalog prices.</p>
+      <p class="summary">Buying the complete package includes every listed component, even if you already have some in your inventory.</p>
+      <p id="pc-builder-login" class="card pc-builder-login" hidden>Sign in to compare packages with your inventory. <a class="link" href="#account">Go to Account</a></p>
+      <p id="pc-builder-balance" class="card pc-builder-balance" hidden></p>
+      <div id="pc-builder-packages" class="pc-builder-packages" hidden></div>
     </section>
 
     <section id="page-circuit-builder" class="page container" hidden>
