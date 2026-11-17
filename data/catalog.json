@@ -19,6 +19,23 @@
     "featured": true
   },
   {
+    "id": "cooler-amd-wraith-stealth",
+    "name": "AMD Wraith Stealth CPU Air Cooler",
+    "category": "CPU Cooler",
+    "price": 200,
+    "summary": "Low-profile stock-style air cooler with pre-applied thermal paste; compatible with AM4 and AM5 sockets.",
+    "specs": {
+      "coolerType": "Air",
+      "socketCompatibility": ["AM4", "AM5"],
+      "fanSizeMM": 92,
+      "thermalPaste": "Pre-applied"
+    },
+    "sourceUrl": "https://www.pcworth.com/product/amd-wraith-stealth-cpu-air-cooler",
+    "sourceName": "PC Worth",
+    "priceCheckedAt": "2026-11-18",
+    "brand": "AMD"
+  },
+  {
     "id": "mb-msi-b650m",
     "name": "MSI B650M Gaming WiFi",
     "category": "Motherboard",

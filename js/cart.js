@@ -21,10 +21,60 @@ function saveCart(cart) {
   announceCartChange()
 }
 
-const cartEntryKey = (entry) => entry.cartId || `item-${entry.catalogId}`
+const cartEntryKey = (entry) => entry.cartId || entry.bundleId || `item-${entry.catalogId}`
+
+function migrateLegacyBundles() {
+  if (!getCurrentAccount()) return
+  const cart = loadAccountCart()
+  const groups = new Map()
+  cart.filter((entry) => entry.bundleId && entry.kind !== 'pc-set').forEach((entry) => {
+    if (!groups.has(entry.bundleId)) groups.set(entry.bundleId, [])
+    groups.get(entry.bundleId).push(entry)
+  })
+  const consumed = new Set()
+  const migrated = []
+  for (const [bundleId, entries] of groups) {
+    const size = Number(entries[0].bundleSize)
+    const quantities = new Set(entries.map((entry) => Number(entry.quantity)))
+    const productIds = new Set(entries.map((entry) => entry.catalogId))
+    if (size > 0 && entries.length === size && productIds.size === size && quantities.size === 1) {
+      entries.forEach((entry) => consumed.add(cartEntryKey(entry)))
+      migrated.push({
+        cartId: bundleId,
+        kind: 'bundle',
+        packageId: entries[0].packageId || `legacy-${bundleId}`,
+        bundleName: entries[0].bundleName || 'PC Package',
+        components: entries.map((entry) => ({ catalogId: entry.catalogId })),
+        quantity: Number(entries[0].quantity),
+      })
+    }
+  }
+  const next = [...cart.filter((entry) => !consumed.has(cartEntryKey(entry))), ...migrated]
+  const normalized = []
+  const normalByCatalogId = new Map()
+  let mergedRows = false
+  for (const entry of next) {
+    if (entry.kind === 'bundle' || entry.bundleId || !entry.catalogId) {
+      normalized.push(entry)
+      continue
+    }
+    const existing = normalByCatalogId.get(entry.catalogId)
+    if (existing) {
+      existing.quantity += Number(entry.quantity) || 0
+      mergedRows = true
+    } else {
+      const row = { ...entry, quantity: Number(entry.quantity) || 1 }
+      normalByCatalogId.set(entry.catalogId, row)
+      normalized.push(row)
+    }
+  }
+  if (migrated.length || mergedRows) {
+    saveAccountCart(normalized)
+  }
+}
 
 export function getCartCount() {
-  return loadAccountCart().reduce((sum, entry) => sum + entry.quantity, 0)
+  return loadAccountCart().reduce((sum, entry) => sum + Number(entry.quantity || 0), 0)
 }
 
 export function subscribeCart(listener) {
@@ -32,6 +82,7 @@ export function subscribeCart(listener) {
 }
 
 export function refreshCart() {
+  migrateLegacyBundles()
   selectedIds.clear()
   initializedIds.clear()
   announceCartChange()
@@ -39,10 +90,11 @@ export function refreshCart() {
 
 export function addItemsToCart(items) {
   if (!getCurrentAccount()) return false
+  migrateLegacyBundles()
   const cart = [...loadAccountCart()]
   for (const item of items) {
     if (!item) continue
-    const existing = cart.find((entry) => !entry.bundleId && entry.catalogId === item.id)
+    const existing = cart.find((entry) => entry.kind !== 'bundle' && !entry.bundleId && entry.catalogId === item.id)
     if (existing) existing.quantity += 1
     else cart.push({ cartId: `item-${item.id}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`, catalogId: item.id, quantity: 1 })
   }
@@ -52,29 +104,58 @@ export function addItemsToCart(items) {
 
 export const addToCart = (item) => addItemsToCart([item])
 
-export function addBundleToCart(items, bundleName) {
+export function addBundleToCart(items, bundleName, packageId = '') {
   if (!getCurrentAccount() || !items?.length) return false
-  const bundleId = `bundle-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
-  const bundleSize = items.length
-  const cart = [...loadAccountCart(), ...items.map((item, index) => ({
-    cartId: `${bundleId}-${index}`,
-    catalogId: item.id,
-    quantity: 1,
-    bundleId,
+  migrateLegacyBundles()
+  const cart = [...loadAccountCart()]
+  const packageKey = packageId || bundleName
+  const existing = cart.find((entry) => entry.kind === 'bundle' && (entry.packageId || entry.bundleName) === packageKey)
+  if (existing) existing.quantity += 1
+  else cart.push({
+    cartId: `bundle-${packageKey}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+    kind: 'bundle',
+    packageId: packageKey,
     bundleName,
-    bundleSize,
-  }))]
+    components: items.map((item) => ({ catalogId: item.id })),
+    quantity: 1,
+  })
   saveCart(cart)
   return true
 }
 
+function getBundlePricing(entry) {
+  const components = (entry.components || []).map((component) => ({
+    ...component,
+    item: catalog.find((part) => part.id === component.catalogId),
+  }))
+  const complete = components.length > 0 && components.every(({ item }) => item && Number.isFinite(Number(item.price)) && item.price != null && Number(item.price) >= 0)
+  if (!complete) return { components, complete: false, retailCents: null, bundleCents: null }
+  const retailCents = components.reduce((sum, { item }) => sum + Math.round(Number(item.price) * 100), 0)
+  const componentPrices = components.map(({ item }) => Math.round(Number(item.price) * 90))
+  const bundleCents = componentPrices.reduce((sum, price) => sum + price, 0)
+  return { components, complete, retailCents, bundleCents, componentPrices }
+}
+
 function getCartEntries() {
-  const entries = loadAccountCart()
-  return entries.map((entry) => ({
-    ...entry,
-    cartKey: cartEntryKey(entry),
-    item: catalog.find((part) => part.id === entry.catalogId),
-  })).filter((entry) => entry.item)
+  return loadAccountCart().map((entry) => {
+    const cartKey = cartEntryKey(entry)
+    if (entry.kind === 'bundle') {
+      const pricing = getBundlePricing(entry)
+      return {
+        ...entry,
+        cartKey,
+        bundleComponents: pricing.components,
+        retailPrice: pricing.retailCents == null ? null : pricing.retailCents / 100,
+        item: {
+          id: cartKey,
+          name: entry.bundleName || 'PC Package',
+          category: 'PC package',
+          price: pricing.bundleCents == null ? null : pricing.bundleCents / 100,
+        },
+      }
+    }
+    return { ...entry, cartKey, item: catalog.find((part) => part.id === entry.catalogId) }
+  }).filter((entry) => entry.item)
 }
 
 function updateCartQuantity(cartKey, quantity) {
@@ -96,27 +177,16 @@ function checkoutSelected(cartKeys) {
   const selected = getCartEntries().filter((entry) => cartKeys.includes(entry.cartKey))
   if (!selected.length) return { ok: false, message: 'Select at least one item to check out.' }
   if (selected.some(({ item }) => !Number.isFinite(Number(item.price)) || item.price == null || Number(item.price) < 0)) {
-    return { ok: false, message: 'Some selected items do not have a catalog price. Unselect them to continue.' }
+    return { ok: false, message: 'Some selected items do not have a complete, priced catalog package. Unselect them to continue.' }
   }
 
-  const subtotalCents = selected.reduce((sum, { item, quantity }) => sum + Math.round(Number(item.price) * 100) * quantity, 0)
-  const discountedBundleIds = new Set()
-  const groups = new Map()
-  selected.filter((entry) => entry.bundleId).forEach((entry) => {
-    if (!groups.has(entry.bundleId)) groups.set(entry.bundleId, [])
-    groups.get(entry.bundleId).push(entry)
-  })
-  for (const [bundleId, entries] of groups) {
-    const expectedSize = Number(entries[0].bundleSize)
-    const quantitySet = new Set(entries.map((entry) => entry.quantity))
-    const ids = new Set(entries.map((entry) => entry.catalogId))
-    if (expectedSize > 0 && entries.length === expectedSize && ids.size === expectedSize && quantitySet.size === 1) discountedBundleIds.add(bundleId)
-  }
-  const discountCents = selected.reduce((sum, entry) => discountedBundleIds.has(entry.bundleId)
-    ? sum + Math.round(Number(entry.item.price) * 100) * entry.quantity * 0.1
-    : sum, 0)
-  const total = Math.round((subtotalCents - discountCents)) / 100
-  const discount = Math.round(discountCents) / 100
+  const totalCents = selected.reduce((sum, { item, quantity }) => sum + Math.round(Number(item.price) * 100) * quantity, 0)
+  const discountCents = selected.filter((entry) => entry.kind === 'bundle').reduce((sum, entry) => {
+    const pricing = getBundlePricing(entry)
+    return sum + (pricing.retailCents - pricing.bundleCents) * entry.quantity
+  }, 0)
+  const total = totalCents / 100
+  const discount = discountCents / 100
   if (total > account.balance) {
     return { ok: false, message: `Your balance is short by ${formatPrice(total - account.balance)}. Cash in from your Account page.` }
   }
@@ -127,17 +197,43 @@ function checkoutSelected(cartKeys) {
   let parts = [...getParts()]
   const purchasedAt = new Date().toISOString()
   for (const entry of selected) {
+    if (entry.kind === 'bundle') {
+      const pricing = getBundlePricing(entry)
+      const components = pricing.components.map(({ item }, index) => ({
+        catalogId: item.id,
+        name: item.name,
+        category: item.category,
+        quantity: 1,
+        ownership: 'owned',
+        purchasePrice: pricing.componentPrices[index] / 100,
+        purchasedAt,
+      }))
+      parts.push({
+        id: makeId(),
+        kind: 'pc-set',
+        packageId: entry.packageId || '',
+        name: entry.bundleName || 'PC Package',
+        category: 'PC Build',
+        quantity: entry.quantity,
+        ownership: 'owned',
+        purchasePrice: components.reduce((sum, component) => sum + component.purchasePrice, 0),
+        components,
+        location: '',
+        purchasedAt,
+      })
+      continue
+    }
+
     const { item, quantity } = entry
-    const unitPrice = discountedBundleIds.has(entry.bundleId) ? Number(item.price) * 0.9 : Number(item.price)
     const owned = parts.find((part) => part.catalogId === item.id && part.ownership !== 'on-hold')
     if (owned) {
       parts = parts.map((part) => part.id === owned.id
-        ? { ...part, quantity: part.quantity + quantity, purchasePrice: Math.round((((part.purchasePrice ?? Number(item.price)) * part.quantity) + unitPrice * quantity) / (part.quantity + quantity) * 100) / 100, ownership: 'owned', purchasedAt }
+        ? { ...part, quantity: part.quantity + quantity, purchasePrice: Math.round((((part.purchasePrice ?? Number(item.price)) * part.quantity) + Number(item.price) * quantity) / (part.quantity + quantity) * 100) / 100, ownership: 'owned', purchasedAt }
         : part)
     } else {
       parts.push({
         id: makeId(), catalogId: item.id, name: item.name, category: item.category,
-        quantity, purchasePrice: unitPrice, ownership: 'owned', minStock: tracksLowStock(item.category) ? getSettings().minStock : 0,
+        quantity, purchasePrice: Number(item.price), ownership: 'owned', minStock: tracksLowStock(item.category) ? getSettings().minStock : 0,
         location: '', purchasedAt,
       })
     }
@@ -173,10 +269,13 @@ function renderCart() {
 
   $('cart-items').innerHTML = entries.map((entry) => {
     const { item, quantity, cartKey } = entry
+    const packageInfo = entry.kind === 'bundle'
+      ? `<p>Complete PC set · ${entry.bundleComponents.length} catalog parts · 10% set discount</p><small class="cart-bundle-components">Includes: ${entry.bundleComponents.map(({ item: component }) => escapeHtml(component?.name || 'Catalog part unavailable')).join(' · ')}</small>`
+      : `<p>${escapeHtml(item.category)}</p>`
     return `
     <li class="card cart-item">
       <label class="cart-select" aria-label="Select ${escapeHtml(item.name)} for checkout"><input type="checkbox" data-cart-select="${escapeHtml(cartKey)}" ${selectedIds.has(cartKey) ? 'checked' : ''}></label>
-      <div class="cart-item-info"><h2>${escapeHtml(item.name)}</h2><p>${escapeHtml(item.category)}${entry.bundleName ? ` · ${escapeHtml(entry.bundleName)} package` : ''}</p><strong>${formatPrice(item.price)}</strong></div>
+      <div class="cart-item-info"><h2>${escapeHtml(item.name)}</h2>${packageInfo}<strong>${formatPrice(item.price)}</strong></div>
       <label class="cart-quantity">Quantity<input type="number" min="1" step="1" value="${quantity}" data-cart-quantity="${escapeHtml(cartKey)}" aria-label="Quantity for ${escapeHtml(item.name)}"></label>
       <button class="btn btn-secondary btn-small" type="button" data-cart-remove="${escapeHtml(cartKey)}">Remove</button>
     </li>`
@@ -186,25 +285,13 @@ function renderCart() {
 
   const selected = entries.filter((entry) => selectedIds.has(entry.cartKey))
   const hasUnpriced = selected.some(({ item }) => item.price == null || !Number.isFinite(Number(item.price)) || Number(item.price) < 0)
-  const subtotalCents = selected.reduce((sum, { item, quantity }) => item.price == null ? sum : sum + Math.round(Number(item.price) * 100) * quantity, 0)
-  const selectedGroups = new Map()
-  selected.filter((entry) => entry.bundleId).forEach((entry) => {
-    if (!selectedGroups.has(entry.bundleId)) selectedGroups.set(entry.bundleId, [])
-    selectedGroups.get(entry.bundleId).push(entry)
-  })
-  let discountCents = 0
-  for (const group of selectedGroups.values()) {
-    const expectedSize = Number(group[0].bundleSize)
-    const quantitySet = new Set(group.map((entry) => entry.quantity))
-    const ids = new Set(group.map((entry) => entry.catalogId))
-    if (expectedSize > 0 && group.length === expectedSize && ids.size === expectedSize && quantitySet.size === 1) {
-      discountCents += group.reduce((sum, entry) => sum + Math.round(Number(entry.item.price) * 100) * entry.quantity * 0.1, 0)
-    }
-  }
-  discountCents = Math.round(discountCents)
-  const discount = discountCents / 100
-  const total = Math.round(subtotalCents - discountCents) / 100
-  $('cart-discount').textContent = hasUnpriced ? '—' : `−${formatPrice(discount)}`
+  const totalCents = selected.reduce((sum, { item, quantity }) => item.price == null ? sum : sum + Math.round(Number(item.price) * 100) * quantity, 0)
+  const discountCents = selected.filter((entry) => entry.kind === 'bundle').reduce((sum, entry) => {
+    const pricing = getBundlePricing(entry)
+    return sum + (pricing.retailCents - pricing.bundleCents) * entry.quantity
+  }, 0)
+  const total = totalCents / 100
+  $('cart-discount').textContent = hasUnpriced ? '—' : `−${formatPrice(discountCents / 100)}`
   $('cart-total').textContent = hasUnpriced ? 'Price needed' : formatPrice(total)
   const error = $('cart-error')
   if (hasUnpriced) {
@@ -222,6 +309,7 @@ function renderCart() {
 
 export function initCartPage(catalogData) {
   catalog = catalogData
+  migrateLegacyBundles()
   $('cart-items').addEventListener('change', (event) => {
     const checkbox = event.target.closest('[data-cart-select]')
     if (checkbox) {
@@ -246,7 +334,7 @@ export function initCartPage(catalogData) {
       $('cart-error').hidden = false
       return
     }
-    showToast(`${result.quantity} item(s) checked out for ${formatPrice(result.total)}${result.discount ? `, including ${formatPrice(result.discount)} package savings` : ''}.`)
+    showToast(`${result.quantity} cart item(s) checked out for ${formatPrice(result.total)}${result.discount ? `, including ${formatPrice(result.discount)} set savings` : ''}.`)
   })
   subscribeCart(renderCart)
   window.addEventListener('pyesa-balance-updated', renderCart)

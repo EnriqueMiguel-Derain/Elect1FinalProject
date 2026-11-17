@@ -16,12 +16,15 @@ export function showItemDetails(item, inventoryPart = null, { onAdd, onComment }
     const text = Array.isArray(value) ? value.join(', ') : typeof value === 'object' ? JSON.stringify(value) : String(value)
     return `<div class="detail-row"><dt>${escapeHtml(label)}</dt><dd>${escapeHtml(text)}</dd></div>`
   }).join('')
+  const setComponents = inventoryPart?.kind === 'pc-set' ? `
+    <div class="detail-row"><dt>Included parts</dt><dd><ul class="set-component-list">${(inventoryPart.components || []).map((component) => `<li>${escapeHtml(component.name)} · ${escapeHtml(component.category)}${component.quantity > 1 ? ` × ${component.quantity}` : ''}${component.purchasePrice != null ? ` · ${formatPrice(component.purchasePrice)}` : ''}</li>`).join('')}</ul></dd></div>` : ''
   const inventoryRows = inventoryPart ? `
     <div class="detail-row"><dt>Inventory status</dt><dd>${inventoryPart.ownership === 'on-hold' ? 'On hold' : 'Owned'}</dd></div>
     <div class="detail-row"><dt>Quantity</dt><dd>${inventoryPart.quantity}</dd></div>
     ${inventoryPart.location ? `<div class="detail-row"><dt>Location</dt><dd>${escapeHtml(inventoryPart.location)}</dd></div>` : ''}
     ${tracksLowStock(inventoryPart.category) ? `<div class="detail-row"><dt>Restock threshold</dt><dd>${inventoryPart.minStock ?? 0}</dd></div><div class="detail-row"><dt>Stock status</dt><dd>${stockLabel(inventoryPart)}</dd></div>` : ''}
-    ${inventoryPart.purchasedAt ? `<div class="detail-row"><dt>Purchased</dt><dd>${escapeHtml(new Date(inventoryPart.purchasedAt).toLocaleString('en-PH'))}</dd></div>` : ''}` : ''
+    ${inventoryPart.purchasedAt ? `<div class="detail-row"><dt>Purchased</dt><dd>${escapeHtml(new Date(inventoryPart.purchasedAt).toLocaleString('en-PH'))}</dd></div>` : ''}
+    ${inventoryPart.assembledAt ? `<div class="detail-row"><dt>Assembled</dt><dd>${escapeHtml(new Date(inventoryPart.assembledAt).toLocaleString('en-PH'))}</dd></div>` : ''}` : ''
   body.innerHTML = `
     <div class="detail-summary"><p class="detail-category">${escapeHtml(item.category)}${item.brand ? ` · ${escapeHtml(item.brand)}` : ''}</p>
       <p class="detail-price${(inventoryPart?.purchasePrice ?? item.price) == null ? ' price-none' : ''}">${formatPrice(inventoryPart?.purchasePrice ?? item.price)}</p>
@@ -30,7 +33,7 @@ export function showItemDetails(item, inventoryPart = null, { onAdd, onComment }
     <dl class="detail-list">
       ${item.year ? `<div class="detail-row"><dt>Model year</dt><dd>${escapeHtml(item.year)}</dd></div>` : ''}
       ${item.sourceUrl ? `<div class="detail-row"><dt>Price reference</dt><dd>${escapeHtml(item.sourceName || 'Retailer listing')}${item.priceCheckedAt ? ` · checked ${escapeHtml(item.priceCheckedAt)}` : ''} · <a href="${escapeHtml(item.sourceUrl)}" target="_blank" rel="noopener noreferrer">Open listing ↗</a></dd></div>` : ''}
-      ${inventoryRows}${specRows}
+      ${inventoryRows}${setComponents}${specRows}
       ${!specs.length && !inventoryPart && !item.year ? '<p class="detail-empty">No additional specifications are listed yet.</p>' : ''}
     </dl>
     ${inventoryPart ? `<section class="detail-comments"><h3>Comments</h3><ul id="item-comments-list" class="item-comments">${(inventoryPart.comments || []).map(commentRow).join('') || '<li class="detail-empty">No comments yet.</li>'}</ul><form id="item-comment-form" class="comment-form"><label for="item-comment-input">Add a comment</label><textarea id="item-comment-input" name="comment" rows="3" maxlength="500" placeholder="Add a note about this item..."></textarea><button type="submit" class="btn btn-small">Save comment</button></form></section>` : ''}`

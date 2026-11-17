@@ -1,13 +1,14 @@
 import { getParts, subscribe } from './store.js'
 import { getCurrentAccount } from './accounts.js'
 import { addToCart, addBundleToCart, addItemsToCart } from './cart.js'
+import { assemblePCSet } from './inventory.js'
 import { productCard } from './components.js'
 import { setCatalogCategory } from './catalog.js'
 import { icon } from './icons.js'
-import { showToast, formatPrice, escapeHtml } from './ui.js'
+import { showToast, formatPrice, escapeHtml, confirmInApp } from './ui.js'
 import { showItemDetails } from './item-details.js'
 
-const ESSENTIAL_PARTS = ['cpu-r5-7600', 'mb-msi-b650m', 'ram-kingston-16-ddr5', 'ssd-samsung-990-1tb', 'psu-msi-a550bn', 'case-cm-elite302']
+const ESSENTIAL_PARTS = ['cpu-r5-7600', 'cooler-amd-wraith-stealth', 'mb-msi-b650m', 'ram-kingston-16-ddr5', 'ssd-samsung-990-1tb', 'psu-msi-a550bn', 'case-cm-elite302']
 const GAMING_PARTS = [...ESSENTIAL_PARTS, 'gpu-zotac-4060']
 const PC_PACKAGES = [
   { id: 'essential-pc', name: 'Essential PC', note: 'Core PC components · no discrete graphics card', partIds: ESSENTIAL_PARTS },
@@ -112,7 +113,7 @@ function initPCBuilder(catalog) {
   const accountSummary = document.getElementById('pc-builder-balance')
   if (!builder || !loginPrompt || !accountSummary) return
 
-  const getPackageParts = (build) => build.partIds.map((id) => catalog.find((item) => item.id === id)).filter(Boolean)
+  const getPackageParts = (build) => build.partIds.map((id) => catalog.find((item) => item.id === id))
   const getAccountQuantities = (item) => getParts().filter((part) => part.catalogId === item.id).reduce((counts, part) => {
     const key = part.ownership === 'on-hold' ? 'onHold' : 'owned'
     counts[key] += Number(part.quantity || 0)
@@ -129,11 +130,19 @@ function initPCBuilder(catalog) {
     accountSummary.textContent = `Available balance: ${formatPrice(account.balance)} · Bundle prices shown below include a 10% full-package discount.`
     builder.innerHTML = PC_PACKAGES.map((build) => {
       const items = getPackageParts(build)
+      const missingCatalogItems = items.filter((item) => !item)
+      if (missingCatalogItems.length) {
+        return `<article class="pc-package card"><h2>${escapeHtml(build.name)} is unavailable</h2><p>One or more package components are missing from the catalog.</p></article>`
+      }
       const retailTotal = items.reduce((sum, item) => sum + (Number(item.price) || 0), 0)
       const discountedTotal = Math.round(retailTotal * 90) / 100
       const missing = items.filter((item) => {
         const count = getAccountQuantities(item)
         return count.owned + count.onHold < 1
+      })
+      const canAssemble = items.every((item) => {
+        const count = getAccountQuantities(item)
+        return count.owned + count.onHold >= 1
       })
       const missingTotal = missing.reduce((sum, item) => sum + (Number(item.price) || 0), 0)
       return `
@@ -142,8 +151,14 @@ function initPCBuilder(catalog) {
           <ul class="pc-package-parts">${items.map((item) => {
             const count = getAccountQuantities(item)
             const have = count.owned + count.onHold
-            const status = count.owned ? `Owned ${count.owned}` : count.onHold ? `On hold ${count.onHold}` : 'Need 1'
-            return `<li><span><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.category)} · ${formatPrice(item.price)}</small></span><span class="tag ${have ? 'tag-ok' : 'tag-hold'}">${status}</span></li>`
+            const status = count.owned && count.onHold
+              ? `In inventory · ${count.owned} owned, ${count.onHold} on hold`
+              : count.owned
+                ? `✓ In inventory · ${count.owned} owned`
+                : count.onHold
+                  ? `In inventory · ${count.onHold} on hold`
+                  : 'Needed · 1'
+            return `<li><span><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.category)} · ${formatPrice(item.price)}</small></span><span class="tag ${count.owned ? 'tag-ok' : 'tag-hold'}">${escapeHtml(status)}</span></li>`
           }).join('')}</ul>
           <div class="pc-package-prices">
             <p><span>Package price</span><s>${formatPrice(retailTotal)}</s></p>
@@ -153,23 +168,46 @@ function initPCBuilder(catalog) {
           <div class="pc-package-actions">
             <button type="button" class="btn" data-buy-package="${escapeHtml(build.id)}">Buy complete package · save ${formatPrice(retailTotal - discountedTotal)}</button>
             <button type="button" class="btn btn-secondary" data-buy-missing="${escapeHtml(build.id)}" ${missing.length ? '' : 'disabled'}>${missing.length ? `Buy ${missing.length} missing part${missing.length === 1 ? '' : 's'} · no discount` : 'You already have all parts'}</button>
+            <button type="button" class="btn btn-secondary" data-assemble-package="${escapeHtml(build.id)}" ${canAssemble ? '' : 'disabled'}>${canAssemble ? 'Build set from inventory' : 'Build set · need all parts'}</button>
           </div>
           <p class="pc-package-footnote">Complete-package savings apply only when all parts in this package are checked out together.</p>
         </article>`
     }).join('')
   }
 
-  builder.addEventListener('click', (event) => {
+  builder.addEventListener('click', async (event) => {
     const fullButton = event.target.closest('[data-buy-package]')
     const missingButton = event.target.closest('[data-buy-missing]')
-    if (!fullButton && !missingButton) return
-    const packageId = fullButton ? fullButton.dataset.buyPackage : missingButton.dataset.buyMissing
+    const assembleButton = event.target.closest('[data-assemble-package]')
+    if (!fullButton && !missingButton && !assembleButton) return
+    const packageId = fullButton
+      ? fullButton.dataset.buyPackage
+      : missingButton
+        ? missingButton.dataset.buyMissing
+        : assembleButton.dataset.assemblePackage
     const build = PC_PACKAGES.find((item) => item.id === packageId)
     if (!build) return
     const items = getPackageParts(build)
+    if (items.some((item) => !item)) {
+      showToast('This package has a component missing from the catalog.', true)
+      return
+    }
+
+    if (assembleButton) {
+      if (!await confirmInApp({
+        title: 'Build PC set from inventory?',
+        message: `Use one of each of the ${items.length} listed parts to create a ${build.name} set?`,
+        confirmLabel: 'Build set',
+      })) return
+      const result = assemblePCSet(build, catalog)
+      if (!result.ok) return showToast(result.message, true)
+      showToast(`${build.name} built from your inventory parts.`)
+      location.hash = '#inventory'
+      return
+    }
 
     if (fullButton) {
-      if (!addBundleToCart(items, build.name)) {
+      if (!addBundleToCart(items, build.name, build.id)) {
         showToast('Sign in before adding a package to your cart.')
         location.hash = '#account'
         return
