@@ -1,11 +1,19 @@
 import { getParts, subscribe } from './store.js'
-import { addToCart } from './cart.js'
+import { getCurrentAccount } from './accounts.js'
+import { addToCart, addBundleToCart, addItemsToCart } from './cart.js'
 import { productCard } from './components.js'
 import { setCatalogCategory } from './catalog.js'
 import { icon } from './icons.js'
 import { showToast, formatPrice, escapeHtml } from './ui.js'
 import { showItemDetails } from './item-details.js'
-import { PC_PACKAGES } from './pc-packages.js'
+
+const ESSENTIAL_PARTS = ['cpu-r5-7600', 'mb-msi-b650m', 'ram-kingston-16-ddr5', 'ssd-samsung-990-1tb', 'psu-msi-a550bn', 'case-cm-elite302']
+const GAMING_PARTS = [...ESSENTIAL_PARTS, 'gpu-zotac-4060']
+const PC_PACKAGES = [
+  { id: 'essential-pc', name: 'Essential PC', note: 'Core PC components · no discrete graphics card', partIds: ESSENTIAL_PARTS },
+  { id: 'gaming-pc', name: 'Gaming PC', note: 'Core components with a dedicated graphics card', partIds: GAMING_PARTS, featured: true },
+  { id: 'complete-setup', name: 'Complete Gaming Setup', note: 'Gaming PC plus monitor, keyboard, and mouse', partIds: [...GAMING_PARTS, 'mon-aoc-24g50f', 'kb-aula-au75', 'mouse-aula-sc580x'] },
+]
 
 const CATEGORY_LABELS = {
   CPU: 'Processors', GPU: 'Graphics Cards', RAM: 'Memory',
@@ -80,6 +88,8 @@ export function initHome(catalog) {
     </article>`
   }).join('')
 
+  initPCBuilder(catalog)
+
   // Any link with data-category (tiles, banner, footer) pre-filters the Catalog page.
   document.addEventListener('click', (event) => {
     const link = event.target.closest('[data-category]')
@@ -94,4 +104,94 @@ export function initHome(catalog) {
     }), { threshold: 0.12, rootMargin: '0px 0px -32px 0px' })
     reveals.forEach((el) => io.observe(el))
   } else reveals.forEach((el) => el.classList.add('in'))
+}
+
+function initPCBuilder(catalog) {
+  const builder = document.getElementById('pc-builder-packages')
+  const loginPrompt = document.getElementById('pc-builder-login')
+  const accountSummary = document.getElementById('pc-builder-balance')
+  if (!builder || !loginPrompt || !accountSummary) return
+
+  const getPackageParts = (build) => build.partIds.map((id) => catalog.find((item) => item.id === id)).filter(Boolean)
+  const getAccountQuantities = (item) => getParts().filter((part) => part.catalogId === item.id).reduce((counts, part) => {
+    const key = part.ownership === 'on-hold' ? 'onHold' : 'owned'
+    counts[key] += Number(part.quantity || 0)
+    return counts
+  }, { owned: 0, onHold: 0 })
+
+  const render = () => {
+    const account = getCurrentAccount()
+    loginPrompt.hidden = Boolean(account)
+    accountSummary.hidden = !account
+    builder.hidden = !account
+    if (!account) return
+
+    accountSummary.textContent = `Available balance: ${formatPrice(account.balance)} · Bundle prices shown below include a 10% full-package discount.`
+    builder.innerHTML = PC_PACKAGES.map((build) => {
+      const items = getPackageParts(build)
+      const retailTotal = items.reduce((sum, item) => sum + (Number(item.price) || 0), 0)
+      const discountedTotal = Math.round(retailTotal * 90) / 100
+      const missing = items.filter((item) => {
+        const count = getAccountQuantities(item)
+        return count.owned + count.onHold < 1
+      })
+      const missingTotal = missing.reduce((sum, item) => sum + (Number(item.price) || 0), 0)
+      return `
+        <article class="pc-package card${build.featured ? ' pc-package-featured' : ''}">
+          <div class="pc-package-heading"><div><p class="eyebrow">${items.length} components</p><h2>${escapeHtml(build.name)}</h2><p>${escapeHtml(build.note)}</p></div><span class="pc-package-discount">10% off</span></div>
+          <ul class="pc-package-parts">${items.map((item) => {
+            const count = getAccountQuantities(item)
+            const have = count.owned + count.onHold
+            const status = count.owned ? `Owned ${count.owned}` : count.onHold ? `On hold ${count.onHold}` : 'Need 1'
+            return `<li><span><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.category)} · ${formatPrice(item.price)}</small></span><span class="tag ${have ? 'tag-ok' : 'tag-hold'}">${status}</span></li>`
+          }).join('')}</ul>
+          <div class="pc-package-prices">
+            <p><span>Package price</span><s>${formatPrice(retailTotal)}</s></p>
+            <p class="pc-package-total"><span>Complete package</span><strong>${formatPrice(discountedTotal)}</strong></p>
+            <p><span>Missing parts only · no discount</span><strong>${formatPrice(missingTotal)}</strong></p>
+          </div>
+          <div class="pc-package-actions">
+            <button type="button" class="btn" data-buy-package="${escapeHtml(build.id)}">Buy complete package · save ${formatPrice(retailTotal - discountedTotal)}</button>
+            <button type="button" class="btn btn-secondary" data-buy-missing="${escapeHtml(build.id)}" ${missing.length ? '' : 'disabled'}>${missing.length ? `Buy ${missing.length} missing part${missing.length === 1 ? '' : 's'} · no discount` : 'You already have all parts'}</button>
+          </div>
+          <p class="pc-package-footnote">Complete-package savings apply only when all parts in this package are checked out together.</p>
+        </article>`
+    }).join('')
+  }
+
+  builder.addEventListener('click', (event) => {
+    const fullButton = event.target.closest('[data-buy-package]')
+    const missingButton = event.target.closest('[data-buy-missing]')
+    if (!fullButton && !missingButton) return
+    const packageId = fullButton ? fullButton.dataset.buyPackage : missingButton.dataset.buyMissing
+    const build = PC_PACKAGES.find((item) => item.id === packageId)
+    if (!build) return
+    const items = getPackageParts(build)
+
+    if (fullButton) {
+      if (!addBundleToCart(items, build.name)) {
+        showToast('Sign in before adding a package to your cart.')
+        location.hash = '#account'
+        return
+      }
+      showToast(`${build.name} added to your cart with the 10% package offer.`)
+    } else {
+      const missing = items.filter((item) => {
+        const count = getAccountQuantities(item)
+        return count.owned + count.onHold < 1
+      })
+      if (!missing.length) return
+      if (!addItemsToCart(missing)) {
+        showToast('Sign in before adding parts to your cart.')
+        location.hash = '#account'
+        return
+      }
+      showToast(`${missing.length} missing part(s) added at regular catalog prices.`)
+    }
+    location.hash = '#cart'
+  })
+
+  subscribe(render)
+  window.addEventListener('pyesa-balance-updated', render)
+  render()
 }
