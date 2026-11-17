@@ -195,6 +195,30 @@ svg { display: block; }
 .preset ul { list-style: none; margin: 0; padding: 0; flex: 1; }
 .preset li { padding: 11px 18px; border-top: 1px solid var(--border); font-size: 0.88rem; color: var(--text-soft); text-align: center; }
 .preset-foot { padding: 16px 18px; border-top: 1px solid var(--border); }
+.pc-builder-login, .pc-builder-balance { margin: 16px 0; color: var(--muted); }
+.pc-builder-login .link { margin-left: 6px; }
+.pc-builder-packages { display: grid; grid-template-columns: 1fr; gap: 16px; margin: 18px 0 32px; }
+.pc-package { display: flex; flex-direction: column; gap: 16px; }
+.pc-package-featured { border-color: var(--accent-hover); box-shadow: 0 0 34px -18px var(--glow); }
+.pc-package-heading { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+.pc-package-heading h2 { margin: 0 0 4px; font-size: 1.2rem; }
+.pc-package-heading p { margin: 0; color: var(--muted); }
+.pc-package-heading .eyebrow { margin-bottom: 6px; color: var(--accent-soft); font-size: .75rem; text-transform: uppercase; letter-spacing: .1em; }
+.pc-package-discount { flex: none; border: 1px solid var(--accent-hover); border-radius: 999px; padding: 6px 10px; color: var(--accent-soft); font-weight: 800; }
+.pc-package-parts { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--border); }
+.pc-package-parts li { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 2px; border-bottom: 1px solid var(--border); }
+.pc-package-parts li > span:first-child { min-width: 0; }
+.pc-package-parts strong, .pc-package-parts small { display: block; }
+.pc-package-parts strong { overflow-wrap: anywhere; font-size: .9rem; }
+.pc-package-parts small { margin-top: 2px; color: var(--muted); }
+.pc-package-prices { display: grid; gap: 8px; margin-top: auto; }
+.pc-package-prices p { display: flex; justify-content: space-between; gap: 12px; margin: 0; color: var(--muted); }
+.pc-package-prices strong { color: var(--text-strong); }
+.pc-package-prices .pc-package-total { padding-top: 10px; border-top: 1px solid var(--border); color: var(--text); }
+.pc-package-total strong { font: 700 1.25rem var(--font-head); }
+.pc-package-actions { display: grid; gap: 8px; }
+.pc-package-actions .btn:disabled { opacity: .5; cursor: not-allowed; }
+.pc-package-footnote { margin: 0; color: var(--muted); font-size: .78rem; line-height: 1.5; }
 
 /* ---------- Forms, toolbar, lists (Inventory + Catalog) ---------- */
 .page h1 { font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
@@ -336,6 +360,7 @@ label.btn { cursor: pointer; }
   .build-grid { grid-template-columns: 0.9fr 1.1fr; }
   .build h2 { font-size: 3rem; }
   .presets { grid-template-columns: repeat(3, 1fr); }
+  .pc-builder-packages { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .features { grid-template-columns: repeat(4, 1fr); }
   .cta { flex-direction: row; align-items: center; justify-content: space-between; padding: 32px; }
   .cta h2 { font-size: 2rem; }

@@ -15,7 +15,8 @@
     "sourceUrl": "https://www.pcworth.com/pricelist?all=1&sort=name_asc",
     "sourceName": "PC Worth",
     "priceCheckedAt": "2026-11-12",
-    "brand": "AMD"
+    "brand": "AMD",
+    "featured": true
   },
   {
     "id": "mb-msi-b650m",
@@ -49,7 +50,8 @@
     "sourceUrl": "https://www.pcworth.com/product/kingston-kvr48u40bs8-16-udimm-16gbx116gb-4800mhz-ddr5",
     "sourceName": "PC Worth",
     "priceCheckedAt": "2026-11-12",
-    "brand": "Kingston"
+    "brand": "Kingston",
+    "featured": true
   },
   {
     "id": "gpu-zotac-4060",
@@ -65,7 +67,8 @@
     "sourceUrl": "https://www.pcworth.com/product/geforce-rtx-4060-zotac-twin-edge-oc-8gb-gddr6-dual-fan",
     "sourceName": "PC Worth",
     "priceCheckedAt": "2026-11-12",
-    "brand": "ZOTAC"
+    "brand": "ZOTAC",
+    "featured": true
   },
   {
     "id": "ssd-samsung-990-1tb",
@@ -169,7 +172,8 @@
     },
     "sourceUrl": "https://circuit.rocks/products/arduino-uno-r3-ch340",
     "sourceName": "Circuitrocks",
-    "priceCheckedAt": "2026-11-18"
+    "priceCheckedAt": "2026-11-18",
+    "featured": true
   },
   {
     "id": "mcu-esp32-ch9102",
@@ -248,7 +252,8 @@
     },
     "sourceUrl": "https://circuit.rocks/products/dht22-temperature-and-humidity-digital-sensor",
     "sourceName": "Circuitrocks",
-    "priceCheckedAt": "2026-11-18"
+    "priceCheckedAt": "2026-11-18",
+    "featured": true
   },
   {
     "id": "sen-dht11",
@@ -324,7 +329,8 @@
     },
     "sourceUrl": "https://circuit.rocks/products/resistor-through-hole-10k-ohm-5-14w-pack-of-10",
     "sourceName": "Circuitrocks",
-    "priceCheckedAt": "2026-11-18"
+    "priceCheckedAt": "2026-11-18",
+    "featured": true
   },
   {
     "id": "res-220",
@@ -408,7 +414,8 @@
     },
     "sourceUrl": "https://circuit.rocks/products/capacitors-0-1uf-ceramic-10-pack",
     "sourceName": "Circuitrocks",
-    "priceCheckedAt": "2026-11-18"
+    "priceCheckedAt": "2026-11-18",
+    "featured": true
   },
   {
     "id": "cap-100uf-16",
@@ -629,7 +636,8 @@
     },
     "sourceUrl": "https://circuit.rocks/products/timer-delay-555-single-timer-3pcs-integrated-circuits",
     "sourceName": "Circuitrocks",
-    "priceCheckedAt": "2026-11-18"
+    "priceCheckedAt": "2026-11-18",
+    "featured": true
   },
   {
     "id": "ic-lm358",
