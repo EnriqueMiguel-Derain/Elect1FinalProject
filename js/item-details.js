@@ -29,6 +29,7 @@ export function showItemDetails(item, inventoryPart = null, { onAdd, onComment }
     </div>
     <dl class="detail-list">
       ${item.year ? `<div class="detail-row"><dt>Model year</dt><dd>${escapeHtml(item.year)}</dd></div>` : ''}
+      ${item.sourceUrl ? `<div class="detail-row"><dt>Price reference</dt><dd>${escapeHtml(item.sourceName || 'Retailer listing')}${item.priceCheckedAt ? ` · checked ${escapeHtml(item.priceCheckedAt)}` : ''} · <a href="${escapeHtml(item.sourceUrl)}" target="_blank" rel="noopener noreferrer">Open listing ↗</a></dd></div>` : ''}
       ${inventoryRows}${specRows}
       ${!specs.length && !inventoryPart && !item.year ? '<p class="detail-empty">No additional specifications are listed yet.</p>' : ''}
     </dl>
