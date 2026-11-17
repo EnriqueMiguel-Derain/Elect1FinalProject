@@ -157,7 +157,7 @@ function initPCBuilder(catalog) {
                 ? `✓ In inventory · ${count.owned} owned`
                 : count.onHold
                   ? `In inventory · ${count.onHold} on hold`
-                  : 'Needed · 1'
+                  : 'Needed'
             return `<li><span><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.category)} · ${formatPrice(item.price)}</small></span><span class="tag ${count.owned ? 'tag-ok' : 'tag-hold'}">${escapeHtml(status)}</span></li>`
           }).join('')}</ul>
           <div class="pc-package-prices">

@@ -17,7 +17,7 @@ export function showItemDetails(item, inventoryPart = null, { onAdd, onComment }
     return `<div class="detail-row"><dt>${escapeHtml(label)}</dt><dd>${escapeHtml(text)}</dd></div>`
   }).join('')
   const setComponents = inventoryPart?.kind === 'pc-set' ? `
-    <div class="detail-row"><dt>Included parts</dt><dd><ul class="set-component-list">${(inventoryPart.components || []).map((component) => `<li>${escapeHtml(component.name)} · ${escapeHtml(component.category)}${component.quantity > 1 ? ` × ${component.quantity}` : ''}${component.purchasePrice != null ? ` · ${formatPrice(component.purchasePrice)}` : ''}</li>`).join('')}</ul></dd></div>` : ''
+    <div class="detail-row"><dt>Included parts</dt><dd><ul class="set-component-list">${(inventoryPart.components || []).map((component) => `<li>${escapeHtml(component.name)} · ${escapeHtml(component.category)}${component.quantity > 1 ? ` × ${component.quantity}` : ''}${component.purchasePrice != null ? ` · ${formatPrice(component.purchasePrice)}` : ''}${component.sourceUrl ? ` · <a href="${escapeHtml(component.sourceUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(component.sourceName || 'Price reference')} · open listing ↗</a>${component.priceCheckedAt ? ` <small>(checked ${escapeHtml(component.priceCheckedAt)})</small>` : ''}` : ''}</li>`).join('')}</ul></dd></div>` : ''
   const inventoryRows = inventoryPart ? `
     <div class="detail-row"><dt>Inventory status</dt><dd>${inventoryPart.ownership === 'on-hold' ? 'On hold' : 'Owned'}</dd></div>
     <div class="detail-row"><dt>Quantity</dt><dd>${inventoryPart.quantity}</dd></div>
@@ -37,9 +37,8 @@ export function showItemDetails(item, inventoryPart = null, { onAdd, onComment }
       ${!specs.length && !inventoryPart && !item.year ? '<p class="detail-empty">No additional specifications are listed yet.</p>' : ''}
     </dl>
     ${inventoryPart ? `<section class="detail-comments"><h3>Comments</h3><ul id="item-comments-list" class="item-comments">${(inventoryPart.comments || []).map(commentRow).join('') || '<li class="detail-empty">No comments yet.</li>'}</ul><form id="item-comment-form" class="comment-form"><label for="item-comment-input">Add a comment</label><textarea id="item-comment-input" name="comment" rows="3" maxlength="500" placeholder="Add a note about this item..."></textarea><button type="submit" class="btn btn-small">Save comment</button></form></section>` : ''}`
-  actions.innerHTML = `${inventoryPart ? '' : onAdd ? '<button type="button" class="btn" data-detail-add>Add to cart</button>' : ''}<button type="button" class="btn btn-secondary" data-detail-close>Close</button>`
+  actions.innerHTML = `${inventoryPart ? '' : onAdd ? '<button type="button" class="btn" data-detail-add>Add to cart</button>' : ''}`
   actions.querySelector('[data-detail-add]')?.addEventListener('click', () => { onAdd?.() })
-  actions.querySelector('[data-detail-close]')?.addEventListener('click', () => dialog.close())
   body.querySelector('#item-comment-form')?.addEventListener('submit', (event) => {
     event.preventDefault()
     const input = body.querySelector('#item-comment-input')

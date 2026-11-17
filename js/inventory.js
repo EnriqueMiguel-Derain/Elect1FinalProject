@@ -119,7 +119,19 @@ async function handleListClick(event) {
     } : catalog.find((entry) => entry.id === part.catalogId) || {
       id: part.catalogId, name: part.name, category: part.category, summary: '', specs: {}, price: null,
     }
-    showItemDetails(item, part, {
+    const detailPart = part.kind === 'pc-set' ? {
+      ...part,
+      components: (part.components || []).map((component) => {
+        const catalogItem = catalog.find((entry) => entry.id === component.catalogId)
+        return {
+          ...component,
+          sourceUrl: component.sourceUrl || catalogItem?.sourceUrl,
+          sourceName: component.sourceName || catalogItem?.sourceName,
+          priceCheckedAt: component.priceCheckedAt || catalogItem?.priceCheckedAt,
+        }
+      }),
+    } : part
+    showItemDetails(item, detailPart, {
       onComment: (comment) => {
         const nextComments = [...(part.comments || []), { text: comment, createdAt: new Date().toISOString() }]
         parts = parts.map((row) => row.id === id ? { ...row, comments: nextComments } : row)
