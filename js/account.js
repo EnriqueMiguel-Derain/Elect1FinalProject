@@ -1,5 +1,5 @@
 import { getParts, setParts, subscribe, reloadAccountParts } from './store.js'
-import { getCurrentAccount, signIn, signOut, adjustCurrentBalance } from './accounts.js'
+import { getCurrentAccount, signIn, signUp, signOut, adjustCurrentBalance, isAccountServiceConfigured } from './accounts.js'
 import { getStockStatus, tracksLowStock } from './availability.js'
 import { loadProfile, saveProfile } from './profile.js'
 import { showToast, escapeHtml, formatPrice, confirmInApp } from './ui.js'
@@ -64,8 +64,17 @@ function clearErrors() {
 
 function renderSession() {
   const account = getCurrentAccount()
+  $('auth-panel').hidden = Boolean(account)
   $('login-form').hidden = Boolean(account)
+  if ($('signup-form')) $('signup-form').hidden = Boolean(account) || $('show-signup').getAttribute('aria-selected') !== 'true'
   $('account-content').hidden = !account
+  const configured = isAccountServiceConfigured()
+  $('auth-setup-notice').hidden = Boolean(account) || (configured && !window.PYESA_AUTH_INIT_ERROR)
+  if (window.PYESA_AUTH_INIT_ERROR) $('auth-setup-notice').textContent = 'Could not connect to the account service. Check the Supabase project settings and try refreshing.'
+  if (!configured) {
+    $('login-form').querySelector('button[type="submit"]').disabled = true
+    $('signup-form').querySelector('button[type="submit"]').disabled = true
+  }
   if (!account) return
   profile = loadProfile()
   $('account-role').textContent = account.role === 'admin' ? 'Administrator account' : 'Student account'
@@ -92,24 +101,58 @@ function openBalanceDialog(direction) {
 
 function bindEvents() {
   const loginForm = $('login-form')
-  loginForm.addEventListener('submit', (event) => {
+  const signupForm = $('signup-form')
+  $('show-signin').addEventListener('click', () => setAuthTab('signin'))
+  $('show-signup').addEventListener('click', () => setAuthTab('signup'))
+  loginForm.addEventListener('submit', async (event) => {
     event.preventDefault()
-    const username = loginForm.elements.username.value
+    const submit = loginForm.querySelector('button[type="submit"]')
+    submit.disabled = true
     const password = loginForm.elements.password.value
-    if (!signIn(username, password)) {
-      $('login-error').textContent = 'That username and password do not match.'
+    try {
+      await signIn(loginForm.elements.email.value, password)
+      $('login-error').hidden = true
+      loginForm.reset()
+      reloadAccountParts()
+      refreshCart()
+      renderSession()
+      showToast('Signed in.')
+    } catch (error) {
+      $('login-error').textContent = error.message || 'We could not sign you in. Check your email and password.'
       $('login-error').hidden = false
-      return
+    } finally {
+      submit.disabled = !isAccountServiceConfigured()
     }
-    $('login-error').hidden = true
-    loginForm.reset()
-    reloadAccountParts()
-    refreshCart()
-    renderSession()
-    showToast('Signed in.')
   })
-  $('account-logout').addEventListener('click', () => {
-    signOut()
+  signupForm.addEventListener('submit', async (event) => {
+    event.preventDefault()
+    if (!signupForm.reportValidity()) return
+    const submit = signupForm.querySelector('button[type="submit"]')
+    submit.disabled = true
+    $('signup-error').hidden = true
+    $('signup-success').hidden = true
+    try {
+      const result = await signUp({ name: signupForm.elements.name.value, email: signupForm.elements.email.value, password: signupForm.elements.password.value })
+      if (result.needsEmailConfirmation) {
+        $('signup-success').textContent = 'Account created. Check your email to confirm it, then sign in here.'
+        $('signup-success').hidden = false
+        signupForm.reset()
+      } else {
+        signupForm.reset()
+        reloadAccountParts()
+        refreshCart()
+        renderSession()
+        showToast('Account created and signed in.')
+      }
+    } catch (error) {
+      $('signup-error').textContent = error.message || 'We could not create the account. Please try again.'
+      $('signup-error').hidden = false
+    } finally {
+      submit.disabled = !isAccountServiceConfigured()
+    }
+  })
+  $('account-logout').addEventListener('click', async () => {
+    try { await signOut() } catch (error) { return showToast(error.message || 'Unable to sign out.', true) }
     reloadAccountParts()
     refreshCart()
     renderSession()
@@ -206,6 +249,18 @@ function bindEvents() {
     window.dispatchEvent(new Event('pyesa-balance-updated'))
     showToast(`Inventory sold for ${formatPrice(proceeds)}.`)
   })
+}
+
+function setAuthTab(tab) {
+  const signingUp = tab === 'signup'
+  $('show-signin').classList.toggle('active', !signingUp)
+  $('show-signup').classList.toggle('active', signingUp)
+  $('show-signin').setAttribute('aria-selected', String(!signingUp))
+  $('show-signup').setAttribute('aria-selected', String(signingUp))
+  $('login-form').hidden = signingUp
+  $('signup-form').hidden = !signingUp
+  if (signingUp) $('signup-name').focus()
+  else $('login-email').focus()
 }
 
 /* ---------- Stats + restock list ---------- */

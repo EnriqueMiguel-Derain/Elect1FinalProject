@@ -235,20 +235,35 @@
       <h1>Account</h1>
       <p class="summary">Sign in to view your profile and personal inventory.</p>
 
-      <form id="login-form" class="card form-grid login-card" novalidate>
+      <div id="auth-panel" class="card login-card">
+        <div class="auth-tabs" role="tablist" aria-label="Account access">
+          <button id="show-signin" class="auth-tab active" type="button" role="tab" aria-selected="true" aria-controls="login-form">Sign in</button>
+          <button id="show-signup" class="auth-tab" type="button" role="tab" aria-selected="false" aria-controls="signup-form">Create account</button>
+        </div>
+        <form id="login-form" class="form-grid" novalidate>
         <h2>Sign in to Pyesa</h2>
-        <p>Use one of the demo accounts to get started.</p>
-        <label for="login-username">Username
-          <input id="login-username" name="username" autocomplete="username" required>
+        <p>Use your email and password to open your account.</p>
+        <label for="login-email">Email
+          <input id="login-email" name="email" type="email" autocomplete="email" required>
         </label>
         <label for="login-password">Password
           <input id="login-password" name="password" type="password" autocomplete="current-password" required>
         </label>
         <p id="login-error" class="error" role="alert" hidden></p>
         <button type="submit" class="btn">Sign in</button>
-        <small class="hint">Student: enrique / pyesa123 · Admin: admin / admin123</small>
-        <small class="hint">Demo only: accounts and passwords are stored in this browser.</small>
-      </form>
+        </form>
+        <form id="signup-form" class="form-grid" novalidate hidden>
+          <h2>Create your Pyesa account</h2>
+          <p>Your profile, balance, cart, and inventory will be saved to your account.</p>
+          <label for="signup-name">Display name<input id="signup-name" name="name" autocomplete="name" maxlength="40" required></label>
+          <label for="signup-email">Email<input id="signup-email" name="email" type="email" autocomplete="email" required></label>
+          <label for="signup-password">Password<input id="signup-password" name="password" type="password" autocomplete="new-password" minlength="8" required><small class="hint">Use at least 8 characters.</small></label>
+          <p id="signup-error" class="error" role="alert" hidden></p>
+          <p id="signup-success" class="hint" role="status" hidden></p>
+          <button type="submit" class="btn">Create account</button>
+        </form>
+        <p id="auth-setup-notice" class="auth-setup-notice" role="status" hidden>Account sign-in is not connected yet. Add the Supabase project URL and publishable key in <code>js/supabase-config.js</code> and run the provided database setup script.</p>
+      </div>
 
       <div id="account-content" hidden>
       <div class="account-session"><span id="account-role" class="badge badge-local"></span><button id="account-logout" type="button" class="btn btn-secondary btn-small">Log out</button></div>
@@ -260,7 +275,7 @@
           <p id="account-bench" class="profile-sub"></p>
           <p id="account-email" class="profile-sub"></p>
         </div>
-        <span class="badge badge-local">Saved in this browser</span>
+        <span class="badge badge-local">Saved to your account</span>
       </div>
 
       <div class="card balance-card">

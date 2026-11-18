@@ -1,117 +1,146 @@
-// Browser-only demo accounts. A real deployment needs a server and secure authentication.
-const DATABASE_KEY = 'pyesa-accounts'
-const SESSION_KEY = 'pyesa-session'
-const LEGACY_PARTS_KEY = 'pyesa-inventory'
-const LEGACY_PROFILE_KEY = 'pyesa-profile'
+import { createSupabaseClient } from './supabase-client.js'
+
+const TABLE = 'pyesa_accounts'
 const STARTING_BALANCE = 5000
+let client = null
+let currentAccount = null
+let saveQueue = Promise.resolve()
 
-const DEMO_ACCOUNTS = [
-  { id: 'student-enrique', username: 'enrique', password: 'pyesa123', role: 'student', balance: STARTING_BALANCE, profile: { name: 'Enrique Miguel N. Derain', bench: '', email: '', photo: '' }, parts: [], cart: [] },
-  { id: 'admin', username: 'admin', password: 'admin123', role: 'admin', balance: STARTING_BALANCE, profile: { name: 'Pyesa Admin', bench: '', email: '', photo: '' }, parts: [], cart: [] },
-]
+const blankProfile = () => ({ name: '', bench: '', email: '', photo: '' })
 
-function readDatabase() {
-  try {
-    const saved = JSON.parse(localStorage.getItem(DATABASE_KEY))
-    if (saved?.accounts?.length) {
-      const normalized = {
-        ...saved,
-        accounts: saved.accounts.map((account) => ({
-          ...account,
-          balance: Number.isFinite(account.balance) ? Math.max(0, account.balance) : STARTING_BALANCE,
-          cart: Array.isArray(account.cart) ? account.cart : [],
-        })),
-      }
-      try { localStorage.setItem(DATABASE_KEY, JSON.stringify(normalized)) } catch { /* normalized data remains available for this visit */ }
-      return normalized
-    }
-  } catch { /* start with demo accounts if storage is unavailable or invalid */ }
-  const database = { accounts: DEMO_ACCOUNTS.map((account) => ({ ...account, profile: { ...account.profile }, parts: [], cart: [] })) }
-  try {
-    const legacyParts = JSON.parse(localStorage.getItem(LEGACY_PARTS_KEY) || '[]')
-    const legacyProfile = JSON.parse(localStorage.getItem(LEGACY_PROFILE_KEY) || 'null')
-    database.accounts[0].parts = Array.isArray(legacyParts) ? legacyParts : []
-    if (legacyProfile && typeof legacyProfile === 'object') database.accounts[0].profile = { ...database.accounts[0].profile, ...legacyProfile }
-  } catch { /* malformed legacy data is ignored */ }
-  try { localStorage.setItem(DATABASE_KEY, JSON.stringify(database)) } catch { /* keep the demo usable for this visit */ }
-  return database
+export function isAccountServiceConfigured() {
+  return Boolean(window.PYESA_SUPABASE_CONFIG?.url && window.PYESA_SUPABASE_CONFIG?.publishableKey)
 }
 
-let database = readDatabase()
-let sessionId = (() => {
-  try {
-    const id = localStorage.getItem(SESSION_KEY)
-    return database.accounts.some((account) => account.id === id) ? id : ''
-  } catch { return '' }
-})()
-
-export const getCurrentAccount = () => database.accounts.find((account) => account.id === sessionId) || null
-export const getAccounts = () => database.accounts.map(({ id, username, role, profile }) => ({ id, username, role, profile }))
-
-function writeDatabase(next = database) {
-  database = next
-  try { localStorage.setItem(DATABASE_KEY, JSON.stringify(database)) } catch { /* keep the current visit usable */ }
+function makeAccount(user, row = {}) {
+  const metadata = user.user_metadata || {}
+  return {
+    id: user.id,
+    username: user.email || '',
+    email: user.email || '',
+    role: user.app_metadata?.pyesa_role === 'admin' ? 'admin' : 'student',
+    balance: Number.isFinite(Number(row.balance)) ? Number(row.balance) : STARTING_BALANCE,
+    profile: { ...blankProfile(), name: metadata.display_name || '', email: user.email || '', ...(row.profile || {}) },
+    parts: Array.isArray(row.parts) ? row.parts : [],
+    cart: Array.isArray(row.cart) ? row.cart : [],
+  }
 }
 
-export function signIn(username, password) {
-  const account = database.accounts.find((item) => item.username.toLowerCase() === username.trim().toLowerCase() && item.password === password)
-  if (!account) return false
-  sessionId = account.id
-  try { localStorage.setItem(SESSION_KEY, sessionId) } catch { /* session lasts for this visit */ }
+async function loadAccount(user) {
+  const { data, error } = await client.from(TABLE).select('profile, parts, cart, balance').eq('user_id', user.id).maybeSingle()
+  if (error) throw error
+  let row = data
+  if (!row) {
+    row = { profile: { ...blankProfile(), name: user.user_metadata?.display_name || '', email: user.email || '' }, parts: [], cart: [], balance: STARTING_BALANCE }
+    const { error: createError } = await client.from(TABLE).insert({ user_id: user.id, ...row })
+    if (createError) throw createError
+  }
+  currentAccount = makeAccount(user, row)
+  return currentAccount
+}
+
+export async function initializeAccounts() {
+  client = await createSupabaseClient()
+  if (!client) return false
+  const { data: { session }, error } = await client.auth.getSession()
+  if (error) throw error
+  if (session?.user) await loadAccount(session.user)
+  client.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_OUT' || !session?.user) currentAccount = null
+  })
   return true
 }
 
-export function signOut() {
-  sessionId = ''
-  try { localStorage.removeItem(SESSION_KEY) } catch { /* already signed out for this visit */ }
+export const getCurrentAccount = () => currentAccount
+export const getAccounts = () => currentAccount ? [{ id: currentAccount.id, username: currentAccount.username, role: currentAccount.role, profile: currentAccount.profile }] : []
+
+function persistAccount() {
+  if (!client || !currentAccount) return
+  const account = currentAccount
+  const row = {
+    user_id: account.id,
+    profile: account.profile,
+    parts: account.parts,
+    cart: account.cart,
+    balance: account.balance,
+  }
+  saveQueue = saveQueue.catch(() => {}).then(async () => {
+    const { error } = await client.from(TABLE).upsert(row, { onConflict: 'user_id' })
+    if (error) throw error
+  }).catch((error) => {
+    console.error('Unable to save account data:', error)
+    window.dispatchEvent(new CustomEvent('pyesa-cloud-save-error'))
+  })
 }
 
-export function loadAccountParts(accountId = sessionId) {
-  return database.accounts.find((account) => account.id === accountId)?.parts || []
+export async function signIn(email, password) {
+  if (!client) throw new Error('Account service is not configured yet. Add the Supabase project settings first.')
+  const { data, error } = await client.auth.signInWithPassword({ email: email.trim(), password })
+  if (error) throw error
+  await loadAccount(data.user)
+  return true
 }
 
-export function saveAccountParts(parts, accountId = sessionId) {
-  if (!accountId) return
-  const account = database.accounts.find((item) => item.id === accountId)
-  if (!account) return
-  account.parts = parts
-  writeDatabase()
+export async function signUp({ name, email, password }) {
+  if (!client) throw new Error('Account service is not configured yet. Add the Supabase project settings first.')
+  const { data, error } = await client.auth.signUp({
+    email: email.trim(),
+    password,
+    options: { data: { display_name: name.trim() } },
+  })
+  if (error) throw error
+  if (data.session && data.user) await loadAccount(data.user)
+  return { needsEmailConfirmation: !data.session }
 }
 
-export function loadAccountCart(accountId = sessionId) {
-  return database.accounts.find((account) => account.id === accountId)?.cart || []
+export async function signOut() {
+  await saveQueue
+  if (client) {
+    const { error } = await client.auth.signOut()
+    if (error) throw error
+  }
+  currentAccount = null
 }
 
-export function saveAccountCart(cart, accountId = sessionId) {
-  if (!accountId) return
-  const account = database.accounts.find((item) => item.id === accountId)
-  if (!account) return
-  account.cart = cart
-  writeDatabase()
+export function loadAccountParts(accountId = currentAccount?.id) {
+  return accountId && accountId === currentAccount?.id ? currentAccount.parts : []
 }
 
-export function loadAccountProfile(accountId = sessionId) {
-  return database.accounts.find((account) => account.id === accountId)?.profile || { name: '', bench: '', email: '', photo: '' }
+export function saveAccountParts(parts, accountId = currentAccount?.id) {
+  if (!currentAccount || accountId !== currentAccount.id) return
+  currentAccount.parts = parts
+  persistAccount()
 }
 
-export function saveAccountProfile(profile, accountId = sessionId) {
-  if (!accountId) return
-  const account = database.accounts.find((item) => item.id === accountId)
-  if (!account) return
-  account.profile = { ...account.profile, ...profile }
-  writeDatabase()
+export function loadAccountCart(accountId = currentAccount?.id) {
+  return accountId && accountId === currentAccount?.id ? currentAccount.cart : []
 }
 
-export function clearAccountInventory(accountId = sessionId) {
+export function saveAccountCart(cart, accountId = currentAccount?.id) {
+  if (!currentAccount || accountId !== currentAccount.id) return
+  currentAccount.cart = cart
+  persistAccount()
+}
+
+export function loadAccountProfile(accountId = currentAccount?.id) {
+  return accountId && accountId === currentAccount?.id ? currentAccount.profile : blankProfile()
+}
+
+export function saveAccountProfile(profile, accountId = currentAccount?.id) {
+  if (!currentAccount || accountId !== currentAccount.id) return
+  currentAccount.profile = { ...currentAccount.profile, ...profile }
+  persistAccount()
+}
+
+export function clearAccountInventory(accountId = currentAccount?.id) {
   saveAccountParts([], accountId)
 }
 
 export function adjustCurrentBalance(amount) {
-  const account = getCurrentAccount()
-  if (!account || !Number.isFinite(amount) || amount === 0) return null
-  const nextBalance = Math.round((account.balance + amount) * 100) / 100
+  if (!currentAccount || !Number.isFinite(amount) || amount === 0) return null
+  const nextBalance = Math.round((currentAccount.balance + amount) * 100) / 100
   if (nextBalance < 0) return null
-  account.balance = nextBalance
-  writeDatabase()
+  currentAccount.balance = nextBalance
+  persistAccount()
   return nextBalance
 }

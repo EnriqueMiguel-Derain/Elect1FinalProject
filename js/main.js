@@ -1,13 +1,15 @@
 import { initInventory } from './inventory.js'
 import { initCatalog } from './catalog.js'
 import { initHome } from './home.js'
-import { getParts, subscribe } from './store.js'
+import { getParts, subscribe, reloadAccountParts } from './store.js'
+import { initializeAccounts } from './accounts.js'
 import { icon } from './icons.js'
 import { motionEnabled } from './settings.js'
 import { initSettings } from './settings-page.js'
 import { initAccount } from './account.js'
 import { initContact } from './contact.js'
 import { initCartPage, getCartCount, subscribeCart } from './cart.js'
+import { showToast } from './ui.js'
 
 const pages = document.querySelectorAll('.page')
 const navLinks = document.querySelectorAll('#nav-links a')
@@ -100,6 +102,14 @@ document.getElementById('year').textContent = new Date().getFullYear()
 
 // Load the catalog with the Fetch API (Module 6), then start every page.
 async function start() {
+  let accountsConnected = false
+  try {
+    accountsConnected = await initializeAccounts()
+  } catch (error) {
+    console.error('Account service could not start:', error)
+    window.PYESA_AUTH_INIT_ERROR = true
+  }
+  if (accountsConnected) reloadAccountParts()
   let catalog = []
   try {
     const response = await fetch('data/catalog.json')
@@ -121,5 +131,7 @@ async function start() {
   updateCartCount()
   showPage()
 }
+
+window.addEventListener('pyesa-cloud-save-error', () => showToast('Could not sync your latest account changes. Check your connection and try again.', true))
 
 start()
