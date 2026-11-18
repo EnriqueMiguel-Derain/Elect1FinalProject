@@ -19,7 +19,7 @@ export const CIRCUIT_CATALOG = [
     "brand": "AMD",
     "featured": true,
     "subcategory": "CPU",
-    "image": "",
+    "image": "https://static.cazasouq.com/image/cache/catalog/2025/Computer%20Parts/CPU/AMD%20Ryzen%205%207600%20Tray%20CPU-01-1000x1000.png",
     "priceNote": "Current in-stock category listing showed this price; the out-of-stock product page may show an older amount."
   },
   {
@@ -42,7 +42,7 @@ export const CIRCUIT_CATALOG = [
     "priceCheckedAt": "2026-11-18",
     "brand": "AMD",
     "subcategory": "CPU Cooler",
-    "image": ""
+    "image": "https://cdn.awsli.com.br/800x800/700/700031/produto/207626682167950911d.jpg"
   },
   {
     "id": "mb-msi-b650m",
@@ -61,7 +61,7 @@ export const CIRCUIT_CATALOG = [
     "priceCheckedAt": "2026-11-18",
     "brand": "MSI",
     "subcategory": "Motherboard",
-    "image": ""
+    "image": "https://img.terabyteshop.com.br/produto/g/placa-mae-msi-b650m-gaming-wifi-chipset-b650-amd-am5-matx-ddr5_222996.jpg"
   },
   {
     "id": "ram-kingston-16-ddr5",
@@ -81,7 +81,7 @@ export const CIRCUIT_CATALOG = [
     "brand": "Kingston",
     "featured": true,
     "subcategory": "RAM",
-    "image": ""
+    "image": "https://longbinh.com.vn/images/detailed/95/DYNACORE-DIY-COMPONENTS-RAM-KINGSTON-KVR48U40BS8-16-1-850x680.jpg"
   },
   {
     "id": "gpu-zotac-4060",
@@ -100,7 +100,7 @@ export const CIRCUIT_CATALOG = [
     "brand": "ZOTAC",
     "featured": true,
     "subcategory": "GPU",
-    "image": ""
+    "image": "https://images.tokopedia.net/img/cache/900/VqbcmM/2023/11/1/74023fb1-c219-4bdc-a0f7-0b916dce00c7.jpg"
   },
   {
     "id": "ssd-samsung-990-1tb",
@@ -118,7 +118,7 @@ export const CIRCUIT_CATALOG = [
     "priceCheckedAt": "2026-11-18",
     "brand": "Samsung",
     "subcategory": "Storage",
-    "image": ""
+    "image": "https://media.lifeinformatica.com/contents/assets/SDSAM093/imgs/MZ-V9E1T0BW-03.png"
   },
   {
     "id": "psu-msi-a550bn",
@@ -136,7 +136,7 @@ export const CIRCUIT_CATALOG = [
     "priceCheckedAt": "2026-11-18",
     "brand": "MSI",
     "subcategory": "PSU",
-    "image": ""
+    "image": "https://techwalker.co.in/uploads/product-imgs/pic/msi-mag-a550bn-80-plus-bronze.png"
   },
   {
     "id": "case-cm-elite302",
@@ -152,7 +152,7 @@ export const CIRCUIT_CATALOG = [
     "priceCheckedAt": "2026-11-18",
     "brand": "Cooler Master",
     "subcategory": "Case",
-    "image": ""
+    "image": "https://assets.pcfactory.cl/public/foto/56446/1.jpg?t=1778601428932"
   },
   {
     "id": "kb-aula-au75",
@@ -166,7 +166,7 @@ export const CIRCUIT_CATALOG = [
     "priceCheckedAt": "2026-11-18",
     "brand": "AULA",
     "subcategory": "Keyboard",
-    "image": ""
+    "image": "https://content.rozetka.com.ua/goods/images/big/645839446.jpg"
   },
   {
     "id": "mouse-aula-sc580x",
@@ -180,7 +180,7 @@ export const CIRCUIT_CATALOG = [
     "priceCheckedAt": "2026-11-18",
     "brand": "AULA",
     "subcategory": "Mouse",
-    "image": ""
+    "image": "https://ecommerce.datablitz.com.ph/cdn/shop/files/0_a4d79018-a349-493e-bb45-d856587c2b9c.jpg?v=1755929403"
   },
   {
     "id": "mon-aoc-24g50f",
@@ -200,7 +200,7 @@ export const CIRCUIT_CATALOG = [
     "priceCheckedAt": "2026-11-18",
     "brand": "AOC",
     "subcategory": "Monitor",
-    "image": ""
+    "image": "https://cdn.sanity.io/images/hf5b3axp/production/17cf0f430e68c47933c1c714ba9ac0a95f578a73-3840x3840.png?auto=format&fit=max&w=414"
   },
   {
     "id": "mcu-uno-ch340",
@@ -1261,7 +1261,7 @@ export const CIRCUIT_CATALOG = [
     "priceCheckedAt": "2026-11-18",
     "brand": "AMD",
     "subcategory": "CPU",
-    "image": "",
+    "image": "https://artline.ua/storage/images/products/18080/gallery/209099/1400_gallery_1702973637765456_0.webp",
     "priceNote": "Current listed amount; price/stock may vary by branch."
   },
   {
@@ -1281,7 +1281,7 @@ export const CIRCUIT_CATALOG = [
     "priceCheckedAt": "2026-11-18",
     "brand": "MSI",
     "subcategory": "Motherboard",
-    "image": ""
+    "image": "https://storage-asset.msi.com/global/picture/product/product_17495468197d2d0e1b3019c6ccdc73c7cc2fd28670.webp"
   },
   {
     "id": "gpu-powercolor-rx7600",
@@ -1301,7 +1301,7 @@ export const CIRCUIT_CATALOG = [
     "priceCheckedAt": "2026-11-18",
     "brand": "PowerColor",
     "subcategory": "GPU",
-    "image": ""
+    "image": "https://files.pccasegear.com/images/1684886099-RX7600-8G-F-thb.jpg"
   },
   {
     "id": "ssd-faspeed-p8-1tb",
@@ -1319,7 +1319,7 @@ export const CIRCUIT_CATALOG = [
     "priceCheckedAt": "2026-11-18",
     "brand": "FASPEED",
     "subcategory": "Storage",
-    "image": ""
+    "image": "https://product.hstatic.net/1000187560/product/ssd60_155d535c8b434052bc88fe7611632600_80477e59e86a444381140b8cfc796e2c_grande.png"
   },
   {
     "id": "psu-deepcool-pf650",
@@ -1338,7 +1338,7 @@ export const CIRCUIT_CATALOG = [
     "priceCheckedAt": "2026-11-18",
     "brand": "DeepCool",
     "subcategory": "PSU",
-    "image": ""
+    "image": "https://compudel.com.pe/img/p/3/4/1/2/6/34126.jpg"
   },
   {
     "id": "case-aigo-apollo-a275",
@@ -1357,7 +1357,7 @@ export const CIRCUIT_CATALOG = [
     "priceCheckedAt": "2026-11-18",
     "brand": "AIGO",
     "subcategory": "Case",
-    "image": ""
+    "image": "https://down-my.img.susercontent.com/file/ph-11134207-81ztd-mhenp1qnoob150"
   },
   {
     "id": "mon-viewsonic-vx2479",
@@ -1377,7 +1377,7 @@ export const CIRCUIT_CATALOG = [
     "priceCheckedAt": "2026-11-18",
     "brand": "ViewSonic",
     "subcategory": "Monitor",
-    "image": ""
+    "image": "https://pcx.com.ph/cdn/shop/files/viber_image_2025-04-07_15-19-36-263.jpg?v=1744011523"
   },
   {
     "id": "mon-aoc-22b40hm",
@@ -1397,7 +1397,7 @@ export const CIRCUIT_CATALOG = [
     "priceCheckedAt": "2026-11-18",
     "brand": "AOC",
     "subcategory": "Monitor",
-    "image": ""
+    "image": "https://vnstore.aoc.com/cdn/shop/files/1200x1200px_1.jpg?v=1779417242"
   },
   {
     "id": "kb-aula-f75-comic",
@@ -1416,7 +1416,7 @@ export const CIRCUIT_CATALOG = [
     "priceCheckedAt": "2026-11-18",
     "brand": "AULA",
     "subcategory": "Keyboard",
-    "image": ""
+    "image": "https://down-ph.img.susercontent.com/file/ph-11134207-81ztk-mlcx5h2qqt4w5f"
   },
   {
     "id": "kb-redragon-k606",
@@ -1434,7 +1434,7 @@ export const CIRCUIT_CATALOG = [
     "priceCheckedAt": "2026-11-18",
     "brand": "Redragon",
     "subcategory": "Keyboard",
-    "image": ""
+    "image": "https://down-ph.img.susercontent.com/file/ph-11134207-7r98t-ltyvafl79fgpdb"
   },
   {
     "id": "mouse-logitech-g102",
@@ -1453,7 +1453,7 @@ export const CIRCUIT_CATALOG = [
     "priceCheckedAt": "2026-11-18",
     "brand": "Logitech",
     "subcategory": "Mouse",
-    "image": ""
+    "image": "https://ezstatic1.ezweb.online/ezweb_2449/2026/04/266254261-logitech-g102-light-sync.jpg"
   },
   {
     "id": "mouse-redragon-m916",
@@ -1472,7 +1472,7 @@ export const CIRCUIT_CATALOG = [
     "priceCheckedAt": "2026-11-18",
     "brand": "Redragon",
     "subcategory": "Mouse",
-    "image": ""
+    "image": "https://rimage.ripley.com.pe/home.ripley/Attachment/MKP/2239/PMP20000381834/imagen3-1.jpeg"
   },
   {
     "id": "spk-edifier-g200",
@@ -1489,6 +1489,6 @@ export const CIRCUIT_CATALOG = [
     "priceCheckedAt": "2026-11-18",
     "brand": "Edifier",
     "subcategory": "Speaker",
-    "image": ""
+    "image": "https://assets.umart.com.au/bdimages/upload1/20250710/Speakers-Audio-Systems-Edifier-Bluetooth-Magnetic-Speaker-G200-BK-1.jpg"
   }
 ]

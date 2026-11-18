@@ -4,10 +4,12 @@ import { getStockStatus, tracksLowStock } from './availability.js'
 import { productVisual } from './components.js'
 
 const dialog = document.getElementById('item-details-dialog')
+const backdrop = document.getElementById('item-details-backdrop')
 const title = document.getElementById('item-details-title')
 const body = document.getElementById('item-details-body')
 const actions = document.getElementById('item-details-actions')
 dialog.querySelector('[data-detail-close]')?.addEventListener('click', () => dialog.close())
+dialog.addEventListener('close', () => backdrop?.classList.remove('is-visible'))
 
 export function showItemDetails(item, inventoryPart = null, { onAdd, onComment } = {}) {
   if (!item || !dialog) return
@@ -56,7 +58,10 @@ export function showItemDetails(item, inventoryPart = null, { onAdd, onComment }
     body.querySelector('#item-comments-list').innerHTML = next.map(commentRow).join('')
     input.value = ''
   })
-  if (!dialog.open) dialog.show()
+  if (!dialog.open) {
+    backdrop?.classList.add('is-visible')
+    dialog.show()
+  }
 }
 
 function commentRow(comment) {
