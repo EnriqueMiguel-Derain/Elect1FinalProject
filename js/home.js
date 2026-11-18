@@ -54,8 +54,7 @@ export function initHome(catalog) {
       const item = byId(details.dataset.details)
       if (item) showItemDetails(item, null, { onAdd: () => {
         if (!addToCart(item)) {
-          showToast('Sign in to add items to your cart.')
-          location.hash = '#account'
+          showToast('Sign in from the Account page to add items to your cart.')
           return
         }
         showToast(`${item.name} added to your cart.`)
@@ -158,7 +157,7 @@ function initPCBuilder(catalog) {
                 : count.onHold
                   ? `In inventory · ${count.onHold} on hold`
                   : 'Needed'
-            return `<li><span><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.category)} · ${formatPrice(item.price)}</small></span><span class="tag ${count.owned ? 'tag-ok' : 'tag-hold'}">${escapeHtml(status)}</span></li>`
+            return `<li><span><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.subcategory || item.category)} · ${formatPrice(item.price)}</small></span><span class="tag ${count.owned ? 'tag-ok' : 'tag-hold'}">${escapeHtml(status)}</span></li>`
           }).join('')}</ul>
           <div class="pc-package-prices">
             <p><span>Package price</span><s>${formatPrice(retailTotal)}</s></p>

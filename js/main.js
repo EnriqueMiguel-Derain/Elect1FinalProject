@@ -128,8 +128,15 @@ async function start() {
     const response = await fetch('data/catalog.json')
     if (!response.ok) throw new Error('Unable to load catalog.')
     catalog = await response.json()
-    const catalogIds = new Set(catalog.map((item) => item.id))
-    catalog = [...catalog, ...CIRCUIT_CATALOG.filter((item) => !catalogIds.has(item.id))]
+    const fetchedById = new Map(catalog.map((item) => [item.id, item]))
+    const canonicalIds = new Set(CIRCUIT_CATALOG.map((item) => item.id))
+    catalog = [
+      ...CIRCUIT_CATALOG.map((item) => {
+        const fetched = fetchedById.get(item.id) || {}
+        return { ...fetched, ...item, image: fetched.image || item.image || '' }
+      }),
+      ...catalog.filter((item) => !canonicalIds.has(item.id)),
+    ]
   } catch (error) {
     console.error(error.message)
   }

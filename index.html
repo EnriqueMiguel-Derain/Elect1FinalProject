@@ -107,7 +107,7 @@
             </div>
             <div class="build-actions">
               <a class="btn btn-lg" href="#pc-builder">Open PC Builder</a>
-              <a class="btn btn-lg btn-outline" href="#catalog" data-category="CPU">Browse Processors</a>
+              <a class="btn btn-lg btn-outline" href="#catalog" data-category="PC Parts">Browse PC Parts</a>
             </div>
           </div>
         </div>
@@ -381,6 +381,10 @@
     </div>
   </dialog>
 
+  <dialog id="delivery-dialog" class="site-dialog delivery-dialog" aria-labelledby="delivery-title" aria-describedby="delivery-message">
+    <div class="form-grid"><h2 id="delivery-title">Delivery processed</h2><p id="delivery-message"></p><div class="actions"><button type="button" id="delivery-close" class="btn">Done</button></div></div>
+  </dialog>
+
   <dialog id="confirm-dialog" class="site-dialog confirm-dialog" aria-labelledby="confirm-title" aria-describedby="confirm-message">
     <form method="dialog" class="form-grid">
       <h2 id="confirm-title">Confirm action</h2>
@@ -417,10 +421,9 @@
       </div>
       <div>
         <h4>Categories</h4>
-        <a href="#catalog" data-category="CPU">Processors</a>
-        <a href="#catalog" data-category="GPU">Graphics Cards</a>
-        <a href="#catalog" data-category="Microcontroller">Microcontrollers</a>
-        <a href="#catalog" data-category="Sensor">Sensors</a>
+        <a href="#catalog" data-category="PC Parts">PC Parts</a>
+        <a href="#catalog" data-category="Peripherals">Peripherals</a>
+        <a href="#catalog" data-category="Electronic Parts">Electronic Parts</a>
       </div>
       <div>
         <h4>About</h4>

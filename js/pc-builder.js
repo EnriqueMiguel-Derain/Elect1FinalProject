@@ -54,7 +54,7 @@ function render() {
           const count = getAccountQuantities(item)
           const have = count.owned + count.onHold
           const status = count.owned ? `Owned ${count.owned}` : count.onHold ? `On hold ${count.onHold}` : 'Need 1'
-          return `<li><span><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.category)} · ${formatPrice(item.price)}</small></span><span class="tag ${have ? 'tag-ok' : 'tag-hold'}">${status}</span></li>`
+          return `<li><span><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.subcategory || item.category)} · ${formatPrice(item.price)}</small></span><span class="tag ${have ? 'tag-ok' : 'tag-hold'}">${status}</span></li>`
         }).join('')}</ul>
         <div class="pc-package-prices">
           <p><span>Package price</span><s>${formatPrice(retailTotal)}</s></p>

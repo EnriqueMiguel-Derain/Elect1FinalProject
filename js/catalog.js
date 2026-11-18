@@ -54,8 +54,7 @@ function handleDetails(event) {
   showItemDetails(item, null, {
     onAdd: () => {
       if (!addToCart(item)) {
-        showToast('Sign in to add items to your cart.')
-        location.hash = '#account'
+        showToast('Sign in from the Account page to add items to your cart.')
         return
       }
       showToast(`${item.name} added to your cart.`)
@@ -72,7 +71,7 @@ function render() {
   }
   const visible = catalog
     .filter((c) => !categorySelect.value || c.category === categorySelect.value)
-    .filter((c) => `${c.name} ${c.category}`.toLowerCase().includes(term))
+    .filter((c) => `${c.name} ${c.category} ${c.subcategory || ''}`.toLowerCase().includes(term))
     .sort(sorters[sortSelect.value])
   const parts = getParts()
   grid.innerHTML = visible.map((c) => productCard(c, parts)).join('')

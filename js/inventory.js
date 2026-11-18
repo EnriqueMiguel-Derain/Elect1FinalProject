@@ -13,6 +13,9 @@ const searchInput = document.getElementById('search')
 const categoryFilter = document.getElementById('filter-category')
 const sortSelect = document.getElementById('sort')
 const summary = document.getElementById('summary')
+const deliveryDialog = document.getElementById('delivery-dialog')
+const deliveryMessage = document.getElementById('delivery-message')
+document.getElementById('delivery-close')?.addEventListener('click', () => deliveryDialog.close())
 
 export function initInventory(catalogItems = []) {
   catalog = catalogItems
@@ -195,10 +198,23 @@ async function handleListClick(event) {
     render()
     showToast(`Item returned. ${formatPrice(refund)} added to your balance.`)
   }
+  if (action === 'deliver' && part) {
+    if (part.ownership === 'on-hold') return showToast('On-hold items cannot be delivered.', true)
+    parts = parts.filter((item) => item.id !== id)
+    setParts(parts)
+    render()
+    deliveryMessage.textContent = `${part.quantity} × ${part.name} has been removed from inventory and marked as delivered.`
+    if (!deliveryDialog.open) deliveryDialog.showModal()
+  }
+}
+
+function inventoryCategory(part) {
+  if (['pc-set', 'circuit-set'].includes(part.kind)) return 'Build Sets'
+  return catalog.find((item) => item.id === part.catalogId)?.category || part.category
 }
 
 function updateCategoryFilter() {
-  const categories = [...new Set(parts.map((part) => part.category))].sort()
+  const categories = [...new Set(parts.map(inventoryCategory))].sort()
   const current = categoryFilter.value
   categoryFilter.innerHTML = '<option value="">All categories</option>' +
     categories.map((category) => `<option value="${escapeHtml(category)}">${escapeHtml(category)}</option>`).join('')
@@ -213,9 +229,14 @@ function getVisibleParts() {
     quantity: (a, b) => a.quantity - b.quantity,
     category: (a, b) => a.category.localeCompare(b.category) || a.name.localeCompare(b.name),
   }
-  return parts.filter((part) => !category || part.category === category)
-    .filter((part) => `${part.name} ${part.category} ${part.location}`.toLowerCase().includes(term))
-    .sort(sorters[sortSelect.value])
+  return parts.filter((part) => !category || inventoryCategory(part) === category)
+    .filter((part) => {
+      const item = catalog.find((entry) => entry.id === part.catalogId)
+      return `${part.name} ${inventoryCategory(part)} ${item?.subcategory || ''} ${part.location}`.toLowerCase().includes(term)
+    })
+    .sort((a, b) => sorters[sortSelect.value](
+      { ...a, category: inventoryCategory(a) }, { ...b, category: inventoryCategory(b) },
+    ))
 }
 
 function render() {
@@ -224,7 +245,7 @@ function render() {
   list.innerHTML = visible.map((part) => inventoryCard(part, catalog.find((item) => item.id === part.catalogId))).join('')
   const ownedCount = parts.filter((part) => part.ownership !== 'on-hold').length
   const onHoldCount = parts.length - ownedCount
-  const lowCount = parts.filter((part) => tracksLowStock(part.category) && getStockStatus(part.quantity, part.minStock) !== 'ok').length
+  const lowCount = parts.filter((part) => tracksLowStock(inventoryCategory(part)) && getStockStatus(part.quantity, part.minStock) !== 'ok').length
   summary.textContent = `${parts.length} part type(s) · ${ownedCount} owned · ${onHoldCount} on hold · ${lowCount} electronic part(s) low or out of stock`
   emptyState.hidden = visible.length > 0
   emptyState.textContent = parts.length === 0
