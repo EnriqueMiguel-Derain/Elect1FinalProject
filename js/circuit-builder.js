@@ -26,7 +26,8 @@ export function initCircuitBuilder(catalog) {
     builder.innerHTML = CIRCUIT_PACKAGES.map((project) => {
       const lines = resolveCircuitParts(project, catalog, currentOptions(project))
       const required = resolveCircuitParts(project, catalog)
-      const missingCatalog = lines.some((line) => !line.item)
+      const missingItems = lines.filter((line) => !line.item)
+      const missingCatalog = missingItems.length > 0
       const retail = lines.reduce((sum, line) => sum + (Number(line.item?.price) || 0) * line.packQuantity, 0)
       const discounted = Math.round(retail * 90) / 100
       const missingLines = required.filter((line) => line.item && inventoryCount(line.id) < line.packQuantity)
@@ -45,7 +46,7 @@ export function initCircuitBuilder(catalog) {
           return `<li><span><strong>${escapeHtml(line.item?.name || 'Catalog component missing')}</strong><small>${escapeHtml(line.item?.category || '')} · ${line.breakdown?.length ? `${line.breakdown.map(escapeHtml).join(' + ')} · ` : ''}${physical} total · ${purchase}${pack > 1 ? ` (${pack} pcs/pack)` : ''} · ${line.item ? formatPrice(Number(line.item.price) * line.packQuantity) : '—'}</small></span><span class="tag ${owned >= line.packQuantity ? 'tag-ok' : 'tag-hold'}">${status}</span></li>`
         }).join('')}</ul>
         <div class="pc-package-prices"><p><span>Catalog-pack total</span><s>${formatPrice(retail)}</s></p><p class="pc-package-total"><span>Complete kit</span><strong>${formatPrice(discounted)}</strong></p><p><span>Required missing packs · no discount</span><strong>${formatPrice(missingCost)}</strong></p></div>
-        ${missingCatalog ? '<p class="error">This project has a catalog component missing.</p>' : ''}
+        ${missingCatalog ? `<p class="error">Catalog component missing: ${missingItems.map((line) => escapeHtml(line.id)).join(', ')}. Add that item to data/catalog.json.</p>` : ''}
         <div class="pc-package-actions"><button type="button" class="btn" data-circuit-buy="${escapeHtml(project.id)}" ${missingCatalog ? 'disabled' : ''}>Buy complete kit · save ${formatPrice(retail - discounted)}</button><button type="button" class="btn btn-secondary" data-circuit-missing="${escapeHtml(project.id)}" ${!missingLines.length || missingCatalog ? 'disabled' : ''}>${missingLines.length ? 'Buy missing components · no discount' : 'You already have all required parts'}</button><button type="button" class="btn btn-secondary" data-circuit-build="${escapeHtml(project.id)}" ${canBuild ? '' : 'disabled'}>${canBuild ? 'Build set from inventory' : 'Build set · need selected parts'}</button></div>
         <p class="pc-package-footnote">Buying the complete kit stores it as one circuit set. You can disassemble it from Inventory to recover the catalog packs.</p>
       </article>`

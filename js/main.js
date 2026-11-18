@@ -10,6 +10,7 @@ import { initAccount } from './account.js'
 import { initContact } from './contact.js'
 import { initCartPage, getCartCount, subscribeCart, refreshCart } from './cart.js'
 import { initCircuitBuilder } from './circuit-builder.js'
+import { CIRCUIT_CATALOG } from './circuit-catalog.js'
 import { showToast } from './ui.js'
 
 const pages = document.querySelectorAll('.page')
@@ -127,6 +128,8 @@ async function start() {
     const response = await fetch('data/catalog.json')
     if (!response.ok) throw new Error('Unable to load catalog.')
     catalog = await response.json()
+    const catalogIds = new Set(catalog.map((item) => item.id))
+    catalog = [...catalog, ...CIRCUIT_CATALOG.filter((item) => !catalogIds.has(item.id))]
   } catch (error) {
     console.error(error.message)
   }

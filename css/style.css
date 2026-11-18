@@ -220,6 +220,11 @@ svg { display: block; }
 .pc-package-actions { display: grid; gap: 8px; }
 .pc-package-actions .btn:disabled { opacity: .5; cursor: not-allowed; }
 .pc-package-footnote { margin: 0; color: var(--muted); font-size: .78rem; line-height: 1.5; }
+.circuit-options { display: grid; gap: 9px; border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
+.circuit-options legend { padding: 0 6px; color: var(--text-strong); font-weight: 700; }
+.circuit-option { display: flex; align-items: flex-start; gap: 9px; color: var(--text); font-size: .9rem; }
+.circuit-option input { flex: none; margin-top: 4px; accent-color: var(--accent); }
+.circuit-options small { color: var(--muted); line-height: 1.45; }
 
 /* ---------- Forms, toolbar, lists (Inventory + Catalog) ---------- */
 .page h1 { font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
