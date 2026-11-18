@@ -219,7 +219,7 @@ export const CIRCUIT_CATALOG = [
     "priceCheckedAt": "2026-11-18",
     "featured": true,
     "subcategory": "Microcontroller",
-    "image": ""
+    "image": "https://lafvintech.com/cdn/shop/products/product-image-1925125281.jpg?v=1643098279"
   },
   {
     "id": "mcu-esp32-ch9102",
@@ -238,7 +238,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "Microcontroller",
-    "image": ""
+    "image": "https://down-vn.img.susercontent.com/file/cn-11134207-7qukw-lg0alhpmp2iw0b"
   },
   {
     "id": "mcu-nano-ch340",
@@ -255,7 +255,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "Microcontroller",
-    "image": ""
+    "image": "https://down-vn.img.susercontent.com/file/c1c9cd761ce71206dc2053f6f67900ef"
   },
   {
     "id": "mcu-nodemcu-esp8266",
@@ -272,7 +272,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "Microcontroller",
-    "image": ""
+    "image": "https://cdn.electronics.com.bd/4915-large_default/nodemcu-v3-esp8266-wifi-module-development-board-with-ch340.webp"
   },
   {
     "id": "mcu-mega2560",
@@ -290,7 +290,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "Microcontroller",
-    "image": ""
+    "image": "https://bizweb.dktcdn.net/thumb/1024x1024/100/445/721/products/arduino-mega2560-r3-atmega16u2-min.png?v=1679710780717"
   },
   {
     "id": "sen-dht22",
@@ -309,7 +309,7 @@ export const CIRCUIT_CATALOG = [
     "priceCheckedAt": "2026-11-18",
     "featured": true,
     "subcategory": "Sensor",
-    "image": ""
+    "image": "https://www.tomsonelectronics.com/cdn/shop/files/A133736_Humidity-and-Temperature-Sensor-DHT11_3-3.jpg?v=1735976460&width=1500"
   },
   {
     "id": "sen-dht11",
@@ -326,7 +326,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "Sensor",
-    "image": ""
+    "image": "https://www.tomsonelectronics.com/cdn/shop/files/A133736_Humidity-and-Temperature-Sensor-DHT11_3-3.jpg?v=1735976460&width=1500"
   },
   {
     "id": "sen-ds18b20-waterproof",
@@ -343,7 +343,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "Sensor",
-    "image": ""
+    "image": "https://thumbnail.coupangcdn.com/thumbnails/remote/492x492ex/image/vendor_inventory/images/2018/03/09/12/2/9907db46-830f-4309-89c9-6f071288dbe2.jpg"
   },
   {
     "id": "sen-ds18b20-module",
@@ -359,7 +359,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "Sensor",
-    "image": ""
+    "image": "https://quartzcomponents.com/cdn/shop/files/DS18B20TemperatureSensorModule3_1024x1024.jpg?v=1741761755"
   },
   {
     "id": "sen-bmp180",
@@ -376,7 +376,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "Sensor",
-    "image": ""
+    "image": "https://38-3d.co.uk/cdn/shop/articles/BMP180-3_3V-Barometric-Pressure-Sensor-Module.webp?crop=center&height=1200&v=1738304559&width=1200"
   },
   {
     "id": "res-10k",
@@ -396,7 +396,7 @@ export const CIRCUIT_CATALOG = [
     "priceCheckedAt": "2026-11-18",
     "featured": true,
     "subcategory": "Resistor",
-    "image": ""
+    "image": "https://www.robonesteg.com/web/image/product.product/358/image_1024/%5Bq7%5D%20Carbon%20Resistor%2010k%CE%A9%200.25W%20Through%20Hole?unique=22fcc4d"
   },
   {
     "id": "res-220",
@@ -415,7 +415,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks · resistor pack listing",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "Resistor",
-    "image": ""
+    "image": "https://www.robonesteg.com/web/image/product.product/358/image_1024/%5Bq7%5D%20Carbon%20Resistor%2010k%CE%A9%200.25W%20Through%20Hole?unique=22fcc4d"
   },
   {
     "id": "res-1k",
@@ -434,7 +434,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "Resistor",
-    "image": ""
+    "image": "https://www.robonesteg.com/web/image/product.product/358/image_1024/%5Bq7%5D%20Carbon%20Resistor%2010k%CE%A9%200.25W%20Through%20Hole?unique=22fcc4d"
   },
   {
     "id": "res-470",
@@ -453,7 +453,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks · 470 Ω resistor pack listing",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "Resistor",
-    "image": ""
+    "image": "https://www.robonesteg.com/web/image/product.product/358/image_1024/%5Bq7%5D%20Carbon%20Resistor%2010k%CE%A9%200.25W%20Through%20Hole?unique=22fcc4d"
   },
   {
     "id": "res-4k7",
@@ -472,7 +472,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "Resistor",
-    "image": ""
+    "image": "https://www.robonesteg.com/web/image/product.product/358/image_1024/%5Bq7%5D%20Carbon%20Resistor%2010k%CE%A9%200.25W%20Through%20Hole?unique=22fcc4d"
   },
   {
     "id": "cap-100nf",
@@ -491,7 +491,7 @@ export const CIRCUIT_CATALOG = [
     "priceCheckedAt": "2026-11-18",
     "featured": true,
     "subcategory": "Capacitor",
-    "image": ""
+    "image": "https://www.electrocomponentes.es/8446-large_default/condensador-ceramico-100nf-50v.jpg"
   },
   {
     "id": "cap-100uf-16",
@@ -509,7 +509,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "Capacitor",
-    "image": ""
+    "image": "https://d3j9qx8couj5an.cloudfront.net/da1ee7mpesotucwe5kdf5kysnoyf"
   },
   {
     "id": "cap-220uf-16",
@@ -527,7 +527,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "Capacitor",
-    "image": ""
+    "image": "https://d3j9qx8couj5an.cloudfront.net/da1ee7mpesotucwe5kdf5kysnoyf"
   },
   {
     "id": "cap-1000uf-100",
@@ -545,7 +545,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "Capacitor",
-    "image": ""
+    "image": "https://d3j9qx8couj5an.cloudfront.net/da1ee7mpesotucwe5kdf5kysnoyf"
   },
   {
     "id": "cap-47uf-25",
@@ -563,7 +563,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "Capacitor",
-    "image": ""
+    "image": "https://d3j9qx8couj5an.cloudfront.net/da1ee7mpesotucwe5kdf5kysnoyf"
   },
   {
     "id": "dio-1n4001",
@@ -581,7 +581,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "Diode",
-    "image": ""
+    "image": "https://www.kit-elec-shop.com/33811-large_default/1n4007-diode-1a-1000v.jpg"
   },
   {
     "id": "dio-1n4148",
@@ -598,7 +598,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "Diode",
-    "image": ""
+    "image": "https://bachkhoadientu.vn/Uploads/medium_diode-1n4148-12w-dip-10c-2109081730277427.png"
   },
   {
     "id": "dio-zener-5v1",
@@ -616,7 +616,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "Diode",
-    "image": ""
+    "image": "https://www.kit-elec-shop.com/33811-large_default/1n4007-diode-1a-1000v.jpg"
   },
   {
     "id": "dio-schottky",
@@ -634,7 +634,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "e-Gizmo",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "Diode",
-    "image": ""
+    "image": "https://www.kit-elec-shop.com/33811-large_default/1n4007-diode-1a-1000v.jpg"
   },
   {
     "id": "dio-tvs",
@@ -652,7 +652,7 @@ export const CIRCUIT_CATALOG = [
     "priceCheckedAt": "2026-11-18",
     "priceNote": "Confirm current price with retailer",
     "subcategory": "Diode",
-    "image": ""
+    "image": "https://www.kit-elec-shop.com/33811-large_default/1n4007-diode-1a-1000v.jpg"
   },
   {
     "id": "led-5mm-mix",
@@ -669,7 +669,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "LED",
-    "image": ""
+    "image": "https://www.elliottelectronicsupply.com/media/catalog/product/cache/761b8bdecfdca96cdc8841a1a603f814/m/e/media-import-pictures-0000000018251_Def.webp"
   },
   {
     "id": "led-ir-940",
@@ -687,7 +687,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "LED",
-    "image": ""
+    "image": "https://www.elliottelectronicsupply.com/media/catalog/product/cache/761b8bdecfdca96cdc8841a1a603f814/m/e/media-import-pictures-0000000018251_Def.webp"
   },
   {
     "id": "led-rgb-5mm",
@@ -705,7 +705,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "LED",
-    "image": ""
+    "image": "https://topelectronics.gr/images/detailed/3/5mm-RGB-LED-Common-Cathode-4Pin-Red-Green-Blue-LED-Light-Emitting-Diode.jpg_640x640_cb6c-j5.jpg"
   },
   {
     "id": "led-3mm",
@@ -722,7 +722,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "LED",
-    "image": ""
+    "image": "https://www.elliottelectronicsupply.com/media/catalog/product/cache/761b8bdecfdca96cdc8841a1a603f814/m/e/media-import-pictures-0000000018251_Def.webp"
   },
   {
     "id": "ic-ne555",
@@ -741,7 +741,7 @@ export const CIRCUIT_CATALOG = [
     "priceCheckedAt": "2026-11-18",
     "featured": true,
     "subcategory": "Integrated Circuit",
-    "image": ""
+    "image": "https://www.sparkfun.com/media/catalog/product/cache/f3020b7489dcfc4d1d147cf4dad07b7f/1/6/16473-IC_555_Timer__PTH_-01.jpg"
   },
   {
     "id": "ic-lm358",
@@ -759,7 +759,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "Integrated Circuit",
-    "image": ""
+    "image": "https://www.sparkfun.com/media/catalog/product/cache/f3020b7489dcfc4d1d147cf4dad07b7f/1/6/16473-IC_555_Timer__PTH_-01.jpg"
   },
   {
     "id": "ic-l293d",
@@ -777,7 +777,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "Integrated Circuit",
-    "image": ""
+    "image": "https://www.sparkfun.com/media/catalog/product/cache/f3020b7489dcfc4d1d147cf4dad07b7f/1/6/16473-IC_555_Timer__PTH_-01.jpg"
   },
   {
     "id": "ic-74hc595",
@@ -795,7 +795,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "Integrated Circuit",
-    "image": ""
+    "image": "https://www.sparkfun.com/media/catalog/product/cache/f3020b7489dcfc4d1d147cf4dad07b7f/1/6/16473-IC_555_Timer__PTH_-01.jpg"
   },
   {
     "id": "ic-ads1115",
@@ -813,7 +813,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "Integrated Circuit",
-    "image": ""
+    "image": "https://www.sparkfun.com/media/catalog/product/cache/f3020b7489dcfc4d1d147cf4dad07b7f/1/6/16473-IC_555_Timer__PTH_-01.jpg"
   },
   {
     "id": "trans-2n2222",
@@ -830,7 +830,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "Transistor",
-    "image": ""
+    "image": "https://d2j6dbq0eux0bg.cloudfront.net/images/77285815/3549980744.jpg"
   },
   {
     "id": "trans-tip32c",
@@ -847,7 +847,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "Transistor",
-    "image": ""
+    "image": "https://d2j6dbq0eux0bg.cloudfront.net/images/77285815/3549980744.jpg"
   },
   {
     "id": "trans-fqpf5n60c",
@@ -865,7 +865,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "Transistor",
-    "image": ""
+    "image": "https://d2j6dbq0eux0bg.cloudfront.net/images/77285815/3549980744.jpg"
   },
   {
     "id": "circ-hcsr04",
@@ -883,7 +883,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks · HC-SR04 with bracket listing",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "Ultrasonic Sensor",
-    "image": ""
+    "image": "https://images.thingbits.net/eyJidWNrZXQiOiJ0aGluZ2JpdHMtbmV0Iiwia2V5Ijoib2hxNXc0NGsxbGJwM2Iyazl6Zzg0Y3JteDcxMCIsImVkaXRzIjp7InJlc2l6ZSI6eyJ3aWR0aCI6OTcwLCJoZWlnaHQiOjcyOCwiZml0IjoiY292ZXIifX19"
   },
   {
     "id": "circ-lcd1602-i2c",
@@ -901,7 +901,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks · I2C LCD 1602 listing",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "Display",
-    "image": ""
+    "image": "https://www.waveshare.com/media/catalog/product/l/c/lcd1602-i2c-module-1.jpg"
   },
   {
     "id": "circ-sg90",
@@ -919,7 +919,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "Servo Motor",
-    "image": ""
+    "image": "https://elecsynergy.in/cdn/shop/files/mmsv002_535x_7d6c3696-0110-4781-af7b-1f7c55373def.webp?v=1754546965&width=1024"
   },
   {
     "id": "circ-breadboard",
@@ -936,7 +936,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "Breadboard",
-    "image": ""
+    "image": "https://epartners.co.nz/cdn/shop/files/breadboard-830-point-solderless-universal-prototyping-board-659888.jpg?v=1726481464"
   },
   {
     "id": "circ-jumper-mm",
@@ -952,7 +952,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "M-M Jumper Wire",
-    "image": ""
+    "image": "https://images.nexusapp.co/assets/29/b5/dd/705239004.jpg"
   },
   {
     "id": "circ-jumper-mf",
@@ -969,7 +969,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks · M-F jumper wire listing",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "M-F Jumper Wire",
-    "image": "",
+    "image": "https://images.nexusapp.co/assets/29/b5/dd/705239004.jpg",
     "priceNote": "Current exact pack price is not published on the linked reference; confirm before purchase."
   },
   {
@@ -987,7 +987,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "5V Power Supply",
-    "image": ""
+    "image": "https://circuit.rocks/cdn/shop/files/SHOPIFYPHOTOSIZEADAPTER.png?v=1768281126"
   },
   {
     "id": "circ-usb-b",
@@ -1004,7 +1004,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks · USB cable listing",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "Arduino USB Cable",
-    "image": ""
+    "image": "https://cf.shopee.co.id/file/sg-11134201-22100-7rii46n8nviv3b"
   },
   {
     "id": "circ-soil-capacitive",
@@ -1021,7 +1021,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "Moisture Sensor",
-    "image": ""
+    "image": "https://thepihut.com/cdn/shop/products/capacitive-soil-moisture-sensor-the-pi-hut-102640-34122518888643.jpg?v=1648059308&width=2048"
   },
   {
     "id": "circ-relay-5v",
@@ -1038,7 +1038,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "Relay Module",
-    "image": ""
+    "image": "https://cdn.webshopapp.com/shops/144750/files/313023492/1-channel-5v-module-suitable-for-arduino.jpg"
   },
   {
     "id": "circ-water-pump",
@@ -1056,7 +1056,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "Mini Water Pump",
-    "image": ""
+    "image": "https://img.drz.lazcdn.com/static/pk/p/7a503c33f4acf6ac5540fcc2e43131a7.jpg_720x720q80.jpg"
   },
   {
     "id": "dio-1n4007",
@@ -1074,7 +1074,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "DigiKey Philippines · 1N4007, 10 pieces",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "Rectifier Diode",
-    "image": "",
+    "image": "https://www.kit-elec-shop.com/33811-large_default/1n4007-diode-1a-1000v.jpg",
     "priceNote": "10-piece price shown; shipping and stock may change."
   },
   {
@@ -1093,7 +1093,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks · MFRC522 listing",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "RFID Reader",
-    "image": ""
+    "image": "https://static.optimusdigital.ro/7269-thickbox_default/mfrc522-rfid-module.jpg"
   },
   {
     "id": "circ-rfid-card",
@@ -1110,7 +1110,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "RFID Card",
-    "image": ""
+    "image": "https://static.optimusdigital.ro/7269-thickbox_default/mfrc522-rfid-module.jpg"
   },
   {
     "id": "circ-rfid-keyfob",
@@ -1127,7 +1127,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "RFID Keyfob",
-    "image": ""
+    "image": "https://static.optimusdigital.ro/7269-thickbox_default/mfrc522-rfid-module.jpg"
   },
   {
     "id": "circ-buzzer",
@@ -1144,7 +1144,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "Buzzer",
-    "image": ""
+    "image": "https://fastbitembedded.com/cdn/shop/files/active-buzzer-module-3.3-5v.jpg?v=1727241243"
   },
   {
     "id": "circ-pushbutton",
@@ -1161,7 +1161,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "Push Button",
-    "image": ""
+    "image": "https://vetco.net/cdn/shop/files/vupn1504_a_tact_switch_6mm_2cc8fb63-5274-4048-a384-64263bc64187.jpg?v=1722913106&width=1024"
   },
   {
     "id": "circ-ldr-pack",
@@ -1177,7 +1177,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "Light Sensor",
-    "image": ""
+    "image": "https://ferretronica.com/cdn/shop/products/Fotoresistencia_LDR_Fotocelda_7mm_Fotocelula_Ferretronica_6148d3cc-5cb3-4b7a-bfdb-96941e543281_512x.jpg?v=1577017860"
   },
   {
     "id": "circ-pir-hcsr501",
@@ -1195,7 +1195,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "Motion Sensor",
-    "image": ""
+    "image": "https://down-id.img.susercontent.com/file/id-11134207-822wu-mncwjmhloyyq0c"
   },
   {
     "id": "circ-led-assortment",
@@ -1220,7 +1220,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "LED Assortment",
-    "image": ""
+    "image": "https://www.elliottelectronicsupply.com/media/catalog/product/cache/761b8bdecfdca96cdc8841a1a603f814/m/e/media-import-pictures-0000000018251_Def.webp"
   },
   {
     "id": "circ-level-shifter",
@@ -1239,7 +1239,7 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "Logic Level Shifter",
-    "image": ""
+    "image": "https://cdn.sparkfun.com/assets/parts/1/1/2/2/12009-01.jpg"
   },
   {
     "id": "cpu-r5-7500f",
