@@ -12,11 +12,14 @@ function readSiteTemplate() {
     className: section.className,
     html: section.innerHTML,
   }]))
-  const frame = [...source.body.children]
-    .filter((node) => node !== main && node.tagName !== 'SCRIPT')
-    .map((node) => node.outerHTML)
-    .join('\n')
-  return { pages, frame }
+  const bodyParts = [...source.body.children].filter((node) => node.tagName !== 'SCRIPT')
+  const mainIndex = bodyParts.indexOf(main)
+  const toMarkup = (nodes) => nodes.filter((node) => node !== main).map((node) => node.outerHTML).join('\n')
+  return {
+    pages,
+    beforeMain: toMarkup(bodyParts.slice(0, mainIndex)),
+    afterMain: toMarkup(bodyParts.slice(mainIndex + 1)),
+  }
 }
 
 const site = readSiteTemplate()
@@ -57,9 +60,10 @@ export default function App() {
   }, [])
 
   return <div className="min-h-screen bg-[#08090f] text-slate-100">
-    <div dangerouslySetInnerHTML={{ __html: site.frame }} />
+    <div dangerouslySetInnerHTML={{ __html: site.beforeMain }} />
     <main id="main" tabIndex="-1">
       {pages.map(([name, page]) => <SitePage key={name} page={page} active={name === activePage} />)}
     </main>
+    <div dangerouslySetInnerHTML={{ __html: site.afterMain }} />
   </div>
 }
