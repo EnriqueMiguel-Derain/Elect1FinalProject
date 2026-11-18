@@ -492,7 +492,7 @@ label.btn { cursor: pointer; }
 .account-session { display: flex; justify-content: flex-end; align-items: center; gap: 12px; margin: 18px 0 8px; }
 .link-button { border: 0; background: transparent; color: var(--muted); text-align: left; padding: 3px 0; font: inherit; cursor: pointer; }
 .link-button:hover { color: #fff; text-decoration: underline; }
-.contact-dialog { width: min(560px, calc(100% - 32px)); max-height: min(90vh, 720px); overflow: auto; border: 1px solid var(--border); border-radius: 16px; background: var(--surface); color: var(--text); padding: 24px; box-shadow: 0 24px 80px rgba(0, 0, 0, .5); }
+.contact-dialog { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); margin: 0; width: min(560px, calc(100vw - 32px)); max-width: calc(100vw - 32px); max-height: min(calc(100dvh - 32px), 720px); overflow: auto; border: 1px solid var(--border); border-radius: 16px; background: var(--surface); color: var(--text); padding: 24px; box-shadow: 0 24px 80px rgba(0, 0, 0, .5); }
 .contact-dialog::backdrop { background: rgba(3, 6, 15, .72); backdrop-filter: blur(4px); }
 .contact-dialog form { grid-template-columns: minmax(0, 1fr); gap: 16px; }
 .contact-dialog form > * { grid-column: 1 / -1; min-width: 0; }
