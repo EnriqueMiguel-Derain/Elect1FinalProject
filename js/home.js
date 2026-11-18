@@ -7,14 +7,7 @@ import { setCatalogCategory } from './catalog.js'
 import { icon } from './icons.js'
 import { showToast, formatPrice, escapeHtml, confirmInApp } from './ui.js'
 import { showItemDetails } from './item-details.js'
-
-const ESSENTIAL_PARTS = ['cpu-r5-7600', 'cooler-amd-wraith-stealth', 'mb-msi-b650m', 'ram-kingston-16-ddr5', 'ssd-samsung-990-1tb', 'psu-msi-a550bn', 'case-cm-elite302']
-const GAMING_PARTS = [...ESSENTIAL_PARTS, 'gpu-zotac-4060']
-const PC_PACKAGES = [
-  { id: 'essential-pc', name: 'Essential PC', note: 'Core PC components · no discrete graphics card', partIds: ESSENTIAL_PARTS },
-  { id: 'gaming-pc', name: 'Gaming PC', note: 'Core components with a dedicated graphics card', partIds: GAMING_PARTS, featured: true },
-  { id: 'complete-setup', name: 'Complete Gaming Setup', note: 'Gaming PC plus monitor, keyboard, and mouse', partIds: [...GAMING_PARTS, 'mon-aoc-24g50f', 'kb-aula-au75', 'mouse-aula-sc580x'] },
-]
+import { PC_PACKAGES } from './pc-packages.js'
 
 const CATEGORY_LABELS = {
   CPU: 'Processors', GPU: 'Graphics Cards', RAM: 'Memory',

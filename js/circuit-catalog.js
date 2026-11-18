@@ -1,4 +1,4 @@
-// Canonical catalog fallback. This keeps circuit and product records available when a deployed JSON catalog is stale.
+// Canonical catalog fallback. This keeps product records available when a deployed JSON catalog is stale.
 export const CIRCUIT_CATALOG = [
   {
     "id": "cpu-r5-7600",
@@ -1239,6 +1239,256 @@ export const CIRCUIT_CATALOG = [
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "Logic Level Shifter",
+    "image": ""
+  },
+  {
+    "id": "cpu-r5-7500f",
+    "name": "AMD Ryzen 5 7500F (AM5, tray)",
+    "category": "PC Parts",
+    "price": 7495,
+    "summary": "6 cores / 12 threads, AM5, up to 5.0 GHz boost, 65 W. This CPU has no integrated graphics and needs a dedicated graphics card.",
+    "specs": {
+      "socket": "AM5",
+      "cores": 6,
+      "threads": 12,
+      "baseGHz": 3.7,
+      "boostGHz": 5.0,
+      "tdp": 65,
+      "integratedGraphics": "None; requires a graphics card"
+    },
+    "sourceUrl": "https://www.pcworth.com/builds-gallery/13655",
+    "sourceName": "PC Worth · current build listing",
+    "priceCheckedAt": "2026-11-18",
+    "brand": "AMD",
+    "subcategory": "CPU",
+    "image": "",
+    "priceNote": "Current listed amount; price/stock may vary by branch."
+  },
+  {
+    "id": "mb-msi-pro-b840m-b",
+    "name": "MSI PRO B840M-B DDR5 mATX Motherboard",
+    "category": "PC Parts",
+    "price": 7395,
+    "summary": "Micro-ATX AM5 motherboard for Ryzen 7000/8000/9000 processors with DDR5 memory.",
+    "specs": {
+      "socket": "AM5",
+      "ramType": "DDR5",
+      "formFactor": "mATX",
+      "chipset": "AMD B840"
+    },
+    "sourceUrl": "https://www.pcworth.com/product/msi-pro-b840m-b-ddr5-matx-am5",
+    "sourceName": "PC Worth · MSI product listing",
+    "priceCheckedAt": "2026-11-18",
+    "brand": "MSI",
+    "subcategory": "Motherboard",
+    "image": ""
+  },
+  {
+    "id": "gpu-powercolor-rx7600",
+    "name": "PowerColor Radeon RX 7600 Fighter 8GB",
+    "category": "PC Parts",
+    "price": 18995,
+    "summary": "8GB GDDR6 dual-fan graphics card aimed at 1080p gaming; PC Worth lists 550 W recommended system power.",
+    "specs": {
+      "chipset": "Radeon RX 7600",
+      "memoryGB": 8,
+      "memoryType": "GDDR6",
+      "formFactor": "PCIe 4.0",
+      "recommendedPSU": "550 W"
+    },
+    "sourceUrl": "https://www.pcworth.com/c/gpu",
+    "sourceName": "PC Worth · current graphics-card listing",
+    "priceCheckedAt": "2026-11-18",
+    "brand": "PowerColor",
+    "subcategory": "GPU",
+    "image": ""
+  },
+  {
+    "id": "ssd-faspeed-p8-1tb",
+    "name": "FASPEED P8 NVMe 1TB Gen 3 SSD",
+    "category": "PC Parts",
+    "price": 7395,
+    "summary": "1TB M.2 NVMe solid-state drive using PCIe Gen 3.",
+    "specs": {
+      "capacityGB": 1000,
+      "interface": "M.2 NVMe",
+      "generation": "PCIe 3.0"
+    },
+    "sourceUrl": "https://www.pcworth.com/product/faspeed-p8-nvme-1tb-gen-3",
+    "sourceName": "PC Worth · FASPEED product listing",
+    "priceCheckedAt": "2026-11-18",
+    "brand": "FASPEED",
+    "subcategory": "Storage",
+    "image": ""
+  },
+  {
+    "id": "psu-deepcool-pf650",
+    "name": "DeepCool PF650 650W 80+ Standard PSU",
+    "category": "PC Parts",
+    "price": 2295,
+    "summary": "650W ATX power supply with 80 PLUS Standard efficiency and non-modular cables.",
+    "specs": {
+      "wattage": 650,
+      "efficiency": "80 PLUS Standard",
+      "formFactor": "ATX",
+      "modular": "No"
+    },
+    "sourceUrl": "https://www.pcworth.com/product/deepcool-pf650-650w-80-standard-atx-non-modular",
+    "sourceName": "PC Worth · DeepCool product listing",
+    "priceCheckedAt": "2026-11-18",
+    "brand": "DeepCool",
+    "subcategory": "PSU",
+    "image": ""
+  },
+  {
+    "id": "case-aigo-apollo-a275",
+    "name": "AIGO Apollo A275 Panoramic mATX Case",
+    "category": "PC Parts",
+    "price": 1195,
+    "summary": "Compact panoramic case supporting mATX/ITX boards, GPUs up to 290 mm, and CPU coolers up to 155 mm. Confirm included fans with retailer.",
+    "specs": {
+      "formFactor": "mATX / ITX",
+      "maxGPULengthMM": 290,
+      "maxCoolerHeightMM": 155,
+      "maxPSULengthMM": 140
+    },
+    "sourceUrl": "https://www.pcworth.com/c/casing?stock=1",
+    "sourceName": "PC Worth · current case listing",
+    "priceCheckedAt": "2026-11-18",
+    "brand": "AIGO",
+    "subcategory": "Case",
+    "image": ""
+  },
+  {
+    "id": "mon-viewsonic-vx2479",
+    "name": "ViewSonic VX2479A-HD-PRO 23.8-inch FHD IPS 240Hz Monitor",
+    "category": "Peripherals",
+    "price": 6295,
+    "summary": "23.8-inch Full HD IPS monitor with 240Hz refresh, 1ms MPRT, FreeSync, HDMI and DisplayPort.",
+    "specs": {
+      "panel": "IPS",
+      "resolution": "1920 × 1080",
+      "refreshRateHz": 240,
+      "responseTimeMPRT": "1 ms",
+      "sizeInches": 23.8
+    },
+    "sourceUrl": "https://www.pcworth.com/product/viewsonic-vx2479a-hd-pro-24-240hz-fhd-ips-gaming-monitor",
+    "sourceName": "PC Worth · ViewSonic product listing",
+    "priceCheckedAt": "2026-11-18",
+    "brand": "ViewSonic",
+    "subcategory": "Monitor",
+    "image": ""
+  },
+  {
+    "id": "mon-aoc-22b40hm",
+    "name": "AOC 22B40HM 21.45-inch FHD VA Monitor",
+    "category": "Peripherals",
+    "price": 3495,
+    "summary": "21.45-inch Full HD VA display with 100Hz native refresh (up to 120Hz overclocked) and HDMI/VGA inputs.",
+    "specs": {
+      "panel": "VA",
+      "resolution": "1920 × 1080",
+      "refreshRateHz": 100,
+      "overclockedRefreshRateHz": 120,
+      "sizeInches": 21.45
+    },
+    "sourceUrl": "https://www.pcworth.com/brands/aoc",
+    "sourceName": "PC Worth · current AOC listing",
+    "priceCheckedAt": "2026-11-18",
+    "brand": "AOC",
+    "subcategory": "Monitor",
+    "image": ""
+  },
+  {
+    "id": "kb-aula-f75-comic",
+    "name": "AULA F75 Comic Reaper Switch Mechanical Keyboard",
+    "category": "Peripherals",
+    "price": 2495,
+    "summary": "80-key, 75% hot-swappable mechanical keyboard with Reaper switches, PBT keycaps, RGB, and tri-mode Bluetooth/2.4GHz/USB-C connectivity.",
+    "specs": {
+      "layout": "75% / 80 keys",
+      "switch": "LEOBOG Reaper",
+      "connectivity": "Bluetooth 5.0, 2.4 GHz wireless, USB-C wired",
+      "hotSwappable": true
+    },
+    "sourceUrl": "https://www.pcworth.com/product/aula-f75-comic-keycaps-reaper-switch-mechanical-keyboard",
+    "sourceName": "PC Worth · AULA product listing",
+    "priceCheckedAt": "2026-11-18",
+    "brand": "AULA",
+    "subcategory": "Keyboard",
+    "image": ""
+  },
+  {
+    "id": "kb-redragon-k606",
+    "name": "Redragon K606R Lakshmi 61-Key Mechanical Keyboard",
+    "category": "Peripherals",
+    "price": 1295,
+    "summary": "Compact 61-key wired keyboard with smooth linear red switches and double-injection keycaps.",
+    "specs": {
+      "layout": "61 keys",
+      "switch": "Linear red",
+      "connectivity": "Wired USB"
+    },
+    "sourceUrl": "https://www.pcworth.com/product/redragon-k606r-lakshmi-black-red-switch-mechanical-keyboard",
+    "sourceName": "PC Worth · Redragon product listing",
+    "priceCheckedAt": "2026-11-18",
+    "brand": "Redragon",
+    "subcategory": "Keyboard",
+    "image": ""
+  },
+  {
+    "id": "mouse-logitech-g102",
+    "name": "Logitech G102 Lightsync RGB Wired Gaming Mouse",
+    "category": "Peripherals",
+    "price": 1045,
+    "summary": "Wired optical mouse with six programmable buttons, LIGHTSYNC RGB, and adjustable sensitivity up to 8,000 DPI.",
+    "specs": {
+      "connectivity": "Wired USB",
+      "buttons": 6,
+      "maxDPI": 8000,
+      "lighting": "LIGHTSYNC RGB"
+    },
+    "sourceUrl": "https://www.pcworth.com/product/logitech-g102-lightsync-rgb-gaming-mouse-black",
+    "sourceName": "PC Worth · Logitech product listing",
+    "priceCheckedAt": "2026-11-18",
+    "brand": "Logitech",
+    "subcategory": "Mouse",
+    "image": ""
+  },
+  {
+    "id": "mouse-redragon-m916",
+    "name": "Redragon M916 Max King Tri-Mode Wireless Gaming Mouse",
+    "category": "Peripherals",
+    "price": 1595,
+    "summary": "49 g tri-mode mouse with USB-C wired, 2.4GHz wireless and Bluetooth; five programmable buttons and adjustable sensor up to 45,000 DPI.",
+    "specs": {
+      "connectivity": "USB-C wired, 2.4 GHz wireless, Bluetooth",
+      "weightG": 49,
+      "maxDPI": 45000,
+      "programmableButtons": 5
+    },
+    "sourceUrl": "https://www.pcworth.com/product/redragon-m916-max-king-black-wireless-gaming-mouse",
+    "sourceName": "PC Worth · Redragon product listing",
+    "priceCheckedAt": "2026-11-18",
+    "brand": "Redragon",
+    "subcategory": "Mouse",
+    "image": ""
+  },
+  {
+    "id": "spk-edifier-g200",
+    "name": "Edifier G200 Bluetooth Magnetic Speaker",
+    "category": "Peripherals",
+    "price": 795,
+    "summary": "Compact Bluetooth speaker for desktop audio and portable listening.",
+    "specs": {
+      "connectivity": "Bluetooth",
+      "type": "Portable speaker"
+    },
+    "sourceUrl": "https://www.pcworth.com/product/edifier-g200-bluetooth-magnetic-speaker",
+    "sourceName": "PC Worth · Edifier product listing",
+    "priceCheckedAt": "2026-11-18",
+    "brand": "Edifier",
+    "subcategory": "Speaker",
     "image": ""
   }
 ]
