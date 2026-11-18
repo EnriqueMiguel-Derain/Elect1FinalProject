@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pyesa</title>
+  <script>try{var t=(JSON.parse(localStorage.getItem('pyesa-settings'))||{}).theme||'dark';if(t==='system')t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.dataset.theme=t}catch(e){document.documentElement.dataset.theme='dark'}</script>
+  <link rel="icon" type="image/png" href="img/logo-white.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&family=Rubik:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main" id="skip-link">Skip to content</a>
+  <header class="site-header">
+    <nav class="nav container">
+      <a class="brand" href="#home"><img class="brand-logo" src="img/logo-white.png" alt="" width="32" height="32">Pyesa</a>
+      <ul id="nav-links" class="nav-links">
+        <li><a href="#home" data-page="home">Home</a></li>
+        <li><a href="#catalog" data-page="catalog">Catalog</a></li>
+        <li><a href="#inventory" data-page="inventory">Inventory<span id="inv-count" class="count" hidden>0</span></a></li>
+        <li><a href="#pc-builder" data-page="pc-builder">PC Builder</a></li>
+        <li><a href="#circuit-builder" data-page="circuit-builder">Circuit Builder</a></li>
+      </ul>
+      <div class="nav-actions">
+        <a id="cart-link" class="icon-link" href="#cart" aria-label="Shopping cart"><span data-icon="cart"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2l2.4 12.2a2 2 0 002 1.6h8.8a2 2 0 002-1.6L22 8H6"/><circle cx="10" cy="21" r="1"/><circle cx="18" cy="21" r="1"/></svg></span><span id="cart-count" class="count" hidden>0</span></a>
+        <a class="icon-link" href="#account" aria-label="Account" data-icon="user"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-7 8-7s8 3 8 7"/></svg></a>
+        <a class="icon-link" href="#settings" aria-label="Settings" data-icon="settings"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg></a>
+        <button id="menu-toggle" class="menu-toggle" aria-label="Toggle menu" aria-expanded="false">Menu</button>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <!-- HOME -->
+    <section id="page-home" class="page">
+      <div class="hero">
+        <div class="container hero-grid">
+          <div>
+            <p class="eyebrow">Organize your workbench</p>
+            <h1>Smart Parts.<strong>Better Builds.</strong></h1>
+            <p class="hero-text">Track the PC parts you own and see when electronic components for your circuits are running low.</p>
+            <div class="hero-cta">
+              <a class="btn btn-lg" href="#catalog" data-category="">Explore Catalog <span data-icon="arrow" data-size="18"></span></a>
+              <div class="hero-stat"><span id="hero-count">48</span> parts<small>ready to add to your bench</small></div>
+            </div>
+          </div>
+          <div class="hero-art" aria-hidden="true">
+            <span class="ring"></span><span class="ring r2"></span>
+            <img src="img/logo-white.png" alt="" width="260" height="260">
+          </div>
+        </div>
+      </div>
+
+      <div id="category-grid" class="tiles" aria-label="Browse by category"></div>
+
+      <div class="container">
+        <ul class="features reveal">
+          <li><a href="#pc-builder"><span data-icon="tower" data-size="30"></span><div><strong>Plan Your Build</strong><small>Pick parts that fit together</small></div></a></li>
+          <li><a href="#inventory"><span data-icon="inventory" data-size="30"></span><div><strong>Stock Your Bench</strong><small>Never buy the same part twice</small></div></a></li>
+          <li><a href="#circuit-builder"><span data-icon="board" data-size="30"></span><div><strong>Prototype Circuits</strong><small>Go from idea to working board</small></div></a></li>
+          <li><a href="#catalog" data-category=""><span data-icon="bolt" data-size="30"></span><div><strong>Learn by Making</strong><small>Made for students and makers</small></div></a></li>
+        </ul>
+      </div>
+
+      <div class="section container">
+        <div class="section-title wide reveal">
+          <p class="eyebrow">Hand-picked components</p>
+          <h2>Featured Parts</h2>
+          <p class="one-line">Popular picks for your next circuit or PC build. Add them to your cart when you are ready to buy.</p>
+        </div>
+        <div id="top-picks" class="product-grid reveal"></div>
+        <p class="picks-more"><a class="link" href="#catalog" data-category="">View all parts <span data-icon="arrow" data-size="14"></span></a></p>
+      </div>
+
+      <div class="section container split">
+        <div class="reveal">
+          <p class="eyebrow">Inventory</p>
+          <h2 class="split-title">Know What's <strong>On Your Bench</strong></h2>
+          <p class="lead">Log every part you own with its quantity and location, and get a heads-up before you run out.</p>
+          <ul class="ticks">
+            <li>Quantities and storage locations</li>
+            <li>Low-stock alerts for electronic components</li>
+            <li>Export and import your list</li>
+          </ul>
+          <a class="btn btn-lg" href="#inventory">Open Inventory <span data-icon="arrow" data-size="18"></span></a>
+        </div>
+        <div class="card stock-panel reveal" role="img" aria-label="Example inventory list showing in stock, low stock and out of stock parts">
+          <div class="stock-head"><span>Example</span><span>Qty</span></div>
+          <div class="stock-row"><div><strong>Arduino Uno R3</strong><small>Drawer A</small></div><span class="badge badge-ok">In stock · 4</span></div>
+          <div class="stock-row"><div><strong>10k Ohm Resistors</strong><small>Parts box</small></div><span class="badge badge-low">Low stock · 2</span></div>
+          <div class="stock-row"><div><strong>DHT22 Sensor</strong><small>Shelf 2</small></div><span class="badge badge-out">Out of stock · 0</span></div>
+        </div>
+      </div>
+
+      <div class="build section">
+        <div class="container build-grid">
+          <div class="build-art reveal" data-icon="tower" data-size="220" aria-hidden="true"></div>
+          <div class="reveal">
+            <p class="eyebrow">Prebuilt PC packages</p>
+            <h2>Build Your <strong>New PC</strong></h2>
+            <p class="lead">Choose a ready-made PC package, or compare the parts you already have and buy only what is missing.</p>
+            <div class="spec-row">
+              <div class="spec"><span data-icon="gpu" data-size="34"></span><div><strong>GPU ready</strong><small>Power and fit checks</small></div></div>
+              <div class="spec"><span data-icon="ram" data-size="34"></span><div><strong>Socket + RAM match</strong><small>AM5 / DDR5 aware</small></div></div>
+            </div>
+            <div class="build-actions">
+              <a class="btn btn-lg" href="#pc-builder">Open PC Builder</a>
+              <a class="btn btn-lg btn-outline" href="#catalog" data-category="PC Parts">Browse PC Parts</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section container">
+        <div class="section-title reveal">
+          <p class="eyebrow">Play like the pros</p>
+          <h2>Ready Builds</h2>
+          <p>Starter bundles priced from the catalog. Open the PC Builder to choose a complete package or only the parts you need.</p>
+        </div>
+        <div id="presets" class="presets"></div>
+      </div>
+
+      <div class="section container split">
+        <div class="reveal">
+          <p class="eyebrow">Circuit Builder</p>
+          <h2 class="split-title">Wire It Up. <strong>Check the Parts.</strong></h2>
+          <p class="lead">Sketch circuits with microcontrollers, sensors and resistors, then see exactly which parts you still need.</p>
+          <ul class="ticks">
+            <li>Place boards, sensors and passives</li>
+            <li>Pull parts straight from the catalog</li>
+            <li>Compare the circuit against your inventory</li>
+          </ul>
+          <a class="btn btn-lg" href="#circuit-builder">Open Circuit Builder <span data-icon="arrow" data-size="18"></span></a>
+        </div>
+        <svg class="circuit-art reveal" viewBox="0 0 320 200" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M40 150V115M26 115H54M33 100H47M40 100V50H90l10-16 14 32 14-32 14 32 10-16h46h20"/>
+          <path d="M230 32V68L258 50Z M262 32V68M262 50H280V150H40"/>
+          <path d="M268 28l14-12M278 40l14-12"/>
+        </svg>
+      </div>
+
+      <div class="container cta-wrap">
+        <div class="cta reveal">
+          <div>
+            <p class="eyebrow">Account</p>
+            <h2>Take your bench with you.</h2>
+            <p>Save builds and projects, and keep your inventory in sync across devices.</p>
+          </div>
+          <a class="btn btn-lg" href="#account">Open Account <span data-icon="arrow" data-size="18"></span></a>
+        </div>
+      </div>
+    </section>
+
+<!-- CATALOG -->
+    <section id="page-catalog" class="page container" hidden>
+      <h1>Catalog</h1>
+      <div class="toolbar">
+        <input type="search" id="catalog-search" placeholder="Search the catalog...">
+        <select id="catalog-category"></select>
+        <select id="catalog-sort">
+          <option value="name">Sort: Name</option>
+          <option value="low">Sort: Price (low to high)</option>
+          <option value="high">Sort: Price (high to low)</option>
+        </select>
+      </div>
+      <p id="catalog-count" class="summary"></p>
+      <div id="catalog-grid" class="product-grid"></div>
+      <p id="catalog-empty" class="empty" hidden>No parts match your search or filter.</p>
+      <p class="picks-more"><button id="catalog-more" type="button" class="btn btn-secondary" hidden>Show more parts</button></p>
+    </section>
+
+    <!-- SHOPPING CART -->
+    <section id="page-cart" class="page container" hidden>
+      <h1>Shopping cart</h1>
+      <p class="summary">Review your items, choose what to check out, and pay with your account balance.</p>
+      <p id="cart-login-prompt" class="card cart-login-prompt" hidden>Sign in to view and use your personal cart. <a class="link" href="#account">Go to Account</a></p>
+      <div id="cart-content" hidden>
+        <div class="cart-layout">
+          <div>
+            <ul id="cart-items" class="cart-list" aria-label="Items in your cart"></ul>
+            <p id="cart-empty" class="card cart-empty" hidden>Your cart is empty. Browse the <a class="link" href="#catalog">Catalog</a> to add parts.</p>
+          </div>
+          <aside class="card cart-summary">
+            <h2>Checkout</h2>
+            <p id="cart-balance" class="cart-balance"></p>
+            <div class="cart-total"><span>Complete-package savings</span><strong id="cart-discount">−₱0.00</strong></div>
+            <div class="cart-total"><span>Selected total</span><strong id="cart-total">₱0</strong></div>
+            <p id="cart-error" class="error cart-error" role="alert" hidden></p>
+            <button id="cart-checkout" type="button" class="btn btn-block" disabled>Check out selected items</button>
+            <small class="hint">Checkout deducts from your demo balance and moves the items into Inventory.</small>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- INVENTORY -->
+    <section id="page-inventory" class="page container" hidden>
+      <h1>Inventory</h1>
+      <p class="summary">Your inventory shows the parts you own or have on hold in this account. Open Details for specifications and comments. Purchased quantities and item information are read-only.</p>
+
+      <div class="toolbar">
+        <input type="search" id="search" placeholder="Search parts...">
+        <select id="filter-category"></select>
+        <select id="sort">
+          <option value="name">Sort: Name</option>
+          <option value="quantity">Sort: Quantity (low first)</option>
+          <option value="category">Sort: Category</option>
+        </select>
+      </div>
+
+      <p id="summary" class="summary"></p>
+      <ul id="parts-list" class="parts-list product-grid inventory-grid"></ul>
+      <p id="empty-state" class="empty" hidden></p>
+    </section>
+
+    <section id="page-pc-builder" class="page container" hidden>
+      <h1>PC Builder</h1>
+      <p class="summary">Choose a prebuilt PC package. Buy the complete package for 10% off, or buy only the parts missing from your inventory at regular catalog prices.</p>
+      <p class="summary">Buying the complete package includes every listed component, even if you already have some in your inventory.</p>
+      <p class="summary">Purchased packages stay together as a PC set in Inventory. You can also build a set from your parts or disassemble it back into those individual parts.</p>
+      <p id="pc-builder-login" class="card pc-builder-login" hidden>Sign in to compare packages with your inventory. <a class="link" href="#account">Go to Account</a></p>
+      <p id="pc-builder-balance" class="card pc-builder-balance" hidden></p>
+      <div id="pc-builder-packages" class="pc-builder-packages" hidden></div>
+    </section>
+
+    <section id="page-circuit-builder" class="page container" hidden>
+      <h1>Circuit Builder</h1>
+      <p class="summary">Choose a ready-made electronics project. Buy the complete kit for 10% off, or buy only missing catalog packs at regular prices. Kit quantities are per project.</p>
+      <p id="circuit-builder-login" class="card pc-builder-login" hidden>Sign in to compare project kits with your inventory. <a class="link" href="#account">Go to Account</a></p>
+      <p id="circuit-builder-balance" class="card pc-builder-balance" hidden></p>
+      <div id="circuit-builder-packages" class="pc-builder-packages" hidden></div>
+    </section>
+
+    <!-- ACCOUNT -->
+    <section id="page-account" class="page container" hidden>
+      <h1>Account</h1>
+
+      <div id="auth-panel" class="card login-card">
+        <div class="auth-tabs" role="tablist" aria-label="Account access">
+          <button id="show-signin" class="auth-tab active" type="button" role="tab" aria-selected="true" aria-controls="login-form">Sign in</button>
+          <button id="show-signup" class="auth-tab" type="button" role="tab" aria-selected="false" aria-controls="signup-form">Create account</button>
+        </div>
+        <form id="login-form" class="form-grid" novalidate>
+        <h2>Sign in to Pyesa</h2>
+        <p>Use your email and password to open your account.</p>
+        <label for="login-email">Email
+          <input id="login-email" name="email" type="email" autocomplete="email" required>
+        </label>
+        <label for="login-password">Password
+          <input id="login-password" name="password" type="password" autocomplete="current-password" required>
+        </label>
+        <p id="login-error" class="error" role="alert" hidden></p>
+        <button type="submit" class="btn">Sign in</button>
+        </form>
+        <form id="signup-form" class="form-grid" novalidate hidden>
+          <h2>Create your Pyesa account</h2>
+          <p>Your profile, balance, cart, and inventory will be saved to your account.</p>
+          <label for="signup-name">Display name<input id="signup-name" name="name" autocomplete="name" maxlength="40" required></label>
+          <label for="signup-email">Email<input id="signup-email" name="email" type="email" autocomplete="email" required></label>
+          <label for="signup-password">Password<input id="signup-password" name="password" type="password" autocomplete="new-password" minlength="8" required><small class="hint">Use at least 8 characters.</small></label>
+          <p id="signup-error" class="error" role="alert" hidden></p>
+          <p id="signup-success" class="hint" role="status" hidden></p>
+          <button type="submit" class="btn">Create account</button>
+        </form>
+        <p id="auth-setup-notice" class="auth-setup-notice" role="status" hidden>Account sign-in is not connected yet. Add the Supabase project URL and publishable key in <code>js/supabase-config.js</code> and run the provided database setup script.</p>
+      </div>
+
+      <div id="account-content" hidden>
+      <div class="account-session"><span id="account-role" class="badge badge-local"></span><button id="account-logout" type="button" class="btn btn-secondary btn-small">Log out</button></div>
+
+      <div class="card profile-card">
+        <div id="account-avatar" class="avatar" aria-hidden="true">?</div>
+        <div class="profile-id">
+          <h2 id="account-name">Maker</h2>
+          <p id="account-bench" class="profile-sub"></p>
+          <p id="account-email" class="profile-sub"></p>
+        </div>
+        <span class="badge badge-local">Saved to your account</span>
+      </div>
+
+      <div class="card balance-card">
+        <div><p class="eyebrow">Demo balance</p><h2 id="account-balance">₱5,000.00</h2><p>Cash in or cash out only changes this on-site balance. No real money moves.</p></div>
+        <div class="actions balance-actions"><button type="button" id="cash-in" class="btn">Cash in</button><button type="button" id="cash-out" class="btn btn-secondary">Cash out</button></div>
+      </div>
+
+      <ul id="account-stats" class="stat-grid" aria-label="Inventory at a glance"></ul>
+
+      <div class="account-grid">
+        <form id="profile-form" class="card form-grid" novalidate>
+          <h2>Edit profile</h2>
+          <div id="profile-errors" class="error-summary" role="alert" tabindex="-1" hidden>
+            <strong>Please fix these fields:</strong>
+            <ul></ul>
+          </div>
+          <label for="pf-name">Display name
+            <input type="text" id="pf-name" name="name" maxlength="40" autocomplete="nickname" aria-describedby="pf-name-error" required>
+            <small class="error" id="pf-name-error"></small>
+          </label>
+          <label for="pf-bench">Bench or workshop name
+            <input type="text" id="pf-bench" name="bench" maxlength="40" aria-describedby="pf-bench-hint">
+            <small class="hint" id="pf-bench-hint">Shown on your profile, e.g. "Garage Lab".</small>
+          </label>
+          <label for="pf-email">Email
+            <input type="email" id="pf-email" name="email" maxlength="80" autocomplete="email" inputmode="email" aria-describedby="pf-email-error">
+            <small class="error" id="pf-email-error"></small>
+          </label>
+          <label for="pf-photo">Profile picture
+            <input type="file" id="pf-photo" name="photo" accept="image/*">
+            <small class="hint">Choose an image up to 2 MB.</small>
+          </label>
+          <div class="actions">
+            <button type="submit" class="btn">Save profile</button>
+            <button type="button" id="profile-reset" class="btn btn-secondary">Discard changes</button>
+          </div>
+        </form>
+
+        <div class="account-side">
+          <div class="card setting">
+            <h2>Electronic parts to restock</h2>
+            <ul id="account-restock" class="restock-list"></ul>
+            <p id="account-restock-empty" class="restock-empty" hidden></p>
+            <a class="link" href="#inventory">Open inventory <span data-icon="arrow" data-size="14"></span></a>
+          </div>
+
+          <div class="card setting">
+            <h2>Sell inventory</h2>
+            <p>Sell priced, owned parts at their catalog value and add the proceeds to your balance. Unpriced and on-hold parts stay in your inventory.</p>
+            <button type="button" id="profile-clear" class="btn btn-small">Sell inventory</button>
+          </div>
+        </div>
+      </div>
+      </div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section id="page-settings" class="page container" hidden>
+      <h1>Settings</h1>
+      <p class="summary">Saved in this browser. No account needed.</p>
+      <div class="settings-grid">
+        <div class="card setting">
+          <h2>Theme</h2>
+          <p>Choose how Pyesa looks.</p>
+          <div id="themes" class="swatches" role="radiogroup" aria-label="Theme"></div>
+        </div>
+        <div class="card setting">
+          <h2>Accent color</h2>
+          <p>Changes buttons, highlights and glows across the site.</p>
+          <div id="swatches" class="swatches" role="radiogroup" aria-label="Accent color"></div>
+        </div>
+        <div class="card setting">
+          <h2>Animations</h2>
+          <p>Page transitions, hover motion and scroll reveals.</p>
+          <label class="switch"><input type="checkbox" id="set-motion"><span class="track" aria-hidden="true"></span>Enable animations</label>
+        </div>
+        <div class="card setting">
+          <h2>Default electronic low-stock level</h2>
+          <p>Used for electronic parts such as resistors, capacitors and sensors. PC parts do not use low-stock alerts.</p>
+          <label class="field">Low-stock at<input type="number" id="set-minstock" min="0"></label>
+        </div>
+        <div class="card setting">
+          <h2>Your data</h2>
+          <p id="data-summary"></p>
+          <div class="actions wrap">
+            <button type="button" id="export-btn" class="btn btn-secondary btn-small">Export JSON</button>
+            <label class="btn btn-secondary btn-small" for="import-file">Import JSON</label>
+            <input type="file" id="import-file" accept="application/json,.json" hidden>
+            <button type="button" id="clear-btn" class="btn btn-danger btn-small">Clear inventory</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="item-details-backdrop" class="item-details-backdrop" aria-hidden="true"></div>
+  <dialog id="item-details-dialog" class="site-dialog item-details-dialog" aria-labelledby="item-details-title">
+    <div class="item-details-panel">
+      <div class="dialog-heading"><div><p class="eyebrow">Part details</p><h2 id="item-details-title"></h2></div><button type="button" class="btn btn-secondary btn-small" data-detail-close aria-label="Close part details" title="Close">×</button></div>
+      <div id="item-details-body"></div>
+      <div id="item-details-actions" class="actions detail-actions"></div>
+    </div>
+  </dialog>
+
+  <dialog id="delivery-dialog" class="site-dialog delivery-dialog" aria-labelledby="delivery-title" aria-describedby="delivery-message">
+    <div class="form-grid"><h2 id="delivery-title">Delivery processed</h2><p id="delivery-message"></p><div class="actions"><button type="button" id="delivery-close" class="btn">Done</button></div></div>
+  </dialog>
+
+  <dialog id="confirm-dialog" class="site-dialog confirm-dialog" aria-labelledby="confirm-title" aria-describedby="confirm-message">
+    <form method="dialog" class="form-grid">
+      <h2 id="confirm-title">Confirm action</h2>
+      <p id="confirm-message"></p>
+      <div class="actions"><button type="submit" value="cancel" class="btn btn-secondary">Cancel</button><button type="submit" id="confirm-action" value="confirm" class="btn btn-danger">Confirm</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="balance-dialog" class="site-dialog" aria-labelledby="balance-dialog-title" aria-describedby="balance-dialog-help">
+    <form id="balance-form" class="form-grid" novalidate>
+      <div class="dialog-heading"><div><p class="eyebrow">Demo balance</p><h2 id="balance-dialog-title">Cash in</h2></div><button type="button" id="balance-cancel" class="btn btn-secondary btn-small">Close</button></div>
+      <p id="balance-dialog-help" class="hint">This only updates your Pyesa balance. No real money moves.</p>
+      <label for="balance-amount">Amount (PHP)<input id="balance-amount" type="number" name="amount" min="0.01" step="0.01" required></label>
+      <p id="balance-error" class="error" role="alert" hidden></p>
+      <div class="actions"><button type="submit" id="balance-submit" class="btn">Cash in</button></div>
+    </form>
+  </dialog>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <a class="brand" href="#home"><img class="brand-logo" src="img/logo-white.png" alt="" width="32" height="32">Pyesa</a>
+        <p>Your parts tracker for electronics projects and PC builds.</p>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <a href="#home">Home</a>
+        <a href="#catalog" data-category="">Catalog</a>
+        <a href="#inventory">Inventory</a>
+        <a href="#pc-builder">PC Builder</a>
+        <a href="#circuit-builder">Circuit Builder</a>
+        <a href="#account">Account</a>
+        <a href="#settings">Settings</a>
+      </div>
+      <div>
+        <h4>Categories</h4>
+        <a href="#catalog" data-category="PC Parts">PC Parts</a>
+        <a href="#catalog" data-category="Peripherals">Peripherals</a>
+        <a href="#catalog" data-category="Electronic Parts">Electronic Parts</a>
+      </div>
+      <div>
+        <h4>About</h4>
+        <p>Capstone project for ELECT1: Frontend Development.</p>
+        <button type="button" class="link-button" id="contact-open">Contact the developers</button>
+        <p class="credit">Part specs from <a href="https://github.com/buildcores/buildcores-open-db">BuildCores OpenDB</a>, licensed <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>. Source filtered and reformatted for this project.</p>
+      </div>
+    </div>
+    <p class="copyright">© <span id="year"></span> Pyesa. Student project.</p>
+  </footer>
+
+  <button id="to-top" class="to-top" type="button" aria-label="Back to top" data-icon="up" data-size="22"></button>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <dialog id="contact-dialog" class="contact-dialog" aria-labelledby="contact-title">
+    <form id="contact-form" class="form-grid" novalidate>
+      <div class="dialog-heading"><div><p class="eyebrow">Pyesa support</p><h2 id="contact-title">Contact the developers</h2></div><button type="button" id="contact-close" class="btn btn-secondary btn-small" aria-label="Close contact form">Close</button></div>
+      <label for="contact-name">Your name<input id="contact-name" name="name" maxlength="80" required></label>
+      <label for="contact-email">Email<input id="contact-email" name="email" type="email" maxlength="120" required></label>
+      <label for="contact-message">Message<textarea id="contact-message" name="message" rows="5" maxlength="2000" required></textarea></label>
+      <p class="hint">This demo saves your message on this device. Message delivery is not connected yet.</p>
+      <div class="actions"><button type="submit" class="btn">Save message</button></div>
+    </form>
+  </dialog>
+
+  <script src="js/supabase-config.js"></script>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

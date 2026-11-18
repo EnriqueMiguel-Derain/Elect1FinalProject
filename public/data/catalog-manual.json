@@ -1,0 +1,139 @@
+[
+  {
+    "id": "mcu-uno",
+    "name": "Arduino Uno R3",
+    "category": "Microcontroller",
+    "price": 650,
+    "featured": true,
+    "specs": {},
+    "summary": "ATmega328P · 5V logic"
+  },
+  {
+    "id": "mcu-esp32",
+    "name": "ESP32 DevKit V1",
+    "category": "Microcontroller",
+    "price": 420,
+    "badge": "NEW",
+    "specs": {},
+    "summary": "Wi-Fi + Bluetooth · 3.3V logic"
+  },
+  {
+    "id": "sen-dht22",
+    "name": "DHT22 Temperature Sensor",
+    "category": "Sensor",
+    "price": 180,
+    "specs": {},
+    "summary": "Temperature + humidity"
+  },
+  {
+    "id": "res-10k",
+    "name": "10k Ohm Resistor (pack of 100)",
+    "category": "Resistor",
+    "price": 60,
+    "specs": {},
+    "summary": "10kΩ · pack of 100"
+  },
+  {
+    "id": "cpu-r5-7600",
+    "name": "AMD Ryzen 5 7600",
+    "category": "CPU",
+    "price": 12500,
+    "featured": true,
+    "specs": {
+      "socket": "AM5",
+      "tdp": 65
+    },
+    "summary": "6C/12T · AM5 · 65W"
+  },
+  {
+    "id": "mb-b650m",
+    "name": "B650M Micro-ATX Motherboard",
+    "category": "Motherboard",
+    "price": 8500,
+    "specs": {
+      "socket": "AM5",
+      "ramType": "DDR5",
+      "formFactor": "mATX"
+    },
+    "summary": "AM5 · B650 · mATX · DDR5"
+  },
+  {
+    "id": "ram-ddr5-16",
+    "name": "16GB DDR5-5600 Kit",
+    "category": "RAM",
+    "price": 3200,
+    "featured": true,
+    "specs": {
+      "ramType": "DDR5"
+    },
+    "summary": "DDR5-5600 · 16GB"
+  },
+  {
+    "id": "gpu-rtx4060",
+    "name": "RTX 4060 8GB",
+    "category": "GPU",
+    "price": 18500,
+    "featured": true,
+    "badge": "NEW",
+    "specs": {
+      "tdp": 115
+    },
+    "summary": "8GB GDDR6 · 115W"
+  },
+  {
+    "id": "ssd-1tb",
+    "name": "1TB NVMe SSD",
+    "category": "Storage",
+    "price": 3800,
+    "specs": {},
+    "summary": "1TB · SSD · NVMe"
+  },
+  {
+    "id": "psu-550",
+    "name": "550W 80+ Bronze PSU",
+    "category": "PSU",
+    "price": 2800,
+    "specs": {
+      "wattage": 550
+    },
+    "summary": "550W · 80+ Bronze"
+  },
+  {
+    "id": "case-matx",
+    "name": "Micro-ATX Mid Tower Case",
+    "category": "Case",
+    "price": 2500,
+    "specs": {
+      "formFactor": "mATX",
+      "supports": [
+        "mATX",
+        "ITX"
+      ]
+    },
+    "summary": "Micro-ATX · Mid tower"
+  },
+  {
+    "id": "kb-mech",
+    "name": "Mechanical Keyboard (Tenkeyless)",
+    "category": "Keyboard",
+    "price": 2200,
+    "specs": {},
+    "summary": "Tenkeyless · Mechanical"
+  },
+  {
+    "id": "ms-gaming",
+    "name": "Gaming Mouse 12000 DPI",
+    "category": "Mouse",
+    "price": 1100,
+    "specs": {},
+    "summary": "12000 DPI"
+  },
+  {
+    "id": "mon-24",
+    "name": "24-inch 144Hz Monitor",
+    "category": "Monitor",
+    "price": 7500,
+    "specs": {},
+    "summary": "24\" · 144Hz"
+  }
+]

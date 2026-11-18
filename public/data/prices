@@ -1,0 +1,3 @@
+{
+  "_comment": "Optional. Add prices in pesos by catalog id, e.g. \"odb-1a2b3c4d\": 8990. The build script merges them into catalog.json."
+}
