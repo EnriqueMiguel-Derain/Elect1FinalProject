@@ -467,9 +467,14 @@ label.btn { cursor: pointer; }
 .restock-list li > span:first-child { min-width: 0; overflow-wrap: anywhere; }
 .restock-empty { margin: 10px 0; }
 .account-side .link { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; }
-.login-card { max-width: 520px; margin: 24px auto; }
+.login-card { max-width: 520px; margin: 24px auto; padding: 22px; }
 .login-card h2, .login-card p { margin: 0; }
 .login-card .hint { display: block; }
+.auth-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 4px; margin-bottom: 20px; border-radius: 10px; background: var(--surface-2); }
+.auth-tab { min-height: 42px; border: 0; border-radius: 7px; color: var(--muted); background: transparent; font: 700 0.9rem var(--font-body); cursor: pointer; }
+.auth-tab.active { color: var(--text-strong); background: var(--surface); box-shadow: 0 2px 8px rgba(0, 0, 0, .2); }
+.auth-setup-notice { margin: 16px 0 0 !important; padding: 12px; border: 1px solid var(--border); border-radius: 8px; color: var(--muted); background: var(--surface-2); font-size: 0.9rem; }
+.auth-setup-notice code { color: var(--text-strong); }
 .account-session { display: flex; justify-content: flex-end; align-items: center; gap: 12px; margin: 18px 0 8px; }
 .link-button { border: 0; background: transparent; color: var(--muted); text-align: left; padding: 3px 0; font: inherit; cursor: pointer; }
 .link-button:hover { color: #fff; text-decoration: underline; }

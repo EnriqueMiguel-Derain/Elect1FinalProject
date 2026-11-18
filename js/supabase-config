@@ -2,6 +2,6 @@
 // This browser-visible key is safe only when the database RLS policies in
 // supabase/setup.sql are enabled. Never put a service_role/secret key here.
 window.PYESA_SUPABASE_CONFIG = {
-  url: '',
+  url: 'https://zkasdfsqjulxruuxrlms.supabase.co',
   publishableKey: 'sb_publishable_x9axjyzKB91VpxNKC_ILhw_nm8af1ZC',
 }
