@@ -302,6 +302,7 @@ export function initAccount(catalogData) {
   catalog = catalogData
   bindEvents()
   renderSession()
+  window.addEventListener('pyesa-session-updated', renderSession)
   window.addEventListener('pyesa-balance-updated', renderBalance)
   subscribe(renderStats)
 }

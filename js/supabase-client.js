@@ -1,5 +1,3 @@
-import './supabase-config.js'
-
 let clientPromise
 
 export function createSupabaseClient() {

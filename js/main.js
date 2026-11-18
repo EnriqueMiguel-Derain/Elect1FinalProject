@@ -8,7 +8,7 @@ import { motionEnabled } from './settings.js'
 import { initSettings } from './settings-page.js'
 import { initAccount } from './account.js'
 import { initContact } from './contact.js'
-import { initCartPage, getCartCount, subscribeCart } from './cart.js'
+import { initCartPage, getCartCount, subscribeCart, refreshCart } from './cart.js'
 import { showToast } from './ui.js'
 
 const pages = document.querySelectorAll('.page')
@@ -100,16 +100,27 @@ document.getElementById('skip-link').addEventListener('click', (event) => {
 document.querySelectorAll('[data-icon]').forEach((el) => (el.innerHTML = icon(el.dataset.icon, Number(el.dataset.size) || 22)))
 document.getElementById('year').textContent = new Date().getFullYear()
 
+// Render the requested page before any remote account or catalog setup. If a
+// service is unavailable, the site shell and hash navigation remain usable.
+showPage()
+
+function safelyInitialize(name, initialize) {
+  try {
+    initialize()
+  } catch (error) {
+    console.error(`Unable to initialize ${name}:`, error)
+  }
+}
+
 // Load the catalog with the Fetch API (Module 6), then start every page.
 async function start() {
-  let accountsConnected = false
-  try {
-    accountsConnected = await initializeAccounts()
-  } catch (error) {
+  // Start account setup in the background. A slow/unavailable auth service
+  // must not prevent catalog rendering or the page controls from starting.
+  const accountReady = initializeAccounts().catch((error) => {
     console.error('Account service could not start:', error)
     window.PYESA_AUTH_INIT_ERROR = true
-  }
-  if (accountsConnected) reloadAccountParts()
+    return false
+  })
   let catalog = []
   try {
     const response = await fetch('data/catalog.json')
@@ -118,18 +129,25 @@ async function start() {
   } catch (error) {
     console.error(error.message)
   }
-  initInventory(catalog)
-  initCatalog(catalog)
-  initCartPage(catalog)
-  initHome(catalog)
-  initSettings()
-  initAccount(catalog)
-  initContact()
+  safelyInitialize('inventory', () => initInventory(catalog))
+  safelyInitialize('catalog', () => initCatalog(catalog))
+  safelyInitialize('cart', () => initCartPage(catalog))
+  safelyInitialize('home', () => initHome(catalog))
+  safelyInitialize('settings', () => initSettings())
+  safelyInitialize('account', () => initAccount(catalog))
+  safelyInitialize('contact', () => initContact())
   subscribe(updateCount)
   subscribeCart(updateCartCount)
   updateCount()
   updateCartCount()
   showPage()
+
+  const accountsConnected = await accountReady
+  if (accountsConnected) {
+    reloadAccountParts()
+    refreshCart()
+    window.dispatchEvent(new Event('pyesa-session-updated'))
+  }
 }
 
 window.addEventListener('pyesa-cloud-save-error', () => showToast('Could not sync your latest account changes. Check your connection and try again.', true))
