@@ -467,9 +467,13 @@ label.btn { cursor: pointer; }
 .restock-list li > span:first-child { min-width: 0; overflow-wrap: anywhere; }
 .restock-empty { margin: 10px 0; }
 .account-side .link { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; }
-.login-card { max-width: 520px; margin: 24px auto; padding: 22px; }
+.login-card { display: block; width: min(100%, 560px); max-width: 560px; margin: 24px auto; padding: 24px; }
 .login-card h2, .login-card p { margin: 0; }
 .login-card .hint { display: block; }
+.login-card form.form-grid { display: grid; width: 100%; grid-template-columns: minmax(0, 1fr); align-items: stretch; gap: 14px; }
+.login-card form.form-grid > * { grid-column: 1; min-width: 0; }
+.login-card form.form-grid > label { display: flex; flex-direction: column; gap: 6px; }
+.login-card form.form-grid > button.btn { width: 100%; min-height: 48px; white-space: normal; }
 .auth-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 4px; margin-bottom: 20px; border-radius: 10px; background: var(--surface-2); }
 .auth-tab { min-height: 42px; border: 0; border-radius: 7px; color: var(--muted); background: transparent; font: 700 0.9rem var(--font-body); cursor: pointer; }
 .auth-tab.active { color: var(--text-strong); background: var(--surface); box-shadow: 0 2px 8px rgba(0, 0, 0, .2); }
