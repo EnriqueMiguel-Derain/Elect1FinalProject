@@ -9,6 +9,7 @@ import { initSettings } from './settings-page.js'
 import { initAccount } from './account.js'
 import { initContact } from './contact.js'
 import { initCartPage, getCartCount, subscribeCart, refreshCart } from './cart.js'
+import { initCircuitBuilder } from './circuit-builder.js'
 import { showToast } from './ui.js'
 
 const pages = document.querySelectorAll('.page')
@@ -133,6 +134,7 @@ async function start() {
   safelyInitialize('catalog', () => initCatalog(catalog))
   safelyInitialize('cart', () => initCartPage(catalog))
   safelyInitialize('home', () => initHome(catalog))
+  safelyInitialize('circuit builder', () => initCircuitBuilder(catalog))
   safelyInitialize('settings', () => initSettings())
   safelyInitialize('account', () => initAccount(catalog))
   safelyInitialize('contact', () => initContact())

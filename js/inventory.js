@@ -53,7 +53,7 @@ export function assemblePCSet(build, catalogItems) {
 
   const unitPrices = components.map((component) => component.purchasePrice)
   const purchasePrice = unitPrices.every((price) => price != null)
-    ? Math.round(unitPrices.reduce((sum, price) => sum + price, 0) * 100) / 100
+    ? Math.round(unitPrices.reduce((sum, price, index) => sum + price * components[index].quantity, 0) * 100) / 100
     : null
   next.push({
     id: makeId(),
@@ -72,9 +72,35 @@ export function assemblePCSet(build, catalogItems) {
   return { ok: true }
 }
 
-export function disassemblePCSet(setId) {
-  const set = getParts().find((part) => part.id === setId && part.kind === 'pc-set')
-  if (!set?.components?.length) return { ok: false, message: 'This inventory entry is not a complete PC set.' }
+export function assembleCircuitSet(project, lines, catalogItems) {
+  const next = [...getParts()]
+  const components = []
+  for (const line of lines) {
+    const item = catalogItems.find((entry) => entry.id === line.id)
+    if (!item) return { ok: false, message: 'A project component is missing from the catalog.' }
+    const index = next.findIndex((part) => part.catalogId === item.id && Number(part.quantity) >= line.packQuantity)
+    if (index < 0) return { ok: false, message: `You need ${line.packQuantity} catalog pack(s) of ${item.name} before building this set.` }
+    const source = next[index]
+    components.push({ catalogId:item.id, name:item.name, category:item.category, quantity:line.packQuantity, bomQuantity:line.physicalQuantity, bomBreakdown:line.breakdown || [],
+      ownership:source.ownership === 'on-hold' ? 'on-hold' : 'owned', purchasePrice:source.purchasePrice ?? item.price,
+      purchasedAt:source.purchasedAt || '', location:source.location || '' })
+    if (source.quantity > line.packQuantity) next[index] = { ...source, quantity:source.quantity-line.packQuantity }
+    else next.splice(index, 1)
+  }
+  const prices = components.map((part) => part.purchasePrice)
+  next.push({ id:makeId(), kind:'circuit-set', packageId:project.id, name:project.name, category:'Circuit Project', quantity:1,
+    ownership:components.some((part) => part.ownership === 'on-hold') ? 'on-hold' : 'owned',
+    purchasePrice:prices.every((price) => price != null) ? Math.round(prices.reduce((sum, price, i) => sum + Number(price) * components[i].quantity, 0) * 100) / 100 : null,
+    components, location:'', assembledAt:new Date().toISOString() })
+  setParts(next)
+  return { ok:true }
+}
+
+export function disassemblePCSet(setId) { return disassembleInventorySet(setId) }
+
+export function disassembleInventorySet(setId) {
+  const set = getParts().find((part) => part.id === setId && ['pc-set','circuit-set'].includes(part.kind))
+  if (!set?.components?.length) return { ok: false, message: 'This inventory entry is not a complete set.' }
 
   const next = getParts().filter((part) => part.id !== setId)
   if (set.quantity > 1) next.push({ ...set, quantity: set.quantity - 1 })
@@ -84,7 +110,7 @@ export function disassemblePCSet(setId) {
     const quantity = Math.max(1, Number(component.quantity) || 1)
     const ownership = component.ownership === 'on-hold' ? 'on-hold' : 'owned'
     const price = component.purchasePrice ?? item.price
-    const existing = next.find((part) => part.kind !== 'pc-set' && part.catalogId === component.catalogId && part.ownership === ownership)
+    const existing = next.find((part) => !['pc-set','circuit-set'].includes(part.kind) && part.catalogId === component.catalogId && part.ownership === ownership)
 
     if (existing) {
       const totalQuantity = Number(existing.quantity) + quantity
@@ -112,14 +138,15 @@ async function handleListClick(event) {
   if (!btn) return
   const { action, id } = btn.dataset
   const part = parts.find((item) => item.id === id)
+  const isSet = ['pc-set','circuit-set'].includes(part?.kind)
   if (action === 'details' && part) {
-    const item = part.kind === 'pc-set' ? {
+    const item = isSet ? {
       id: part.packageId, name: part.name, category: part.category,
-      summary: `A PC set containing ${part.components?.length || 0} catalog components.`, specs: {}, price: part.purchasePrice,
+      summary: `A ${part.kind === 'circuit-set' ? 'circuit kit' : 'PC set'} containing ${part.components?.length || 0} catalog component types.`, specs: {}, price: part.purchasePrice,
     } : catalog.find((entry) => entry.id === part.catalogId) || {
       id: part.catalogId, name: part.name, category: part.category, summary: '', specs: {}, price: null,
     }
-    const detailPart = part.kind === 'pc-set' ? {
+    const detailPart = isSet ? {
       ...part,
       components: (part.components || []).map((component) => {
         const catalogItem = catalog.find((entry) => entry.id === component.catalogId)
@@ -140,13 +167,13 @@ async function handleListClick(event) {
       },
     })
   }
-  if (action === 'disassemble' && part?.kind === 'pc-set') {
+  if (action === 'disassemble' && isSet) {
     if (!await confirmInApp({
-      title: 'Disassemble PC set?',
+      title: part.kind === 'circuit-set' ? 'Disassemble circuit set?' : 'Disassemble PC set?',
       message: `Turn one ${part.name} set back into its ${part.components.length} individual parts?`,
       confirmLabel: 'Disassemble set',
     })) return
-    const result = disassemblePCSet(id)
+    const result = disassembleInventorySet(id)
     if (!result.ok) return showToast(result.message, true)
     showToast(`One ${part.name} set was disassembled into individual inventory parts.`)
   }

@@ -42,7 +42,7 @@ export function productCard(item, parts) {
 // Inventory keeps the Catalog card layout while replacing its purchase action
 // with the account-specific quantity, status, and management controls.
 export function inventoryCard(part, item) {
-  const isSet = part.kind === 'pc-set'
+  const isSet = ['pc-set', 'circuit-set'].includes(part.kind)
   const stockStatus = tracksLowStock(part.category) ? getStockStatus(part.quantity, part.minStock) : ''
   const purchaseDate = part.purchasedAt ? new Date(part.purchasedAt) : null
   const purchaseLabel = purchaseDate && !Number.isNaN(purchaseDate.valueOf())
@@ -54,7 +54,7 @@ export function inventoryCard(part, item) {
       <div class="product-visual ${tone(part.category)}">${icon(part.category, 56)}</div>
       <h3>${escapeHtml(part.name)}</h3>
       <p class="product-cat">${escapeHtml(part.category)}${item?.brand ? ' · ' + escapeHtml(item.brand) : ''}</p>
-      ${isSet ? `<p class="product-spec">PC set · ${part.components?.length || 0} included catalog parts. Open Details to see the full component list.</p>` : item?.summary ? `<p class="product-spec">${escapeHtml(item.summary)}</p>` : ''}
+      ${isSet ? `<p class="product-spec">${part.kind === 'circuit-set' ? 'Circuit kit' : 'PC set'} · ${part.components?.length || 0} included catalog parts. Open Details to see the full component list.</p>` : item?.summary ? `<p class="product-spec">${escapeHtml(item.summary)}</p>` : ''}
       <p class="price${part.purchasePrice == null && item?.price == null ? ' price-none' : ''}">${part.purchasePrice == null && item?.price == null ? 'Price not set' : formatPrice(part.purchasePrice ?? item?.price)}</p>
       <div class="inventory-tags"><span class="tag ${held ? 'tag-hold' : 'tag-ok'}">${held ? 'On hold' : 'Owned'} · Qty ${part.quantity}</span>${stockStatus ? `<span class="tag tag-${stockStatus}">${stockStatus === 'out' ? 'Out of stock' : stockStatus === 'low' ? 'Low stock' : 'In stock'}</span>` : ''}</div>
       ${part.location ? `<p class="product-cat inventory-location">Location · ${escapeHtml(part.location)}</p>` : ''}

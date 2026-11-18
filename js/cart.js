@@ -123,6 +123,19 @@ export function addBundleToCart(items, bundleName, packageId = '') {
   return true
 }
 
+export function addCircuitBundleToCart(lines, bundleName, packageId = '') {
+  if (!getCurrentAccount() || !lines?.length) return false
+  migrateLegacyBundles()
+  const cart = [...loadAccountCart()]
+  const packageKey = `${packageId}:${lines.map((line) => line.catalogId).sort().join(',')}`
+  const existing = cart.find((entry) => entry.kind === 'bundle' && entry.packageType === 'circuit' && entry.packageId === packageKey)
+  if (existing) existing.quantity += 1
+  else cart.push({ cartId: `circuit-${packageId}-${Date.now()}`, kind: 'bundle', packageType: 'circuit', packageId: packageKey, bundleName,
+    components: lines.map((line) => ({ catalogId: line.catalogId, quantity: line.packQuantity, bomQuantity: line.physicalQuantity, bomBreakdown: line.breakdown || [] })), quantity: 1 })
+  saveCart(cart)
+  return true
+}
+
 function getBundlePricing(entry) {
   const components = (entry.components || []).map((component) => ({
     ...component,
@@ -130,9 +143,9 @@ function getBundlePricing(entry) {
   }))
   const complete = components.length > 0 && components.every(({ item }) => item && Number.isFinite(Number(item.price)) && item.price != null && Number(item.price) >= 0)
   if (!complete) return { components, complete: false, retailCents: null, bundleCents: null }
-  const retailCents = components.reduce((sum, { item }) => sum + Math.round(Number(item.price) * 100), 0)
+  const retailCents = components.reduce((sum, { item, quantity = 1 }) => sum + Math.round(Number(item.price) * 100) * quantity, 0)
   const componentPrices = components.map(({ item }) => Math.round(Number(item.price) * 90))
-  const bundleCents = componentPrices.reduce((sum, price) => sum + price, 0)
+  const bundleCents = componentPrices.reduce((sum, price, index) => sum + price * (Number(components[index].quantity) || 1), 0)
   return { components, complete, retailCents, bundleCents, componentPrices }
 }
 
@@ -199,24 +212,26 @@ function checkoutSelected(cartKeys) {
   for (const entry of selected) {
     if (entry.kind === 'bundle') {
       const pricing = getBundlePricing(entry)
-      const components = pricing.components.map(({ item }, index) => ({
+      const components = pricing.components.map(({ item, quantity = 1, bomQuantity }, index) => ({
         catalogId: item.id,
         name: item.name,
         category: item.category,
-        quantity: 1,
+        quantity,
+        bomQuantity: Number(bomQuantity) || quantity,
+        bomBreakdown: component.bomBreakdown || [],
         ownership: 'owned',
         purchasePrice: pricing.componentPrices[index] / 100,
         purchasedAt,
       }))
       parts.push({
         id: makeId(),
-        kind: 'pc-set',
+        kind: entry.packageType === 'circuit' ? 'circuit-set' : 'pc-set',
         packageId: entry.packageId || '',
         name: entry.bundleName || 'PC Package',
-        category: 'PC Build',
+        category: entry.packageType === 'circuit' ? 'Circuit Project' : 'PC Build',
         quantity: entry.quantity,
         ownership: 'owned',
-        purchasePrice: components.reduce((sum, component) => sum + component.purchasePrice, 0),
+        purchasePrice: components.reduce((sum, component) => sum + component.purchasePrice * component.quantity, 0),
         components,
         location: '',
         purchasedAt,
@@ -270,7 +285,7 @@ function renderCart() {
   $('cart-items').innerHTML = entries.map((entry) => {
     const { item, quantity, cartKey } = entry
     const packageInfo = entry.kind === 'bundle'
-      ? `<p>Complete PC set · ${entry.bundleComponents.length} catalog parts · 10% set discount</p><small class="cart-bundle-components">Includes: ${entry.bundleComponents.map(({ item: component }) => escapeHtml(component?.name || 'Catalog part unavailable')).join(' · ')}</small>`
+      ? `<p>Complete ${entry.packageType === 'circuit' ? 'circuit kit' : 'PC set'} · ${entry.bundleComponents.length} catalog parts · 10% set discount</p><small class="cart-bundle-components">Includes: ${entry.bundleComponents.map(({ item: component, quantity = 1, bomQuantity, bomBreakdown = [] }) => `${escapeHtml(component?.name || 'Catalog part unavailable')} × ${bomBreakdown.length ? `${bomBreakdown.join(', ')} (${quantity} pack${quantity === 1 ? '' : 's'})` : bomQuantity > 1 ? `${bomQuantity} pcs (${quantity} pack${quantity === 1 ? '' : 's'})` : quantity}`).join(' · ')}</small>`
       : `<p>${escapeHtml(item.category)}</p>`
     return `
     <li class="card cart-item">
