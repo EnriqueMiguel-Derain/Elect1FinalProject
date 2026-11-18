@@ -18,7 +18,7 @@
     "brand": "AMD",
     "featured": true,
     "subcategory": "CPU",
-    "image": "https://static.cazasouq.com/image/cache/catalog/2025/Computer%20Parts/CPU/AMD%20Ryzen%205%207600%20Tray%20CPU-01-1000x1000.png",
+    "image": "https://www.startech.com.bd/image/cache/catalog/processor/amd/ryzen-5-7600-tray/ryzen-5-7600-tray-01-500x500.webp",
     "priceNote": "Current in-stock category listing showed this price; the out-of-stock product page may show an older amount."
   },
   {
@@ -99,7 +99,7 @@
     "brand": "ZOTAC",
     "featured": true,
     "subcategory": "GPU",
-    "image": "https://images.tokopedia.net/img/cache/900/VqbcmM/2023/11/1/74023fb1-c219-4bdc-a0f7-0b916dce00c7.jpg"
+    "image": "https://cdn.mwave.com.au/images/400/zotac_gaming_geforce_rtx_4060_twin_edge_oc_8gb_video_card_ac69887_16613.jpg"
   },
   {
     "id": "ssd-samsung-990-1tb",
@@ -375,7 +375,7 @@
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "Sensor",
-    "image": "https://38-3d.co.uk/cdn/shop/articles/BMP180-3_3V-Barometric-Pressure-Sensor-Module.webp?crop=center&height=1200&v=1738304559&width=1200"
+    "image": "https://www.theengineerstore.in/cdn/shop/products/1679381660127-0a0b3c00f0c64fc2-36C961BC6B6241C0C767B1B747A5C9ED.jpg?v=1699528389"
   },
   {
     "id": "res-10k",
@@ -704,7 +704,7 @@
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "LED",
-    "image": "https://topelectronics.gr/images/detailed/3/5mm-RGB-LED-Common-Cathode-4Pin-Red-Green-Blue-LED-Light-Emitting-Diode.jpg_640x640_cb6c-j5.jpg"
+    "image": "https://www.robotics.org.za/image/cache/catalog/generic/RGB-LED-05-CC/RGB-LED-05-CC-055-500x500.jpg"
   },
   {
     "id": "led-3mm",
@@ -986,7 +986,7 @@
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "5V Power Supply",
-    "image": "https://circuit.rocks/cdn/shop/files/SHOPIFYPHOTOSIZEADAPTER.png?v=1768281126"
+    "image": "https://i5.walmartimages.com/asr/0957940c-e412-4647-934d-c6004a80030d.d4e1881f5e0612b1927a35419df6f09b.jpeg?odnBg=FFFFFF&odnHeight=768&odnWidth=768"
   },
   {
     "id": "circ-usb-b",
@@ -1238,7 +1238,7 @@
     "sourceName": "Circuitrocks",
     "priceCheckedAt": "2026-11-18",
     "subcategory": "Logic Level Shifter",
-    "image": "https://cdn.sparkfun.com/assets/parts/1/1/2/2/12009-01.jpg"
+    "image": "https://cdn.sparkfun.com/assets/parts/8/0/0/6/11771-03.jpg"
   },
   {
     "id": "cpu-r5-7500f",
@@ -1471,7 +1471,7 @@
     "priceCheckedAt": "2026-11-18",
     "brand": "Redragon",
     "subcategory": "Mouse",
-    "image": "https://rimage.ripley.com.pe/home.ripley/Attachment/MKP/2239/PMP20000381834/imagen3-1.jpeg"
+    "image": "https://redragon.es/content/uploads/2024/07/KING-PRO-4K-BLACK-M916.png"
   },
   {
     "id": "spk-edifier-g200",
